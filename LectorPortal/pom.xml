@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.escapedoom</groupId>
-    <artifactId>LectorPortalBackend</artifactId>
+    <artifactId>LectorPortal</artifactId>
     <version>0.0.1</version>
     <name>PortalBackend</name>
     <description>This jar contains all logic to manage the state of EscapeRooms </description>
