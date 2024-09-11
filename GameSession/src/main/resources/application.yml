@@ -1,0 +1,51 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: computedCode
+  mvc:
+    async:
+      request-timeout: -1
+  session:
+    redis:
+      namespace: spring:session
+    timeout: 12h
+  datasource:
+    url: jdbc:postgresql://localhost:5432/LectorPortal
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimumIdle: 10
+      maximumPoolSize: 50
+      idleTimeout: 1200
+      connectionTimeout: 3000
+      leakDetectionThreshold: 10000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    #TODO Deletes everything when stopped change if needed
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: localhost
+      password:
+      port: 6379
+      username:
+server:
+  port: 8090
+escapedoom:
+  codecompiler:
+    code-compiler-topic: codeCompiler
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG

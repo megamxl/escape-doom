@@ -1,0 +1,124 @@
+version: '3.8'
+services:
+  gamesession:
+    networks:
+      - default-net
+    image: escapedoom-backend/gamesession:1
+    build:
+      context: .
+    container_name: gamesession
+    depends_on:
+        - db
+        - redis
+        - zookeeper
+        - broker
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/LectorPortal
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_KAFKA_BOOTSTRAP-SERVERS=broker:29092
+  lectorportal:
+    networks:
+      - default-net
+    image: escapedoom-backend/lectorportal:1
+    build:
+      context: .
+    container_name: lectorportal
+    depends_on:
+        - db
+        - redis
+        - zookeeper
+        - broker
+        - gamesession
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/LectorPortal
+      - GAMESESION_URL=http://gamesession:8090
+
+  website:
+    networks:
+      - default-net
+    image: escapedoom-frontend/website:1
+    build:
+      context: .
+    container_name: website
+    depends_on:
+        - db
+        - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/LectorPortal
+
+  redis:
+    networks:
+      - default-net
+    image: redis
+    container_name: redis
+    command: redis-server --save 60 1 --loglevel warning #save 1 or more writes every 20 seconds to disk
+    volumes:
+      - redis_data:/data #named volume, speichert Redis-Daten auf dem host system.
+
+  db:
+    networks:
+      - default-net
+    image: postgres
+    container_name: postgres
+#    restart: always #wenn docker container failed, wird restartet
+    environment:
+      POSTGRES_USER: myuser           #optional damit auch user+password vorhanden
+      POSTGRES_PASSWORD: mypassword   #required
+      POSTGRES_DB: LectorPortal       #optional fr default database
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  zookeeper:
+    networks:
+      - default-net
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    networks:
+      - default-net
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: broker
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  executor:
+    image: escapedoom-backend/executor:1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      default-net:
+
+  nginx:
+    networks:
+      - default-net
+    image: nginx
+    depends_on:
+      - db
+      - broker
+      - zookeeper
+      - lectorportal
+      - gamesession
+      - executor
+    ports:
+      - "80:80"
+
+volumes:
+  redis_data:
+    driver: local #the actual storage path is created by docker itself -> to create it on a local file system
+  db_data:
+    driver: local
+    
+networks:
+  default-net:
