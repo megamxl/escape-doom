@@ -6,6 +6,7 @@ import com.escapedoom.gamesession.data.response.JoinResponse;
 import com.escapedoom.gamesession.data.response.StageResponse;
 import com.escapedoom.gamesession.data.response.StatusReturn;
 import com.escapedoom.gamesession.repositories.*;
+import com.escapedoom.gamesession.services.util.NameGeneratorUtil;
 import com.escapedoom.gamesession.utils.CodeSniptes;
 import com.escapedoom.gamesession.utils.SseEmitterExtended;
 import com.escapedoom.gamesession.configuration.redis.KafkaConfigProperties;
@@ -58,51 +59,6 @@ public class PlayerStateManagementService {
 
     private boolean update = false;
 
-
-    private ArrayList<String> firstNames = new ArrayList<>() {{
-        add("Shadow");
-        add("Dark");
-        add("Crimson");
-        add("Blaze");
-        add("Frost");
-        add("Mystic");
-        add("Iron");
-        add("Silver");
-        add("Void");
-        add("Sky");
-        add("Moonlight");
-        add("Blood");
-        add("Night");
-        add("Ice");
-        add("Phoenix");
-        add("Ghost");
-        add("Dragon");
-    }};
-
-    private ArrayList<String> secondNames = new ArrayList<>() {{
-        add("Blade");
-        add("Night");
-        add("Viper");
-        add("Fire");
-        add("Fang");
-        add("Gaze");
-        add("Fist");
-        add("Storm");
-        add("Walker");
-        add("Watcher");
-        add("Assassin");
-        add("Moon");
-        add("Wing");
-        add("Slayer");
-        add("Queen");
-        add("Rider");
-        add("Bringer");
-        add("Reaper");
-        add("Slayer");
-    }};
-
-    private final Random random = new Random();
-
     public JoinResponse mangeStateBySessionID(String httpSessionID, Long escaperoomSession) {
 
         Optional<OpenLobbys> lobbyOpt = openLobbyRepository.findByLobbyId(escaperoomSession);
@@ -150,7 +106,7 @@ public class PlayerStateManagementService {
         } else {
             if (lobby != null) {
                 player = Player.builder()
-                        .name(getRandomName())
+                        .name(NameGeneratorUtil.generate())
                         .escampeRoom_room_id(lobby.getEscaperoom_escaperoom_id())
                         .httpSessionID(httpSessionID)
                         .escaperoomSession(escaperoomSession)
@@ -265,10 +221,6 @@ public class PlayerStateManagementService {
 
     public List<Player> getAllPlayersByEscapeRoomID(Long id) {
         return sessionManagementRepository.findAllByEscaperoomSession(id).orElseThrow();
-    }
-
-    private String getRandomName() {
-        return firstNames.get((random.nextInt(0, firstNames.size()))) + secondNames.get(random.nextInt(0, secondNames.size()));
     }
 
     public void informAboutStart(Long id) {
