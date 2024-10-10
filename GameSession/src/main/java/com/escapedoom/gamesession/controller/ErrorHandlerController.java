@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-public class Controller implements ErrorController {
+public class ErrorHandlerController implements ErrorController {
 
-    @RequestMapping("/error")
+    @RequestMapping(UrlConstants.ERROR_URL)
     public String handleError(HttpServletRequest request) {
 
         return request.getRequestURL().toString();
