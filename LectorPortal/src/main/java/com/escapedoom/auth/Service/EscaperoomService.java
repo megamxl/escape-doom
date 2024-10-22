@@ -41,8 +41,6 @@ public class EscaperoomService {
 
     private final EscaperoomRepository escaperoomRepository;
 
-    private final AuthenticationService authenticationService;
-
     private final UserRepository userRepository;
 
     private final LobbyRepository lobbyRepository;
