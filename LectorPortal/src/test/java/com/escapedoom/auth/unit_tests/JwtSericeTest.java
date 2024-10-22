@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -30,7 +31,7 @@ public class JwtSericeTest {
         String token = jwtService.generateToken(userDetails);
         String username = jwtService.extractUsername(token);
 
-        assertEquals("testUser", username);
+        assertThat(username).isEqualTo("testUser");
     }
 
     @Test
@@ -41,7 +42,7 @@ public class JwtSericeTest {
         String token = jwtService.generateToken(userDetails);
 
         assertNotNull(token);
-        assertTrue(jwtService.isTokenValid(token, userDetails));
+        assertThat(jwtService.isTokenValid(token, userDetails)).isTrue();
     }
 
     @Test
@@ -51,7 +52,7 @@ public class JwtSericeTest {
 
         String token = jwtService.generateToken(userDetails);
 
-        assertTrue(jwtService.isTokenValid(token, userDetails));
+        assertThat(jwtService.isTokenValid(token, userDetails)).isTrue();
     }
 
     @Test
@@ -65,7 +66,7 @@ public class JwtSericeTest {
         String token = jwtService.generateToken(claims, userDetails);
         String extractedClaims = jwtService.extractClaim(token, Claims::toString);
 
-        assertTrue(extractedClaims.contains("role=admin"));
+        assertThat(extractedClaims).contains("role=admin");
     }
 
 

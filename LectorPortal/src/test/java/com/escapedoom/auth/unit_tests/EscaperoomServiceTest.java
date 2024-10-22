@@ -1,10 +1,8 @@
 package com.escapedoom.auth.unit_tests;
 
 import com.escapedoom.auth.Service.EscaperoomService;
-import com.escapedoom.auth.data.dataclasses.models.escaperoom.ConsoleNodeCode;
 import com.escapedoom.auth.data.dataclasses.models.escaperoom.Escaperoom;
 import com.escapedoom.auth.data.dataclasses.models.escaperoom.OpenLobbys;
-import com.escapedoom.auth.data.dataclasses.models.escaperoom.nodes.EscapeRoomDto;
 import com.escapedoom.auth.data.dataclasses.models.user.Role;
 import com.escapedoom.auth.data.dataclasses.models.user.User;
 import com.escapedoom.auth.data.dataclasses.repositories.CodeRiddleRepository;
@@ -24,8 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -81,9 +78,9 @@ public class EscaperoomServiceTest {
 
         List<EscaperoomDTO> rooms = escaperoomService.getAllRoomsByAnUser();
 
-        assertNotNull(rooms);
-        assertEquals(1, rooms.size());
-        assertEquals("Test Room", rooms.get(0).getName());
+        assertThat(rooms).isNotNull();
+        assertThat(1).isEqualTo(rooms.size());
+        assertThat("Test Room").isEqualTo(rooms.get(0).getName());
     }
 
     @Test
@@ -103,8 +100,8 @@ public class EscaperoomServiceTest {
 
         String lobbyId = escaperoomService.openEscapeRoom(1L);
 
-        assertNotNull(lobbyId);
-        assertEquals("123", lobbyId); // Check that the returned ID is the one we set
+        assertThat(lobbyId).isNotNull();
+        assertThat("123").isEqualTo(lobbyId);// Check that the returned ID is the one we set
         verify(lobbyRepository, times(1)).save(any(OpenLobbys.class));
     }
 }
