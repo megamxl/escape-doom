@@ -55,6 +55,24 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
 - #### Frontend
 
+    - The system must be refactored to meet the [next.js standards](https://github.com/dwarvesf/nextjs-boilerplate/blob/master/docs/CODE_STYLE.md)
+    - The systems 3 most important features must be tested using E2E tests
+    - The system must prepare the code-structure to switch from SSE to WS
+ 
+    <br>
+
+    - The system should be modular enough that new features can be added without refactoring the whole code
+    - The system should improve the placement of InteractionNodes to handle page resizing
+  
+    <br>
+
+    - The system could utilize Next.js features to improve data fetching latency using Server Components
+    - The system could improve the integration of TanStack Query
+
+    <br>
+
+    - The system won't split the frontend into multiple packages this semester
+
 ### Microservices
 
 ### Evaluierung Neuer Technoliegen
