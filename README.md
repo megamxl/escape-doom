@@ -31,7 +31,15 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
 - #### Gamesession
 
+    - The module must include automated tests with at least 60% code coverage before refactoring.
+  
+    - The system must be refactored according to [Java and Maven multi-module](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module) / [Baelding](https://www.baeldung.com/maven-multi-module) standards.
+
 - #### LectorPortal
+
+    - The module must include automated tests with at least 60% code coverage before refactoring.
+
+    - The system must be refactored according to [Java and Maven multi-module](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module) / [Baelding](https://www.baeldung.com/maven-multi-module) standards.
 
 - #### CodeExecutor
 
@@ -73,18 +81,20 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
     - The system won't split the frontend into multiple packages this semester
 
-## Microservices
-- The system must be documented and planned according to the [c4 Standard](https://c4model.com/), with a focus on the 
-microservice section of this standard
-- The system must be planned technology wise to define which technology's will be used to implement the microservice architecture
-- The system should provide a planned deployment structure for kubernetes 
-- The services that our System relies on, such as PostgreSQL, Redis, Kafka and all others we document should be preemptively 
-deployed as Helm charts
-- The spring cloud ecosystem could be evaluated for the microservice transition the system is going to do
+- ## Microservices
 
-## Evaluierung Neuer Technoliegen
-- The system should be evaluated how parallel access by team members (two window tabs or access to the same room on two PCs)
-- The system should be evaluated to integrate an editor with multifiles (tabs multiple classes/interfaces), code completions for jdk functions)
-- The system should be evaluated to enable a student login to allow cross device session and state tracking
-- The system should be evaluated on how to provide a streamlined process for Escape room creation
-- The system should be evaluated  different ways to compile and run use code safely. Non-binding ideas (Wasm, Open-Source Serverless Function Framework, Docker, Podman?)
+    - The system must be documented and planned according to the [c4 Standard](https://c4model.com/), with a focus on the 
+      microservice section of this standard
+    - The system must be planned technology wise to define which technology's will be used to implement the microservice architecture
+    - The system should provide a planned deployment structure for kubernetes 
+    - The services that our System relies on, such as PostgreSQL, Redis, Kafka and all others we document should be preemptively 
+      deployed as Helm charts
+    - The spring cloud ecosystem could be evaluated for the microservice transition the system is going to do
+
+- ## Evaluierung Neuer Technoliegen
+
+    - The system should be evaluated how parallel access by team members (two window tabs or access to the same room on two PCs)
+    - The system should be evaluated to integrate an editor with multifiles (tabs multiple classes/interfaces), code completions for jdk functions)
+    - The system should be evaluated to enable a student login to allow cross device session and state tracking
+    - The system should be evaluated on how to provide a streamlined process for Escape room creation
+    - The system should be evaluated  different ways to compile and run use code safely. Non-binding ideas (Wasm, Open-Source Serverless Function Framework, Docker, Podman?)
