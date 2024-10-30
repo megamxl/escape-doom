@@ -47,7 +47,7 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
     - The system must realize the Kafka connection via a configuration which is loaded at runtime
 
-    - The system should have the modularity that the code executor engine is easily replaceable
+    - The system should have the modularity that the code executor engine is exchangable if a new implemntaion matches the interface
 
     - The system should have a test code coverage of 60 % over all files containing some kind of logic.
 
