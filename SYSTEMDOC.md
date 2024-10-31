@@ -51,7 +51,7 @@ Since the main goal of our group aside from building a usable product is to rest
   - Talk to leon to and evaluated feedback recursively
 
 #### Evaluate New Technologies:
-The escape room is a system that is planned to be combined with cutting-edge technology, as well as features that aren't known to be technically feasible in the time given. Therefore, there are technologies that need to be assessed and played around with before being able to decide if they are usable and feasible to implement in the next semester. For a technology to be considered a working prototype or a report, it has to be crafted.
+The escape room is a system that is planned to be combined with cutting-edge technology, as well as features that aren't known to be technically feasible in the time given. Therefore, there are technologies that need to be assessed and played around with before being able to decide if they are usable and feasible to implement in the next semester. For a technology to be considered as working a prototype or a report / presentation needs to be built.
 - Key Actions:
   - Explore, evaluate and select new technologies.
   - Provide a holistic overview of the future of our product 
@@ -166,7 +166,7 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 | NT-05 | The system could be evaluated for safe user code compilation and execution approaches. Non-binding ideas include using WASM, open-source serverless function frameworks, Docker, or Podman.                                                                                |           |                       |
 | NT-06 | The use of caching technologies, such as Redis, should be evaluated to improve access times for frequently accessed data.                                                                                                                                                  |           |                       |
 | NT-07 | The system could be evaluated for tracking key game events in the frontend, such as time on stages, necessary hint requests, and incorrect attempts, and sending them to the server for analytics (non-binding ideas: custom dashboards or tools like Grafana, ELK stack). |           |                       |
-| NT-08 | New technologies could be evaluated to enhance the placement of interaction nodes, supporting responsive resizing.                                                                                                                                                         |           |                       | 
+| NT-08 | New technologies could be evaluated to enhance the placement of interaction nodes in the frontend, supporting responsive resizing.                                                                                                                                         |           |                       | 
 
 - The escape room system is planned to incorporate cutting-edge technology, as well as features that may not be technically feasible within the given timeframe.
 - Therefore, certain technologies need to be assessed and experimented with before deciding if they are usable and feasible to implement in the next semester.
