@@ -1,100 +1,102 @@
+# Escape Doom
 
-# Requirements
+## Components
 
-## Introduction
+- CodeExecutor: Responsible for handling code submissions, compilation, and execution within the escape room environment.
+- GameSession: Manages game logic, user sessions, and communication with the CodeExecutor.
+- LectorPortal: provides endpoints and interface for lecturers to create, manage, and monitor escape room sessions.
+- Frontend: A React-based UI for students and lecturers, facilitating interaction with the game and its components.
 
-This document is there to define the current state as well as our new goals for turning the current distributed monolith into a clean microservice architecture ready to be deployed and used. To achieve this goal, a few milestones have to be reached.
+>TO DO: create and link dedicated README.md in each component
 
-### The great refactoring
-Since the architecture as well as the implementation lack standards and maintainability, it is crucial to take the current state of the project and transform it into a maintainable and readable state. For this task, each team member already has a part of the system to look through and define what has to be changed to get a maintainable code base.
+## Prerequisites
 
-### Microservices
-Since the main goal of our group aside from building an useable product is to restructure the current architecture to a true microservice architecture, we have to invest time into this restructuring. Therefore, the team has to learn how to really construct microservices and plan the execution for the next semester.
-
-
-### Evaluation of new technology
-The escape room is a system that is planned to be combined with cutting-edge technology, as well as features that aren't known to be technically feasible in the time given. Therefore, there are technologies that need to be assessed and played around with before being able to decide if they are usable and feasible to implement in the next semester. For a technology to be considered a working prototype or a report, it has to be crafted.
+...
 
 
-## Glosar
-- code executor engine = a module that takes at least a Java file and returns the computed result.
+## Set-Up
+
+- ...
+- Navigate to the EscapeDoom/docker folder.
+- Run the following command:
+`docker compose -f ./docker-compose-dev.yaml up`
+- Start the Game Session Spring application
+- Then, start the Lector Portal Spring application
+- Note: Start the Game Session before the Lector Portal, as both use ddl:create drop and share tables.
+- Set up and Start the Frontend:
+`npm install`
+`npm run dev`
+
+
+## Usage
+
+Lecturer:
+
+- Open the frontend in your browser at http://localhost:80/login (or the designated port if configured differently).
+- Use the default login credentials:
+- Email: leon@escapeddoom.com
+- Password: escapeDoom
+
+Note: Ensure that the Game Session service is running before launching sessions.
+
+Students:
+- Students can join an active escape room session using a session code provided by the lecturer.
+Within the game, students solve riddles and submit code through the integrated editor.
+The CodeExecutor processes submissions and returns results in real-time for students.
+
+...
+
+## Configuration
+
+
+Backend: application.yml or .env files for environment variables.
+
+Docker: docker-compose-deploy.yaml
+
+Frontend:  package.json or tsconfig.json
+
+### Code Executor
+
+...
+
+### Game Session
+
+| Category               | Setting                         | Value                                                |
+|------------------------|---------------------------------|------------------------------------------------------|
+| **Base URLs**          | VITE_LECTOR_BASE_URL            | `http://localhost:8080/api/v1`                       |
+|                        | VITE_GAME_BASE_URL              | `http://localhost:8090/api`                          |
+| **Spring Kafka**       | Bootstrap Servers               | `localhost:9092`                                     |
+|                        | Consumer Group ID               | `computedCode`                                       |
+|                        | Code Compiler Topic              | `codeCompiler` (Kafka topic for code execution)      |
+| **Spring MVC**         | Asynchronous Request Timeout    | No timeout (`-1`)                                    |
+| **Spring Session**     | Session Store                   | Redis (`spring:session` namespace)                   |
+|                        | Session Timeout                 | `12 hours`                                           |
+| **Data Source**        | Database URL                    | `jdbc:postgresql://localhost:5433/LectorPortal`      |
+| (PostgreSQL)           | Username                        | `myuser`                                             |
+|                        | Password                        | `mypassword`                                         |
+| **Connection Pooling** | Minimum Idle Connections        | `10`                                                 |
+| (HikariCP)             | Maximum Pool Size               | `50`                                                 |
+|                        | Idle Timeout                    | `1200ms`                                             |
+|                        | Connection Timeout              | `3000ms`                                             |
+| **JPA and Hibernate**  | DDL-Auto                        | `validate` (validates schema without altering)       |
+|                        | Show SQL                        | Enabled (`true`)                                     |
+|                        | Dialect                         | PostgreSQL (`PostgreSQLDialect`)                     |
+| **Redis Data Store**   | Host                            | `localhost`                                          |
+|                        | Port                            | `6379`                                               |
+| **Server**             | Port                            | `8090`                                               |
+
+### Lector Portal
+
+...
 
 
 
-## Systembeschreibung
+## Deployment
 
-## Erledigte Anforderung
+Either build all Dockerfiles manually and execute the compose deployment.
+...
 
-## Geplante Anforderungen (1. Sem.)
+## Contributing
 
-### Refactoring
-
-- #### Gamesession
-
-    - The module must include automated tests with at least 60% code coverage before refactoring.
-  
-    - The system must be refactored according to [Java and Maven multi-module](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module) / [Baelding](https://www.baeldung.com/maven-multi-module) standards.
-
-- #### LectorPortal
-
-    - The module must include automated tests with at least 60% code coverage before refactoring.
-
-    - The system must be refactored according to [Java and Maven multi-module](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module) / [Baelding](https://www.baeldung.com/maven-multi-module) standards.
-
-- #### CodeExecutor
-
-    - The system must be refactored according to the [go standard](https://github.com/golang-standards/project-layout)
-
-    - The system must realize the Kafka connection via a configuration which is loaded at runtime
-
-    - The system should have the modularity that the code executor engine is exchangable if a new implemntaion matches the interface
-
-    - The system should have a test code coverage of 60 % over all files containing some kind of logic.
-
-    - The system could provide the ability to configure the used code executor engine with the same configuration as the Kafka properties
-
-    <br>
-
-    - The system won't introduce a new code executor engine
-
-    - The system won't change the current behavior
-
-    - The system won't provide multi-file execution behavior
-
-- #### Frontend
-
-    - The system must be refactored to meet the [next.js standards](https://github.com/dwarvesf/nextjs-boilerplate/blob/master/docs/CODE_STYLE.md)
-    - The systems 3 most important features must be tested using E2E tests
-    - The system must prepare the code-structure to switch from SSE to WS
- 
-    <br>
-
-    - The system should be modular enough that new features can be added without refactoring the whole code
-    - The system should improve the placement of InteractionNodes to handle page resizing
-  
-    <br>
-
-    - The system could utilize Next.js features to improve data fetching latency using Server Components
-    - The system could improve the integration of TanStack Query
-
-    <br>
-
-    - The system won't split the frontend into multiple packages this semester
-
-- ## Microservices
-
-    - The system must be documented and planned according to the [c4 Standard](https://c4model.com/), with a focus on the 
-      microservice section of this standard
-    - The system must be planned technology wise to define which technology's will be used to implement the microservice architecture
-    - The system should provide a planned deployment structure for kubernetes 
-    - The services that our System relies on, such as PostgreSQL, Redis, Kafka and all others we document should be preemptively 
-      deployed as Helm charts
-    - The spring cloud ecosystem could be evaluated for the microservice transition the system is going to do
-
-- ## Evaluierung Neuer Technoliegen
-
-    - The system should be evaluated how parallel access by team members (two window tabs or access to the same room on two PCs)
-    - The system should be evaluated to integrate an editor with multifiles (tabs multiple classes/interfaces), code completions for jdk functions)
-    - The system should be evaluated to enable a student login to allow cross device session and state tracking
-    - The system should be evaluated on how to provide a streamlined process for Escape room creation
-    - The system should be evaluated  different ways to compile and run use code safely. Non-binding ideas (Wasm, Open-Source Serverless Function Framework, Docker, Podman?)
+Rules
+...
