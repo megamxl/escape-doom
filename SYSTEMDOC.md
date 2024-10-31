@@ -3,7 +3,7 @@
 ---
 
 - [System Description](#system-description)
-- [Projected Overhaul](#planned-overhaul)
+- [Projected Overhaul](#projected-overhaul)
 - [Glossary](#glossary)
 - [Requirements Refactoring](#requirements-refactoring)
   - [GameSession](#gamesession)
@@ -11,7 +11,7 @@
   - [CodeExecutor](#codeexecutor)
   - [Frontend](#frontend)
 - [Requirements Microservices](#requirements-microservices)
-- [Requirements Evaluation of New Technologies](#evaluation-of-new-technologies)
+- [Requirements Evaluation of New Technologies](#requirements-evaluation-of-new-technologies)
 
 ---
 
