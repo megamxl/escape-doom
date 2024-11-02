@@ -54,6 +54,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
+  executor:
+    image: executor
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
   redis_data:
     driver: local #the actual storage path is created by docker itself -> to create it on a local file system

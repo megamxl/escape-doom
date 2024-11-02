@@ -8,18 +8,29 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GameSession" />
+        <module name="lector-portal-web" />
+        <module name="lector-portal-shared" />
+        <module name="lector-portal-rest" />
         <module name="LectorPortalBackend" />
         <module name="lector-portal-dataaccess" />
-        <module name="LectorPortal" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="gamesession-dataaccess" target="17" />
+      <module name="gamesession-rest" target="17" />
+      <module name="LectorPortal (1)" target="17" />
+      <module name="LectorPortal (2)" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="GameSession" options="-parameters" />
-      <module name="LectorPortal" options="-parameters" />
+      <module name="LectorPortal" options="" />
       <module name="LectorPortalBackend" options="-parameters" />
       <module name="lector-portal-dataaccess" options="-parameters" />
+      <module name="lector-portal-rest" options="-parameters" />
+      <module name="lector-portal-shared" options="-parameters" />
+      <module name="lector-portal-web" options="-parameters" />
     </option>
   </component>
 </project>

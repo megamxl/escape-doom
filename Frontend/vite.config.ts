@@ -9,7 +9,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd())
 
   return {
-    // vite config
+    // vite lector.portal.dataaccess.config
     plugins: [react()],
     define: {
       __APP_ENV__: env.APP_ENV,
