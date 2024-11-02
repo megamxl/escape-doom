@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CodeExecutor/CodeExecutor.iml" filepath="$PROJECT_DIR$/CodeExecutor/CodeExecutor.iml" />
       <module fileurl="file://$PROJECT_DIR$/Frontend/Frontend.iml" filepath="$PROJECT_DIR$/Frontend/Frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GameSession/GameSession.iml" filepath="$PROJECT_DIR$/GameSession/GameSession.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/escape-doom.iml" filepath="$PROJECT_DIR$/.idea/escape-doom.iml" />
     </modules>
   </component>
