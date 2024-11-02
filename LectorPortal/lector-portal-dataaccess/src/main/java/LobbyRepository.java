@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static query.LobbyNativeQueries.FIND_ALL_BY_STATE_PLAYING;
+import static query.LobbyNativeQueries.FIND_BY_ESCAPEROOM_AND_USER_AND_STATE_STOPPED_NOT;
+
 @Repository
 public interface LobbyRepository extends JpaRepository<OpenLobbys, Long> {
 
@@ -17,15 +20,9 @@ public interface LobbyRepository extends JpaRepository<OpenLobbys, Long> {
 
     Optional<List<OpenLobbys>> findByEscaperoomAndUser(Escaperoom escaperoom, User user);
 
-    @Query(value = "FROM OpenLobbys os where os.state = 'PLAYING'")
+    @Query(value = FIND_ALL_BY_STATE_PLAYING)
     Optional<List<OpenLobbys>> findAllByStatePlaying();
 
-
-    @Query(value = "select * " +
-            "from open_lobbys op " +
-            "where op.state not like 'STOPPED' " +
-            "and op.escaperoom_escaperoom_id = ?1 ", nativeQuery = true)
-
+    @Query(value = FIND_BY_ESCAPEROOM_AND_USER_AND_STATE_STOPPED_NOT, nativeQuery = true)
     Optional<OpenLobbys> findByEscaperoomAndUserAndStateStoppedNot(Long escaperoomID, User user);
-
 }
