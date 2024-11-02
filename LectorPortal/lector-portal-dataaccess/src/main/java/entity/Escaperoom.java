@@ -1,6 +1,5 @@
 package entity;
 
-import com.escapedoom.auth.data.dataclasses.models.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

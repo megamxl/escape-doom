@@ -1,11 +1,11 @@
 package entity;
 
-import com.escapedoom.auth.data.dataclasses.models.escaperoom.CodingLanguage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.CodingLanguage;
 
 @Data
 @AllArgsConstructor

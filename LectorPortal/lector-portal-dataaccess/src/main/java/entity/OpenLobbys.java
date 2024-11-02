@@ -2,7 +2,7 @@ package entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import types.EscapeRoomState;
+import model.EscapeRoomState;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package types;
+package model;
 
 public enum EscapeRoomState {
 

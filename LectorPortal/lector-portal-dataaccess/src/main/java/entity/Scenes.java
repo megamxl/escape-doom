@@ -1,10 +1,10 @@
 package entity;
 
-import com.escapedoom.auth.data.dataclasses.models.escaperoom.nodes.Node;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.Node;
 
 import java.util.List;
 
