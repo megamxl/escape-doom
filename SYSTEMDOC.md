@@ -85,7 +85,7 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
 | ID    | Requirement                                                                                                                                                      | Fulfilled | Responsible Developer |
 |-------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
-|       | Must                                                                                                                                                             |           | @Jaquie               |
+|       | Must                                                                                                                                                             |           |                       |
 | GS-01 | PlayerStateManagementService must be split into smaller, specialized Java classes (such as LobbyService and possibly CodeCompilingService).                      |           | @Jaquie @Mark         |
 | GS-02 | The system must transition from using an in-memory sseEmitters list to WebSockets for real-time bidirectional communication.                                     |           | @Jaquie               |
 | GS-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           | @Mark                 |
@@ -102,23 +102,23 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 |       | Must                                                                                                                                                             |           |                       |
 | LP-01 | The module must include automated tests with at least 60% code coverage.                                                                                         |           | @Mark                 |
 | LP-02 | The system must be refactored according to [Java and Maven multi-module standards](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module). |           | @Mark                 | 
-| GS-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           | @Jaquie               |
-| GS-04 | User-facing error messages must be descriptive, enabling users to understand and respond to errors effectively.                                                  |           | @Anas                 |
+| LP-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           | @Jaquie               |
+| LP-04 | User-facing error messages must be descriptive, enabling users to understand and respond to errors effectively.                                                  |           | @Anas                 |
 |       | Should                                                                                                                                                           |           |                       |
-| GS-05 | Error messages should be categorized at appropriate levels (info, warning, error).                                                                               |           | @Jacquie              |
+| LP-05 | Error messages should be categorized at appropriate levels (info, warning, error).                                                                               |           | @Jacquie              |
 
 ### CodeExecutor
 
 | ID    | Requirement                                                                                                                                  | Fulfilled | Responsible Developer |
 |-------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
 |       | Must                                                                                                                                         |           |                       |
-| CE-01 | The system must be refactored according to the [Go project layout standard](https://github.com/golang-standards/project-layout).             |           |                       |
-| CE-02 | The system must establish the Kafka connection through a runtime-loaded configuration.                                                       |           |                       |
-| CE-03 | The system should be modular enough to allow the code executor engine to be replaceable, if the new implementation adheres to the interface. |           |                       |
+| CE-01 | The system must be refactored according to the [Go project layout standard](https://github.com/golang-standards/project-layout).             |           | @Maxl                 |
+| CE-02 | The system must establish the Kafka connection through a runtime-loaded configuration.                                                       |           | @Maxl                 |
+| CE-03 | The system should be modular enough to allow the code executor engine to be replaceable, if the new implementation adheres to the interface. |           | @Maxl                 |
 |       | Should                                                                                                                                       |           |                       |
-| CE-04 | The system should have a test coverage of at least 60% across all logic-containing files.                                                    |           |                       |
+| CE-04 | The system should have a test coverage of at least 60% across all logic-containing files.                                                    |           | @Maxl @Thommy         |
 |       | Could                                                                                                                                        |           |                       |
-| CE-05 | The system could allow configuration of the code executor engine using the same properties configuration as Kafka.                           |           |                       |
+| CE-05 | The system could allow configuration of the code executor engine using the same properties configuration as Kafka.                           |           | @Anas                 |
 |       | Wont                                                                                                                                         |           |                       |
 | CE-06 | The system won't introduce a new code executor engine.                                                                                       |           |                       |
 | CE-07 | The system won't provide multi-file execution behavior.                                                                                      |           |                       |
@@ -134,7 +134,7 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 | FE-04 | The system must prepare the code structure to support a transition from SSE (Server-Sent Events) to WebSockets (WS).                           |           | @Jaquie               |
 |       | Should                                                                                                                                         |           |                       |
 | FE-05 | The system source code should be structured that all files for the lector portal frontend are in one folder.                                   |           | @Anas                 |
-|       | Could                                                                                                                                          |           | K                     |
+|       | Could                                                                                                                                          |           |                       |
 | FE-06 | The system could leverage Next.js features to improve data fetching latency via Server Components.                                             |           | @Thommy               |
 | FE-07 | The system could enhance integration with TanStack Query.                                                                                      |           | @Anas                 |
 |       | Won't                                                                                                                                          |           |                       |
