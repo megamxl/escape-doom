@@ -85,27 +85,27 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
 | ID    | Requirement                                                                                                                                                      | Fulfilled | Responsible Developer |
 |-------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
+|       | Must                                                                                                                                                             |           | @Jaquie               |
+| GS-01 | PlayerStateManagementService must be split into smaller, specialized Java classes (such as LobbyService and possibly CodeCompilingService).                      |           | @Jaquie @Mark         |
+| GS-02 | The system must transition from using an in-memory sseEmitters list to WebSockets for real-time bidirectional communication.                                     |           | @Jaquie               |
+| GS-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           | @Mark                 |
+| GS-04 | The module must include automated tests with at least 60% code coverage.                                                                                         |           | @Mark                 |
+| GS-05 | The system must be refactored according to [Java and Maven multi-module standards](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module). |           | @Mark                 |
+| GS-06 | User-facing error messages must be descriptive, enabling users to understand and respond to errors effectively.                                                  |           | @Anas                 |
 |       | Should                                                                                                                                                           |           |                       |
-| GS-01 | PlayerStateManagementService must be split into smaller, specialized Java classes (such as LobbyService and possibly CodeCompilingService).                      |           |                       |
-| GS-02 | The system must transition from using an in-memory sseEmitters list to WebSockets for real-time bidirectional communication.                                     |           |                       |
-| GS-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           |                       |
-| GS-04 | The module must include automated tests with at least 60% code coverage.                                                                                         |           |                       |
-| GS-05 | The system must be refactored according to [Java and Maven multi-module standards](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module). |           |                       |
-| GS-06 | User-facing error messages must be descriptive, enabling users to understand and respond to errors effectively.                                                  |           |                       |
-|       | Should                                                                                                                                                           |           |                       |
-| GS-07 | Error messages should be categorized at appropriate levels (info, warning, error).                                                                               |           |                       |
+| GS-07 | Error messages should be categorized at appropriate levels (info, warning, error).                                                                               |           | @Jacquie              |
 
 ### LectorPortal
 
 | ID    | Requirement                                                                                                                                                      | Fulfilled | Responsible Developer |
 |-------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
 |       | Must                                                                                                                                                             |           |                       |
-| LP-01 | The module must include automated tests with at least 60% code coverage.                                                                                         |           |                       |
-| LP-02 | The system must be refactored according to [Java and Maven multi-module standards](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module). |           |                       |
-| GS-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           |                       |
-| GS-04 | User-facing error messages must be descriptive, enabling users to understand and respond to errors effectively.                                                  |           |                       |
+| LP-01 | The module must include automated tests with at least 60% code coverage.                                                                                         |           | @Mark                 |
+| LP-02 | The system must be refactored according to [Java and Maven multi-module standards](https://vaadin.com/docs/latest/building-apps/project-structure/multi-module). |           | @Mark                 | 
+| GS-03 | All runtime errors must be logged and handled with structured error management throughout the system to address both expected and unexpected issues.             |           | @Jaquie               |
+| GS-04 | User-facing error messages must be descriptive, enabling users to understand and respond to errors effectively.                                                  |           | @Anas                 |
 |       | Should                                                                                                                                                           |           |                       |
-| GS-05 | Error messages should be categorized at appropriate levels (info, warning, error).                                                                               |           |                       |
+| GS-05 | Error messages should be categorized at appropriate levels (info, warning, error).                                                                               |           | @Jacquie              |
 
 ### CodeExecutor
 
@@ -128,15 +128,15 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 | ID    | Requirement                                                                                                                                    | Fulfilled | Responsible Developer |
 |-------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
 |       | Must                                                                                                                                           |           |                       |
-| FE-01 | The system must be refactored to adhere to [Next.js standards](https://github.com/dwarvesf/nextjs-boilerplate/blob/master/docs/CODE_STYLE.md). |           |                       |
-| FE-02 | The system must be migrated from pure React to Next.js?                                                                                        |           |                       |
-| FE-03 | The system must provide end-to-end (E2E) testing solution.                                                                                     |           |                       |
-| FE-04 | The system must prepare the code structure to support a transition from SSE (Server-Sent Events) to WebSockets (WS).                           |           |                       |
+| FE-01 | The system must be refactored to adhere to [Next.js standards](https://github.com/dwarvesf/nextjs-boilerplate/blob/master/docs/CODE_STYLE.md). |           | @Thommy               |
+| FE-02 | The system must be migrated from pure React to Next.js?             K                                                                          |           | @Thommy               |
+| FE-03 | The system must provide end-to-end (E2E) testing solution.                                                                                     |           | @Thommy               |
+| FE-04 | The system must prepare the code structure to support a transition from SSE (Server-Sent Events) to WebSockets (WS).                           |           | @Jaquie               |
 |       | Should                                                                                                                                         |           |                       |
-| FE-05 | The system source code should be structured that all files for the lector portal frontend are in one folder.                                   |           |                       |
-|       | Could                                                                                                                                          |           |                       |
-| FE-06 | The system could leverage Next.js features to improve data fetching latency via Server Components.                                             |           |                       |
-| FE-07 | The system could enhance integration with TanStack Query.                                                                                      |           |                       |
+| FE-05 | The system source code should be structured that all files for the lector portal frontend are in one folder.                                   |           | @Anas                 |
+|       | Could                                                                                                                                          |           | K                     |
+| FE-06 | The system could leverage Next.js features to improve data fetching latency via Server Components.                                             |           | @Thommy               |
+| FE-07 | The system could enhance integration with TanStack Query.                                                                                      |           | @Anas                 |
 |       | Won't                                                                                                                                          |           |                       |
 | FE-08 | The system won't split the frontend into multiple packages this semester.                                                                      |           |                       |
 
