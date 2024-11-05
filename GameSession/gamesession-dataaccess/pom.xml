@@ -12,6 +12,8 @@
     <groupId>org.example</groupId>
     <artifactId>gamesession-dataaccess</artifactId>
 
+    <packaging>pom</packaging>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

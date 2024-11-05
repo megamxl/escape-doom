@@ -7,7 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gamesession-dataaccess" />
         <module name="LectorPortalBackend" />
         <module name="gamesession-rest" />
         <module name="LectorPortal" />
@@ -25,7 +24,7 @@
       <module name="GameSession" options="" />
       <module name="LectorPortal" options="-parameters" />
       <module name="LectorPortalBackend" options="-parameters" />
-      <module name="gamesession-dataaccess" options="-parameters" />
+      <module name="gamesession-dataaccess" options="" />
       <module name="gamesession-rest" options="-parameters" />
     </option>
   </component>
