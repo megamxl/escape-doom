@@ -1,8 +1,6 @@
 package com.escapedoom.auth;
 
-import com.escapedoom.auth.Service.AuthenticationService;
 import com.escapedoom.auth.Service.EscaperoomService;
-import com.escapedoom.auth.data.dataclasses.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +12,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class LectorPortalBackend {
+public class LectorPortalBackend implements CommandLineRunner {
 
-    public static void main(String[] args) {
+    @Autowired
+    EscaperoomService escaperoomService;
+
+    public static void main(String[] args)
+    {
         SpringApplication.run(LectorPortalBackend.class, args);
     }
 
@@ -27,4 +29,8 @@ public class LectorPortalBackend {
         return objectMapper;
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+//        escaperoomService.createADummyRoom();
+    }
 }
