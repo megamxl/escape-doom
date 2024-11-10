@@ -1,6 +1,14 @@
+export const LECTOR_PORTAL_API_PATHS = {
+    BASE_URL: 'http://localhost:8080/api/v1',
+    LECTOR_PORTAL_BASE: function() { return `${this.BASE_URL}/portal-escape-room` },
+    OPEN_ROOM: function() { return `${this.LECTOR_PORTAL_BASE}/openEscapeRoom` },
+    START_ROOM: function() { return `${this.LECTOR_PORTAL_BASE}/startEscapeRoom` },
+    STOP_ROOM: function() { return `${this.LECTOR_PORTAL_BASE}/stopEscapeRoom` }
+} as const;
+
 /**
  *
  */
-export const PATHS = {
+export const APP_PATHS = {
     STUDENT_JOIN: "/game-session/student-join"
 } as const;

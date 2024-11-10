@@ -1,10 +1,92 @@
-import React from 'react';
+'use client'
+
+import React, {ChangeEvent, FormEvent, useState} from 'react';
+import {Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography} from "@mui/material";
+import {LockOutlined} from "@mui/icons-material";
+
+type LoginCreds = {
+    email: string,
+    password: string
+}
 
 const Login = () => {
-    return (
-        <div>
 
-        </div>
+    const [open, setOpen] = useState(false)
+    const [loginData, setLoginData] = useState<LoginCreds>({email: "", password: ""})
+
+    async function login (e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        // TODO: Make login call with TanStack
+    }
+
+    const handleClose = () => setOpen(false)
+
+    const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
+        setLoginData({...loginData, password: e.target.value});
+    };
+
+    const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
+        setLoginData({...loginData, email: e.target.value})
+    };
+
+    return (
+        <>
+            <Container maxWidth="xs">
+                <Box
+                    sx={{
+                        mt: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Avatar sx={{m: 1}}>
+                        <LockOutlined/>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Log In!
+                    </Typography>
+                    <Box component="form" onSubmit={login} noValidate mt={1}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            onChange={onChangeEmail}
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            onChange={onChangePassword}
+                            autoComplete="current-password"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant={"contained"}
+                            sx={{mt: 3, mb: 2}}
+                        >
+                            Log In
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error" sx={{width: '100%'}}>
+                    Logging in didn't work! Make sure you use the correct credentials
+                </Alert>
+            </Snackbar>
+
+        </>
     );
 };
 
