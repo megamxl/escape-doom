@@ -7,6 +7,9 @@
         <option value="$PROJECT_DIR$/GameSession/pom.xml" />
         <option value="$PROJECT_DIR$/LectorPotral/pom.xml" />
         <option value="$PROJECT_DIR$/LectorPortal/pom.xml" />
+        <option value="$PROJECT_DIR$/GameSession/gamesession-dataaccess/pom.xml" />
+        <option value="$PROJECT_DIR$/GameSession/gamesession-web/pom.xml" />
+        <option value="$PROJECT_DIR$/GameSession/gamesession-rest/pom.xml" />
       </list>
     </option>
   </component>

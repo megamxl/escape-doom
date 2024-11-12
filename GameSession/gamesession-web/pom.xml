@@ -12,7 +12,7 @@
     </parent>
 
     <!-- Module Information -->
-    <artifactId>gamesession-dataaccess</artifactId>
+    <artifactId>gamesession-web</artifactId>
     <packaging>pom</packaging>
 
 </project>
