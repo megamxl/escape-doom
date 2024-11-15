@@ -12,3 +12,8 @@ export const LECTOR_PORTAL_API_PATHS = {
 export const APP_PATHS = {
     STUDENT_JOIN: "/game-session/student-join"
 } as const;
+
+export const BASE_URLS = {
+    VITE_LECTOR_BASE_URL: "http://localhost:8080/api/v1",
+    VITE_GAME_BASE_URL: "http://localhost:8090/api"
+} as const;
