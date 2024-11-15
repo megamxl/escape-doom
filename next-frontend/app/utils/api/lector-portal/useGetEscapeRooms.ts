@@ -18,4 +18,4 @@ const useChangeRoomState = (state: RoomState, id: number, time?: number) => {
     );
 }
 
-export {useGetEscapeRooms}
+export {useGetEscapeRooms, useChangeRoomState}

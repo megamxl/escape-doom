@@ -4,12 +4,22 @@ import React, {useEffect, useState} from 'react';
 import {Box, Divider, Grid2, Stack, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
 import RoomCard, {RoomState} from "@/app/lector-portal/dashboard/_components/RoomCard";
-import {useGetEscapeRooms} from "@/app/utils/api/useGetEscapeRooms";
+import {useGetEscapeRooms} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
 import RoomCardSkeleton from "@/app/lector-portal/dashboard/_components/RoomCardSkeleton";
+import {redirect} from "next/navigation";
+import {useToken} from "@/app/utils/token-handler";
 
 const LectorPortalDashboard = () => {
 
-    const {data, isPending, isError} = useGetEscapeRooms()
+    const [token, _] = useToken()
+    const {data, isPending, isError, error} = useGetEscapeRooms()
+
+    useEffect(() => {
+        // @ts-ignore
+        if (error?.status === 403 && !isPending && token != null) {
+            redirect("/lector-portal/login")
+        }
+    }, [isError]);
 
     return (
         <>

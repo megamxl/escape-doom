@@ -10,7 +10,8 @@ export const LECTOR_PORTAL_API_PATHS = {
  *
  */
 export const APP_PATHS = {
-    STUDENT_JOIN: "/game-session/student-join"
+    STUDENT_JOIN: "/game-session/student-join",
+    LECTOR_DASHBOARD: "/lector-portal/dashboard"
 } as const;
 
 export const BASE_URLS = {

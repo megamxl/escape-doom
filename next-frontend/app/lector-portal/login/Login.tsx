@@ -3,20 +3,30 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography} from "@mui/material";
 import {LockOutlined} from "@mui/icons-material";
-
-type LoginCreds = {
-    email: string,
-    password: string
-}
+import {useToken} from "@/app/utils/token-handler";
+import {AuthCreds} from "@/app/api/lectorPortal/login";
+import useAuthentication from "@/app/utils/api/login/useAuthentication";
+import {redirect, RedirectType} from "next/navigation";
+import {APP_PATHS} from "@/app/constants/paths";
 
 const Login = () => {
 
     const [open, setOpen] = useState(false)
-    const [loginData, setLoginData] = useState<LoginCreds>({email: "", password: ""})
+    const [loginData, setLoginData] = useState<AuthCreds>({email: "", password: ""})
+    const [_, setToken] = useToken()
+
+    const {refetch} = useAuthentication(loginData)
 
     async function login (e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        // TODO: Make login call with TanStack
+        const refetchResponse = await refetch();
+        if (!refetchResponse.isError) {
+            // @ts-ignore
+            setToken(refetchResponse.data?.token)
+            redirect(APP_PATHS.LECTOR_DASHBOARD, RedirectType.push)
+        } else {
+            setOpen(true)
+        }
     }
 
     const handleClose = () => setOpen(false)

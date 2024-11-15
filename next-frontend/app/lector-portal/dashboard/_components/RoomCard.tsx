@@ -19,6 +19,7 @@ import {
 import {AccessTime, Circle, Close, OpenInBrowser, PlayArrow} from "@mui/icons-material";
 import axios from "axios";
 import {LECTOR_PORTAL_API_PATHS} from "@/app/constants/paths";
+import {useChangeRoomState} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
 
 type RoomCardCreationProps = {
     name: string,
@@ -54,6 +55,7 @@ const RoomCard = ({name, topic, imgUrl, time, escapeRoomState}: RoomCardCreation
 
     const changeRoomState = async (newState: RoomState) => {
         let callURL: string;
+
         switch (newState) {
             case RoomState.JOINABLE:
                 callURL = `${LECTOR_PORTAL_API_PATHS.OPEN_ROOM()}/${roomInfo.ID}`;
