@@ -17,8 +17,8 @@ import {
     Typography
 } from "@mui/material";
 import {AccessTime, Circle, Close, OpenInBrowser, PlayArrow} from "@mui/icons-material";
-import {LECTOR_PORTAL_API_PATHS} from "@/app/constants/paths";
 import axios from "axios";
+import {LECTOR_PORTAL_API_PATHS} from "@/app/constants/paths";
 
 type RoomCardCreationProps = {
     name: string,
@@ -35,6 +35,7 @@ type RoomCardState = {
 }
 
 export enum RoomState {
+    IDLE = '#999',
     STOPPED = '#ff0000',
     JOINABLE = '#ffff00',
     PLAYING = '#00ff00'
@@ -43,10 +44,11 @@ export enum RoomState {
 const RoomCard = ({name, topic, imgUrl, time, escapeRoomState}: RoomCardCreationProps) => {
 
     const [roomInfo, setRoomInfo] = useState<RoomCardState>({
-        Status: escapeRoomState,
+        Status: RoomState.IDLE,
         ID: 0,
         Time: time
     })
+
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const handleClose = () => setSnackbarOpen(false)
 

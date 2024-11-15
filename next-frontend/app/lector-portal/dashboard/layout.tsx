@@ -25,7 +25,7 @@ const TopAppBar = ({children}: Readonly<{ children: React.ReactNode;}>) => {
                         <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                             Escape Doom
                         </Typography>
-                        <Button color="inherit">Login</Button>
+                        <Button color="inherit">Login</Button> {/*TODO: Make login work?*/}
                     </Toolbar>
                 </AppBar>
             </Box>
