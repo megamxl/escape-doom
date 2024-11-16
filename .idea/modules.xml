@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/CodeExecutor/CodeExecutor.iml" filepath="$PROJECT_DIR$/CodeExecutor/CodeExecutor.iml" />
       <module fileurl="file://$PROJECT_DIR$/Frontend/Frontend.iml" filepath="$PROJECT_DIR$/Frontend/Frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/escape-doom.iml" filepath="$PROJECT_DIR$/.idea/escape-doom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/next-frontend/next-frontend.iml" filepath="$PROJECT_DIR$/next-frontend/next-frontend.iml" />
     </modules>
   </component>
 </project>

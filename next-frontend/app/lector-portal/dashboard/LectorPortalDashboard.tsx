@@ -16,7 +16,7 @@ const LectorPortalDashboard = () => {
 
     useEffect(() => {
         // @ts-ignore
-        if (error?.status === 403 && !isPending && token != null) {
+        if (error?.status === 403 && !isPending) {
             redirect("/lector-portal/login")
         }
     }, [isError]);

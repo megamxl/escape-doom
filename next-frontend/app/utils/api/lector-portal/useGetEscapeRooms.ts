@@ -5,7 +5,8 @@ import {RoomState} from "@/app/lector-portal/dashboard/_components/RoomCard";
 const useGetEscapeRooms = () => {
     return useQuery({
             queryKey: ["lectorPortal"],
-            queryFn: () => getAllRooms()
+            queryFn: () => getAllRooms(),
+            retry: false
         }
     );
 }
