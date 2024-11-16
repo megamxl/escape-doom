@@ -34,6 +34,24 @@
 
     <dependencies>
 
+        <!-- Intern -->
+        <dependency>
+            <groupId>com.escapedoom</groupId>
+            <artifactId>lector-portal-shared</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Util -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -59,22 +77,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.escapedoom</groupId>
-            <artifactId>lector-portal-shared</artifactId>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

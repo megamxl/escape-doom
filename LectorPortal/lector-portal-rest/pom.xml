@@ -7,6 +7,7 @@
     <parent>
         <groupId>com.escapedoom</groupId>
         <artifactId>LectorPortal</artifactId>
+        <version>0.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -17,10 +18,12 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jjwt-version>0.11.5</jjwt-version>
     </properties>
 
     <dependencies>
 
+        <!-- Intern -->
         <dependency>
             <groupId>com.escapedoom</groupId>
             <artifactId>lector-portal-shared</artifactId>
@@ -31,9 +34,28 @@
             <artifactId>lector-portal-dataaccess</artifactId>
         </dependency>
 
+        <!-- Utils -->
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
     </dependencies>
