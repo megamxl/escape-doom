@@ -1,0 +1,9 @@
+import {useQuery} from "@tanstack/react-query";
+import {getLeaderboard} from "@/app/api/lectorPortal/leaderboards";
+
+export const useGetLeaderboard = (lobbyId: number) => {
+    return useQuery({
+        queryKey: ['leaderboard'],
+        queryFn: () => getLeaderboard(lobbyId)
+    })
+}

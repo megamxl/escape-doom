@@ -2,7 +2,7 @@ import {useMutation, useQuery} from "@tanstack/react-query";
 import {changeRoomState, getAllRooms} from "@/app/api/lectorPortal/portal";
 import {RoomState} from "@/app/lector-portal/dashboard/_components/RoomCard";
 
-const useGetEscapeRooms = () => {
+export const useGetEscapeRooms = () => {
     return useQuery({
             queryKey: ["lectorPortal"],
             queryFn: () => getAllRooms(),
@@ -11,11 +11,9 @@ const useGetEscapeRooms = () => {
     );
 }
 
-const useChangeRoomState = (state: RoomState, id: number, time?: number) => {
+export const useChangeRoomState = (state: RoomState, id: number, time?: number) => {
     return useMutation({
             mutationFn: () => changeRoomState(state, id, time)
         }
     );
 }
-
-export {useGetEscapeRooms, useChangeRoomState}
