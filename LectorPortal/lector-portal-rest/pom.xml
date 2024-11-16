@@ -7,7 +7,6 @@
     <parent>
         <groupId>com.escapedoom</groupId>
         <artifactId>LectorPortal</artifactId>
-        <version>0.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -25,13 +24,11 @@
         <dependency>
             <groupId>com.escapedoom</groupId>
             <artifactId>lector-portal-shared</artifactId>
-            <version>0.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.escapedoom</groupId>
             <artifactId>lector-portal-dataaccess</artifactId>
-            <version>0.0.1</version>
         </dependency>
 
         <dependency>
