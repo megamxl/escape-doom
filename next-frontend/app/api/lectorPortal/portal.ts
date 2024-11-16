@@ -7,7 +7,7 @@ import {AxiosRequestConfig} from "axios";
 const ENDPOINT = "/portal-escape-room"
 
 const headers: AxiosRequestConfig = {
-    headers: { Authorization: `Bearer ${_getToken()}` }
+    headers: { Authorization: `Bearer ${_getToken()}`, }
 }
 
 const getAllRooms = async (): Promise<EscapeRoom[]> => {
@@ -17,24 +17,26 @@ const getAllRooms = async (): Promise<EscapeRoom[]> => {
 
 const changeRoomState = async (state: RoomState, id: number, time?: number) => {
     switch (state) {
-        case RoomState.PLAYING: await startRoom(id, time!); break;
-        case RoomState.JOINABLE: await openRoom(id); break;
-        case RoomState.STOPPED: await stopRoom(id); break;
+        case RoomState.PLAYING: return (await startRoom(id, time!));
+        case RoomState.JOINABLE: return (await openRoom(id));
+        case RoomState.STOPPED: return (await stopRoom(id));
+        default: console.log("No valid state given", state); break;
     }
 }
 
 const openRoom = async (id: number) => {
-    const {data} = await lectorClient.get(`${ENDPOINT}/openEscapeRoom/${id}`, headers)
+    console.log("Headers:", headers)
+    const {data} = await lectorClient.post(`${ENDPOINT}/openEscapeRoom/${id}`, null, headers)
     return data;
 }
 
 const startRoom = async (id: number, escapeRoomTime: number) => {
-    const {data} = await lectorClient.get(`${ENDPOINT}/startEscapeRoom/${id}/${escapeRoomTime}`, headers)
+    const {data} = await lectorClient.post(`${ENDPOINT}/startEscapeRoom/${id}/${escapeRoomTime}`, null, headers)
     return data;
 }
 
 const stopRoom = async (id: number) => {
-    const {data} = await lectorClient.get(`${ENDPOINT}/stopEscapeRoom/${id}`, headers)
+    const {data} = await lectorClient.post(`${ENDPOINT}/stopEscapeRoom/${id}`, null, headers)
     return data;
 }
 

@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Divider, Grid2, Stack, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
-import RoomCard, {RoomState} from "@/app/lector-portal/dashboard/_components/RoomCard";
+import RoomCard from "@/app/lector-portal/dashboard/_components/RoomCard";
 import {useGetEscapeRooms} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
 import RoomCardSkeleton from "@/app/lector-portal/dashboard/_components/RoomCardSkeleton";
 import {redirect} from "next/navigation";
@@ -32,10 +32,10 @@ const LectorPortalDashboard = () => {
                     <Grid2 container spacing={{md: 6, lg: 12}}>
                         {/*TODO: IDFK why lint thinks this shit is not available <3*/}
                         {/*@ts-ignore*/}
-                        {data ? data.map(({name, topic, time, escapeRoomState}, index) => (
+                        {data ? data.map(({name, topic, time, escapeRoomState, escaproom_id}, index) => (
                             <Grid2 key={index} size={{lg: 6, sm: 12}}>
                                 <RoomCard name={name} topic={topic} imgUrl={BackgroundImage.src}
-                                          time={time} escapeRoomState={escapeRoomState}
+                                          time={time} id={escaproom_id} escapeRoomState={escapeRoomState}
                                 />
                             </Grid2>
                         )) :

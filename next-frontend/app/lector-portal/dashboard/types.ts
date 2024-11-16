@@ -1,5 +1,5 @@
 export type EscapeRoom = () => {
-    escaperoom_id: number,
+    escaproom_id: number,
     name: string,
     topic: string
     time: number,

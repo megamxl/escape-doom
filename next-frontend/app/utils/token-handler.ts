@@ -3,7 +3,9 @@ import {useState} from "react";
 const tokenString = 'token';
 
 export const _getToken = () => {
-    return sessionStorage.getItem(tokenString)
+    if (typeof window !== "undefined") {
+        return sessionStorage.getItem(tokenString)
+    }
 }
 
 export const useToken = () => {

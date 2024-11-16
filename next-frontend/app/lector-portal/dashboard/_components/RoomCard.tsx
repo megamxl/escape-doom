@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Alert,
     Button,
@@ -26,6 +26,7 @@ type RoomCardCreationProps = {
     topic: string,
     imgUrl: string,
     time: number,
+    id: number
     escapeRoomState: RoomState,
 }
 
@@ -36,43 +37,40 @@ type RoomCardState = {
 }
 
 export enum RoomState {
-    IDLE = '#999',
-    STOPPED = '#ff0000',
-    JOINABLE = '#ffff00',
-    PLAYING = '#00ff00'
+    STOPPED = "STOPPED",
+    JOINABLE = "JOINABLE",
+    PLAYING = "PLAYING"
 }
 
-const RoomCard = ({name, topic, imgUrl, time, escapeRoomState}: RoomCardCreationProps) => {
+const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCreationProps) => {
 
     const [roomInfo, setRoomInfo] = useState<RoomCardState>({
-        Status: RoomState.IDLE,
-        ID: 0,
+        Status: escapeRoomState,
+        ID: id,
         Time: time
     })
 
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const handleClose = () => setSnackbarOpen(false)
+    const changeRoomState = useChangeRoomState(roomInfo.Status, roomInfo.ID, roomInfo.Time)
 
-    const changeRoomState = async (newState: RoomState) => {
-        let callURL: string;
-
-        switch (newState) {
-            case RoomState.JOINABLE:
-                callURL = `${LECTOR_PORTAL_API_PATHS.OPEN_ROOM()}/${roomInfo.ID}`;
-                break;
-            case RoomState.PLAYING:
-                callURL = `${LECTOR_PORTAL_API_PATHS.START_ROOM()}/${roomInfo.ID}`;
-                break;
-            case RoomState.STOPPED:
-                callURL = `${LECTOR_PORTAL_API_PATHS.STOP_ROOM()}/${roomInfo.ID}`;
-                break;
-            default:
-                callURL = ``
-                console.error("The given RoomState does not exist!")
+    const statusLedColor = (() => {
+        switch (roomInfo.Status) {
+            case RoomState.STOPPED: return '#f00';
+            case RoomState.PLAYING: return '#0f0';
+            case RoomState.JOINABLE: return '#ff0'
+            default: console.log("Something went wrong - Can't read RoomState:", roomInfo.Status)
         }
-        //TODO: Make this with TanStack Query call
-        const response = await axios.get(callURL)
-        if (response.status != 200) {
+    })();
+
+    const handleStateChange = async (newState: RoomState) => {
+        const stateBeforeUpdate = roomInfo
+
+        setRoomInfo({...roomInfo, Status: newState});
+        changeRoomState.mutate()
+
+        if (changeRoomState.isError) {
+            setRoomInfo(stateBeforeUpdate);
             setSnackbarOpen(true)
         }
     }
@@ -85,30 +83,33 @@ const RoomCard = ({name, topic, imgUrl, time, escapeRoomState}: RoomCardCreation
                 title="Escape Room Picture"
             />
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography variant="h5" component="div">
                     {name}
                 </Typography>
-                <Typography gutterBottom sx={{fontSize: 14}} component="div">
+                <Typography sx={{fontSize: 14}} component="div">
                     {topic}
                 </Typography>
-                {roomInfo.ID !== 0 ?
-                    <Typography gutterBottom sx={{fontSize: 14}} component="div">
-                        LobbyID: {roomInfo.ID}
-                    </Typography>
-                    : ''
-                }
-                {roomInfo.ID !== 0 ?
-                    <Link target="_blank" rel="noopener" sx={{fontSize: 14}}
-                          href={"/leaderboard/" + roomInfo.ID}>Leaderboard</Link>
-                    : ''
-                }
+                <div className={"flex flex-row gap-2"}>
+                    {roomInfo.ID !== 0 ?
+                        <Typography alignSelf={"baseline"} sx={{fontSize: 14}} component="div">
+                            LobbyID: {roomInfo.ID}
+                        </Typography>
+                        : ''
+                    }
+                    |
+                    {roomInfo.ID !== 0 ?
+                        <Link target="_blank" rel="noopener" sx={{fontSize: 14}}
+                              href={"/leaderboard/" + roomInfo.ID}>Leaderboard</Link>
+                        : ''
+                    }
+                </div>
 
             </CardContent>
             <CardActions sx={{justifyContent: "space-between"}}>
-                <Circle sx={{color: roomInfo.Status}}> </Circle>
-                <Button onClick={() => changeRoomState(RoomState.JOINABLE)} startIcon={<OpenInBrowser/>}> Open </Button>
-                <Button onClick={() => changeRoomState(RoomState.PLAYING)} startIcon={<PlayArrow/>}> Start </Button>
-                <Button onClick={() => changeRoomState(RoomState.STOPPED)} startIcon={<Close/>}> Close </Button>
+                <Circle sx={{color: statusLedColor}}> </Circle>
+                <Button onClick={() => handleStateChange(RoomState.JOINABLE)} startIcon={<OpenInBrowser/>}> Open </Button>
+                <Button onClick={() => handleStateChange(RoomState.PLAYING)} startIcon={<PlayArrow/>}> Start </Button>
+                <Button onClick={() => handleStateChange(RoomState.STOPPED)} startIcon={<Close/>}> Close </Button>
                 <Stack direction="row" alignItems={"center"} gap={.5}>
                     <AccessTime/>
                     <FormControl>
@@ -131,8 +132,8 @@ const RoomCard = ({name, topic, imgUrl, time, escapeRoomState}: RoomCardCreation
             {/* Snackbars */}
 
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="info" sx={{width: '100%'}}>
-                    Moving from {roomInfo.Status} to the desired state not possible
+                <Alert onClose={handleClose} severity="error" sx={{width: '100%'}}>
+                    There was a problem changing the Room state!
                 </Alert>
             </Snackbar>
         </Card>
