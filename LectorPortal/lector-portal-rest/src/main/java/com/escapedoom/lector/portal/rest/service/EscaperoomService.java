@@ -1,6 +1,8 @@
 package com.escapedoom.lector.portal.rest.service;
 
 import com.escapedoom.lector.portal.dataaccess.entity.*;
+import com.escapedoom.lector.portal.shared.model.*;
+import com.escapedoom.lector.portal.shared.model.Scenes;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -12,10 +14,6 @@ import com.escapedoom.lector.portal.dataaccess.model.EscapeRoomDto;
 import com.escapedoom.lector.portal.shared.console.ConsoleNodeInfo;
 import com.escapedoom.lector.portal.shared.console.DataNodeInfo;
 import com.escapedoom.lector.portal.shared.console.DetailsNodeInfo;
-import com.escapedoom.lector.portal.shared.model.EscapeRoomState;
-import com.escapedoom.lector.portal.shared.model.Node;
-import com.escapedoom.lector.portal.shared.model.NodeType;
-import com.escapedoom.lector.portal.shared.model.Position;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
