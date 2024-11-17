@@ -97,13 +97,6 @@
                 <scope>runtime</scope>
             </dependency>
 
-            <!-- JSON Processing -->
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>${json.version}</version>
-            </dependency>
-
             <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
