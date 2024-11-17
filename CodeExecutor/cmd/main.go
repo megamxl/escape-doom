@@ -3,15 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/megamxl/escape-doom/CodeExecutor/pkg"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
+	docker_based "github.com/megamxl/escape-doom/CodeExecutor/internal/engine/docker-based"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/messaging"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
-	"github.com/megamxl/escape-doom/CodeExecutor/internal/engine/docker-based"
 )
 
 func main() {
@@ -24,7 +23,7 @@ func main() {
 	}
 
 	configFile := os.Args[1]
-	conf := pkg.ReadConfig(configFile)
+	conf := messaging.ReadKafkaConfig(configFile)
 	conf["group.id"] = "kafka-go-getting-started"
 	conf["auto.offset.reset"] = "earliest"
 
