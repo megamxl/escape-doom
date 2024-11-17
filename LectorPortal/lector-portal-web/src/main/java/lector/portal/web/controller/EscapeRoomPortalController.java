@@ -38,7 +38,10 @@ public class EscapeRoomPortalController {
 
     @CrossOrigin
     @PostMapping(value = "startEscapeRoom/{escapeRoomId}/{minutes}")
-    public ResponseEntity<String> startEscapeRoom(@PathVariable("escapeRoomId") Long lobbyId, @PathVariable("minutes") Long minutes) {
+    public ResponseEntity<String> startEscapeRoom(
+            @PathVariable("escapeRoomId") Long lobbyId,
+            @PathVariable("minutes") Long minutes
+    ) {
         return ResponseEntity.ok(service.changeEscapeRoomState(lobbyId, EscapeRoomState.PLAYING ,minutes));
     }
 

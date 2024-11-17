@@ -2,6 +2,7 @@ package lector.portal.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,14 @@ public class WebConfig implements WebMvcConfigurer {
         return objectMapper;
     }
 
+    @Value("${cors.allowed.origins}")
+    private String[] allowedOrigins;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/v1/auth/**")
-            .allowedOrigins("http://localhost")
-            .allowedMethods("POST", "GET", "OPTIONS")
-            .allowCredentials(true);
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods("POST", "GET", "OPTIONS")
+                .allowCredentials(true);
     }
 }
