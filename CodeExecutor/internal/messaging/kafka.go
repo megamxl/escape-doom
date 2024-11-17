@@ -1,13 +1,13 @@
-package main
+package messaging
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
+	"os"
 )
 
-func sendMessage(topic string, conf kafka.ConfigMap, input *Request, output string) {
+func SendMessage(topic string, conf kafka.ConfigMap, input *constants.Request, output string) {
 
 	p, err := kafka.NewProducer(&conf)
 
