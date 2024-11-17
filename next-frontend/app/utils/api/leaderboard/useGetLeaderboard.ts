@@ -4,6 +4,7 @@ import {getLeaderboard} from "@/app/api/lectorPortal/leaderboards";
 export const useGetLeaderboard = (lobbyId: number) => {
     return useQuery({
         queryKey: ['leaderboard'],
-        queryFn: () => getLeaderboard(lobbyId)
+        queryFn: () => getLeaderboard(lobbyId),
+        refetchInterval: 1000 * 10 // in millis
     })
 }
