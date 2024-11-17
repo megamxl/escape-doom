@@ -15,11 +15,11 @@ const LeaderboardRankEntry = ({rankingInfo, index}: RankEntryProps) => {
         <div className={"flex flex-row gap-2 justify-between px-8"}>
             <div className={"flex flex-row gap-3"}>
                 <p className={"text-2xl"}> #{index + 1} </p>
-                <p> {playerName} </p>
+                <p className={"text-2xl"}> {playerName} </p>
             </div>
-            <div>
-                <h2> {score} </h2>
-                <h2> {time || "No time set yet"} </h2>
+            <div className={"flex flex-row gap-3"}>
+                <p className={"text-1xl"}> {score} </p>
+                <p className={"text-1xl"}> {time || "No time set yet"} </p>
             </div>
         </div>
     )

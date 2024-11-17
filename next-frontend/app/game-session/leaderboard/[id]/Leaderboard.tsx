@@ -14,8 +14,6 @@ const Leaderboard = ({boardID}: { boardID: number }) => {
 
     return (
         <div className={"flex flex-col gap-2 justify-around content-center"}>
-            { isFetching && <p> Refetching... </p>
-            }
             <div> {boardID} </div>
             <TopThree />
             {
