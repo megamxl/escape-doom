@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/GameSession/gamesession-dataaccess/pom.xml" />
         <option value="$PROJECT_DIR$/GameSession/gamesession-web/pom.xml" />
         <option value="$PROJECT_DIR$/GameSession/gamesession-rest/pom.xml" />
+        <option value="$PROJECT_DIR$/GameSession/gamesession-shared/pom.xml" />
       </list>
     </option>
   </component>

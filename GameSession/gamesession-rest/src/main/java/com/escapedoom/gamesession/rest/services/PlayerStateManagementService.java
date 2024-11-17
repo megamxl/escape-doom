@@ -137,12 +137,23 @@ public class PlayerStateManagementService {
         } else {
             var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());
             if (players.isPresent()) {
-                players.get().stream().filter(player1 -> Objects.equals(player1.getEscaperoomSession(), player.getEscaperoomSession()));
-                jsonPlayers.put("players", players.get().stream().map(Player::getName).collect(Collectors.toList()));
+                try {
+                    jsonPlayers.put(
+                            "players",
+                            players.get().stream()
+                                    .filter(Objects::nonNull)
+                                    .map(Player::getName)
+                                    .filter(Objects::nonNull)
+                                    .collect(Collectors.toList())
+                    );
+                } catch (org.json.JSONException e) {
+                    log.error("Error adding players to JSON object", e);
+                }
             }
             informClients(player.getEscaperoomSession(), ALL_NAME_EVENT, jsonPlayers.toString());
         }
     }
+
 
     public SseEmitterExtended lobbyConnection(String httpId) {
 
