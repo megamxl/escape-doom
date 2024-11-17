@@ -1,10 +1,10 @@
-package lector.portal.rest;
+package lector.portal.rest.util;
 
 
 import lector.portal.shared.model.EscapeRoomState;
 import lector.portal.dataaccess.LobbyRepository;
 import lector.portal.dataaccess.entity.OpenLobbys;
-import lector.portal.rest.auth.RoomStopperComponent;
+import lector.portal.rest.util.RoomStopper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,27 +24,27 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
-public class RoomStopperComponentTest {
+public class RoomStopperTest {
 
     @Mock
     private LobbyRepository lobbyRepository;
 
     @InjectMocks
-    private RoomStopperComponent roomStopperComponent;
+    private RoomStopper roomStopper;
 
     @Mock
     private Logger log;
 
     @BeforeEach
     public void setUp() {
-        log = LoggerFactory.getLogger(RoomStopperComponent.class);
+        log = LoggerFactory.getLogger(RoomStopper.class);
     }
 
     @Test
     public void testHouseKeeper_NoLobbiesToStop() {
         when(lobbyRepository.findAllByStatePlaying()).thenReturn(Optional.of(Collections.emptyList()));
 
-        roomStopperComponent.HouseKeeper();
+        roomStopper.HouseKeeper();
 
         verify(lobbyRepository, times(1)).findAllByStatePlaying();
         verifyNoMoreInteractions(lobbyRepository);
@@ -66,7 +66,7 @@ public class RoomStopperComponentTest {
 
         when(lobbyRepository.findAllByStatePlaying()).thenReturn(Optional.of(lobbies));
 
-        roomStopperComponent.HouseKeeper();
+        roomStopper.HouseKeeper();
 
         verify(lobbyRepository, times(1)).findAllByStatePlaying();
         verify(lobbyRepository, times(1)).save(lobby1);

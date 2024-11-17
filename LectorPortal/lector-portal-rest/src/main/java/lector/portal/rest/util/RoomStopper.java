@@ -1,4 +1,4 @@
-package lector.portal.rest.auth;
+package lector.portal.rest.util;
 
 
 import lector.portal.shared.model.EscapeRoomState;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RoomStopperComponent {
+public class RoomStopper {
 
     private final LobbyRepository lobbyRepository;
 

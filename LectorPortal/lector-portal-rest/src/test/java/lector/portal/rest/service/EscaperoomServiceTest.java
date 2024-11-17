@@ -1,4 +1,4 @@
-package lector.portal.rest;
+package lector.portal.rest.service;
 
 import lector.portal.dataaccess.CodeRiddleRepository;
 import lector.portal.dataaccess.EscaperoomRepository;
