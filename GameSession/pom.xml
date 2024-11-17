@@ -39,6 +39,7 @@
         <lombok.version>1.18.30</lombok.version>
         <postgresql.version>42.6.1</postgresql.version>
         <json.version>20220320</json.version>
+        <lettuce-core.version>6.3.1.RELEASE</lettuce-core.version>
     </properties>
 
     <dependencyManagement>
@@ -69,6 +70,7 @@
                 <artifactId>spring-boot-starter-test</artifactId>
                 <scope>test</scope>
             </dependency>
+
             <!-- Jackson for JSON Parsing -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -112,6 +114,15 @@
                 <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- Lettuce Core Redis -->
+
+            <dependency>
+                <groupId>io.lettuce</groupId>
+                <artifactId>lettuce-core</artifactId>
+                <version>${lettuce-core.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
