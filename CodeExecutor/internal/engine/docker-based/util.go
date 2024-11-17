@@ -1,7 +1,6 @@
-package main
+package docker_based
 
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -9,10 +8,11 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"strings"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/messaging"
 )
 
 type output struct {
@@ -20,38 +20,7 @@ type output struct {
 	err error
 }
 
-func ReadConfig(configFile string) kafka.ConfigMap {
-
-	m := make(map[string]kafka.ConfigValue)
-
-	file, err := os.Open(configFile)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to open file: %s", err)
-		os.Exit(1)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if !strings.HasPrefix(line, "#") && len(line) != 0 {
-			kv := strings.Split(line, "=")
-			parameter := strings.TrimSpace(kv[0])
-			value := strings.TrimSpace(kv[1])
-			m[parameter] = value
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		fmt.Printf("Failed to read file: %s", err)
-		os.Exit(1)
-	}
-
-	return m
-
-}
-
-func setupForExecution(input *Request, configMap kafka.ConfigMap) string {
+func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) string {
 
 	shouldExecute := true
 
@@ -71,13 +40,13 @@ func setupForExecution(input *Request, configMap kafka.ConfigMap) string {
 	samplefile := "app.java"
 	switch {
 	case input.Language == "Java":
-		dockerfile = "java.Dockerfile"
+		dockerfile = "internal/engine/docker-based/java.Dockerfile"
 		samplefile = "app.java"
 	case input.Language == "Javascript":
-		dockerfile = "javascript.Dockerfile"
+		dockerfile = "internal/engine/docker-based/javascript.Dockerfile"
 		samplefile = "app.js"
 	case input.Language == "Python":
-		dockerfile = "python.Dockerfile"
+		dockerfile = "internal/engine/docker-based/python.Dockerfile"
 		samplefile = "app.py"
 	}
 
@@ -112,7 +81,7 @@ func setupForExecution(input *Request, configMap kafka.ConfigMap) string {
 		fmt.Println("lel not deleted")
 	}
 
-	sendMessage("computedCode", configMap, input, curr)
+	messaging.SendMessage("computedCode", configMap, input, curr)
 
 	return curr
 }
@@ -126,7 +95,6 @@ func executeDocker(dockerFileName string, name string) string {
 	var errb bytes.Buffer
 	dockerBuild.Stderr = &errb
 	dockerBuild.Stderr = os.Stderr
-	//dockerBuild.Stdout = &outb
 
 	_, err := dockerBuild.Output()
 	if err != nil {

@@ -3,20 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
+	docker_based "github.com/megamxl/escape-doom/CodeExecutor/internal/engine/docker-based"
+	"github.com/megamxl/escape-doom/CodeExecutor/internal/messaging"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
-
-type Request struct {
-	PlayerSessionId string `json:playerSessionId`
-	Language        string `json:language`
-	Code            string `json:code`
-	DateTime        string `json:dateTime`
-}
 
 func main() {
 	fmt.Println("hello")
@@ -28,7 +23,7 @@ func main() {
 	}
 
 	configFile := os.Args[1]
-	conf := ReadConfig(configFile)
+	conf := messaging.ReadKafkaConfig(configFile)
 	conf["group.id"] = "kafka-go-getting-started"
 	conf["auto.offset.reset"] = "earliest"
 
@@ -62,7 +57,7 @@ func main() {
 			fmt.Printf("Consumed event from topic %s value = %s\n",
 				*ev.TopicPartition.Topic, string(ev.Value))
 
-			var request Request
+			var request constants.Request
 
 			err2 := json.Unmarshal(ev.Value, &request)
 			if err2 != nil {
@@ -70,8 +65,8 @@ func main() {
 			}
 			fmt.Println("the request is", request.Code)
 
-			go setupForExecution(&request, conf)
+			go docker_based.SetupForExecution(&request, conf)
 		}
 	}
-	c.Close()
+	_ = c.Close()
 }
