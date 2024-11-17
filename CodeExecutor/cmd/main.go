@@ -17,7 +17,7 @@ func main() {
 	fmt.Println("hello")
 
 	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <lector.portal.dataaccess.config>\n",
+		fmt.Fprintf(os.Stderr, "Usage: %s <config-file-path>\n",
 			os.Args[0])
 		os.Exit(1)
 	}

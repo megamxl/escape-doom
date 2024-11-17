@@ -20,7 +20,7 @@ func SendMessage(topic string, conf kafka.ConfigMap, input *constants.Request, o
 	}
 
 	// Go-routine to handle message delivery reports and
-	// possibly other event lector.portal.dataaccess.model (errors, stats, etc)
+	// possibly other event types (errors, stats, etc)
 	go func() {
 		for e := range p.Events() {
 			switch ev := e.(type) {
