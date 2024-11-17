@@ -291,7 +291,7 @@ public class EscaperoomService {
     private Escaperoom getEscapeRoomAndCheckForUser(Long escapeRoomId) {
         Optional<Escaperoom> escapeRoom = Optional.of(escaperoomRepository.getReferenceById(escapeRoomId));
 
-        if (escapeRoom.isPresent() && getUser() != null) {
+        if (getUser() != null) {
             return escapeRoom.get();
         }
 

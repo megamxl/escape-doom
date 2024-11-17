@@ -1,4 +1,4 @@
-package lector.portal.web;
+package lector.portal.rest;
 
 import lector.portal.rest.service.EscaperoomService;
 import org.springframework.beans.factory.annotation.Autowired;

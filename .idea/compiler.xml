@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GameSession" />
-        <module name="lector-portal-web" />
         <module name="lector-portal-shared" />
         <module name="lector-portal-rest" />
         <module name="LectorPortalBackend" />
@@ -18,6 +17,7 @@
     <bytecodeTargetLevel>
       <module name="gamesession-dataaccess" target="17" />
       <module name="gamesession-rest" target="17" />
+      <module name="lector-portal-web" target="17" />
       <module name="LectorPortal (1)" target="17" />
       <module name="LectorPortal (2)" target="1.5" />
     </bytecodeTargetLevel>

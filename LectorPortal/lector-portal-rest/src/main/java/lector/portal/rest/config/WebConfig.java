@@ -1,4 +1,4 @@
-package lector.portal.web.config;
+package lector.portal.rest.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;

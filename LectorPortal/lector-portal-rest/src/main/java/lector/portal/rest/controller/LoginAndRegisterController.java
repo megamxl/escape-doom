@@ -1,11 +1,10 @@
-package lector.portal.web.controller;
+package lector.portal.rest.controller;
 
 import lector.portal.rest.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lector.portal.shared.request.AuthenticationRequest;
 import lector.portal.shared.request.RegisterRequest;
 import lector.portal.shared.response.AuthenticationResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

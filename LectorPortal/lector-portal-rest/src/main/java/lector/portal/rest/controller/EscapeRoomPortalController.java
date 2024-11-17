@@ -1,4 +1,4 @@
-package lector.portal.web.controller;
+package lector.portal.rest.controller;
 
 
 import lector.portal.rest.service.EscaperoomDTO;

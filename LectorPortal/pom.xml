@@ -22,7 +22,6 @@
         <module>lector-portal-shared</module>
         <module>lector-portal-dataaccess</module>
         <module>lector-portal-rest</module>
-        <module>lector-portal-web</module>
     </modules>
 
     <properties>
