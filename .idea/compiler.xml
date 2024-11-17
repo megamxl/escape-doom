@@ -7,18 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="LectorPortalBackend" />
-      </profile>
-      <profile name="Annotation profile for lector-portal" enabled="true">
-        <sourceOutputDir name="../target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
         <module name="lector-portal-shared" />
         <module name="gamesession-dataaccess" />
-        <module name="gamesession-shared" />
         <module name="lector-portal-rest" />
+        <module name="LectorPortalBackend" />
         <module name="lector-portal-dataaccess" />
         <module name="gamesession-rest" />
+        <module name="gamesession-shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -32,12 +27,12 @@
       <module name="GameSession" options="" />
       <module name="LectorPortal" options="" />
       <module name="LectorPortalBackend" options="-parameters" />
-      <module name="gamesession-dataaccess" options="" />
-      <module name="gamesession-rest" options="" />
-      <module name="gamesession-shared" options="" />
-      <module name="lector-portal-dataaccess" options="" />
-      <module name="lector-portal-rest" options="" />
-      <module name="lector-portal-shared" options="" />
+      <module name="gamesession-dataaccess" options="-parameters" />
+      <module name="gamesession-rest" options="-parameters" />
+      <module name="gamesession-shared" options="-parameters" />
+      <module name="lector-portal-dataaccess" options="-parameters" />
+      <module name="lector-portal-rest" options="-parameters" />
+      <module name="lector-portal-shared" options="-parameters" />
     </option>
   </component>
 </project>

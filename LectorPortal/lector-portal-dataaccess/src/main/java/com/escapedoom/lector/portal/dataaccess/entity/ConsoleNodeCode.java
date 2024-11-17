@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "console_node_code")
 public class ConsoleNodeCode {
 
     @Id
