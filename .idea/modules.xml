@@ -5,10 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/CodeExecutor/CodeExecutor.iml" filepath="$PROJECT_DIR$/CodeExecutor/CodeExecutor.iml" />
       <module fileurl="file://$PROJECT_DIR$/Frontend/Frontend.iml" filepath="$PROJECT_DIR$/Frontend/Frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/escape-doom.iml" filepath="$PROJECT_DIR$/.idea/escape-doom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/GameSession/game-session-dataaccess/gamesession-dataaccess.iml" filepath="$PROJECT_DIR$/GameSession/game-session-dataaccess/gamesession-dataaccess.iml" />
-      <module fileurl="file://$PROJECT_DIR$/gamesession-rest.iml" filepath="$PROJECT_DIR$/gamesession-rest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/LectorPortal/lector-portal-dataaccess/lector-portal-dataaccess.iml" filepath="$PROJECT_DIR$/LectorPortal/lector-portal-dataaccess/lector-portal-dataaccess.iml" />
-      <module fileurl="file://$PROJECT_DIR$/LectorPortal/lector-portal-shared/lector-portal-shared.iml" filepath="$PROJECT_DIR$/LectorPortal/lector-portal-shared/lector-portal-shared.iml" />
     </modules>
   </component>
 </project>

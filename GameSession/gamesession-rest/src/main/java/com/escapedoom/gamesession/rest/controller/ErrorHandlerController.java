@@ -1,5 +1,6 @@
 package com.escapedoom.gamesession.rest.controller;
 
+import com.escapedoom.gamesession.rest.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class ErrorHandlerController implements ErrorController {
 
-    @RequestMapping(UrlConstants.ERROR_URL)
+    @RequestMapping(Constants.ERROR_URL)
     public String handleError(HttpServletRequest request) {
 
         return request.getRequestURL().toString();

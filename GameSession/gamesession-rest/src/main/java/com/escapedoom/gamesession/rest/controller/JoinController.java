@@ -1,12 +1,13 @@
 package com.escapedoom.gamesession.rest.controller;
 
-import com.escapedoom.gamesession.rest.data.codeCompiling.CodeStatus;
-import com.escapedoom.gamesession.rest.data.response.StageResponse;
-import com.escapedoom.gamesession.rest.data.response.StatusReturn;
+import com.escapedoom.gamesession.rest.Constants;
+import com.escapedoom.gamesession.rest.model.code.CodeStatus;
+import com.escapedoom.gamesession.rest.model.response.StageResponse;
+import com.escapedoom.gamesession.rest.model.response.StatusReturn;
 import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
-import com.escapedoom.gamesession.rest.data.Player;
-import com.escapedoom.gamesession.rest.data.codeCompiling.CodeCompilingRequestEvent;
-import com.escapedoom.gamesession.rest.data.response.JoinResponse;
+import com.escapedoom.gamesession.dataaccess.entity.Player;
+import com.escapedoom.gamesession.rest.model.code.CodeCompilingRequestEvent;
+import com.escapedoom.gamesession.rest.model.response.JoinResponse;
 import com.escapedoom.gamesession.rest.services.PlayerStateManagementService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +19,24 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 @RestController
-@RequestMapping(UrlConstants.API_JOIN_PATH)
+@RequestMapping(Constants.API_JOIN_PATH)
 public class JoinController {
 
     private final PlayerStateManagementService playerStateManagementService;
 
     // method for joining / subscribing
     @CrossOrigin
-    @GetMapping(value = UrlConstants.ESCAPE_ROOM_URL, consumes = MediaType.ALL_VALUE)
+    @GetMapping(value = Constants.ESCAPE_ROOM_URL, consumes = MediaType.ALL_VALUE)
     public JoinResponse sessionId(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
         return playerStateManagementService.mangeStateBySessionID(httpSession.getSession().getId(), escaperoom_id);
     }
 
-    @GetMapping(value = UrlConstants.LOBBY_URL)
+    @GetMapping(value = Constants.LOBBY_URL)
     public SseEmitterExtended lobby(@PathVariable("id") String session) {
         return playerStateManagementService.lobbyConnection(session);
     }
 
-    @GetMapping(value = UrlConstants.GET_STAGE_URL)
+    @GetMapping(value = Constants.GET_STAGE_URL)
     public StageResponse currentStage(@PathVariable String httpSession) {
         return playerStateManagementService.returnStageToPlayer(httpSession);
     }
@@ -43,28 +44,28 @@ public class JoinController {
     // method to dispatch data to the rigth lobbys
 
     //TODO REMOVE IF THIS SERVICE KNOWS WHICH TO DELETE AND WHEN
-    @GetMapping(value = UrlConstants.DELETE_URL)
+    @GetMapping(value = Constants.DELETE_URL)
     public String deletAll(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
         return playerStateManagementService.deleteAllPlayersByEscaperoomID(escaperoom_id);
     }
 
     //TODO REMOVE IF THIS SERVICE KNOWS WHICH TO DELETE AND WHEN
-    @GetMapping(value = UrlConstants.GET_ALL_URL)
+    @GetMapping(value = Constants.GET_ALL_URL)
     public List<Player> getAll(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
         return playerStateManagementService.getAllPlayersByEscapeRoomID(escaperoom_id);
     }
 
-    @PostMapping(value = UrlConstants.SUBMIT_CODE_URL)
+    @PostMapping(value = Constants.SUBMIT_CODE_URL)
     public void submitCode(@RequestBody CodeCompilingRequestEvent codeCompilingRequestEvent) {
         playerStateManagementService.startCompiling(codeCompilingRequestEvent);
     }
 
-    @GetMapping(value = UrlConstants.GET_CODE_URL)
+    @GetMapping(value = Constants.GET_CODE_URL)
     public CodeStatus submitCode(@PathVariable String playerID) {
         return playerStateManagementService.getResult(playerID);
     }
 
-    @GetMapping(value = UrlConstants.STATUS_URL)
+    @GetMapping(value = Constants.STATUS_URL)
     public StatusReturn getCurrentStatusByPlayerID(@PathVariable String playerID) {
         return playerStateManagementService.getCurrentStatus(playerID);
     }

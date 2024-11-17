@@ -1,5 +1,6 @@
 package com.escapedoom.gamesession.rest.services.util;
 
+import com.escapedoom.gamesession.rest.utils.NameGeneratorUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 

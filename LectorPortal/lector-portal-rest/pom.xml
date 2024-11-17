@@ -27,11 +27,13 @@
         <dependency>
             <groupId>com.escapedoom</groupId>
             <artifactId>lector-portal-shared</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.escapedoom</groupId>
             <artifactId>lector-portal-dataaccess</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Utils -->
@@ -56,6 +58,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
 
     </dependencies>

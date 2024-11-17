@@ -9,11 +9,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.5</version>
-        <relativePath/>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.EscapeDoom</groupId>
+    <groupId>com.escapedoom</groupId>
     <artifactId>GameSession</artifactId>
+
     <version>0.0.1</version>
     <packaging>pom</packaging>
 
@@ -23,7 +24,6 @@
     <modules>
         <module>gamesession-rest</module>
         <module>gamesession-dataaccess</module>
-        <module>gamesession-web</module>
         <module>gamesession-shared</module>
     </modules>
 
@@ -33,17 +33,46 @@
         <spring-boot.version>3.0.5</spring-boot.version>
         <assertj.version>3.24.2</assertj.version>
 
+        <!-- Game Session -->
+        <gamesession.version>0.0.1</gamesession.version>
+
         <!-- Dependency Versions -->
-        <jackson-databind.version>2.15.0</jackson-databind.version>
-        <jackson-jsr310.version>2.15.0</jackson-jsr310.version>
+        <jackson.version>2.15.2</jackson.version>
         <lombok.version>1.18.30</lombok.version>
         <postgresql.version>42.6.1</postgresql.version>
         <json.version>20220320</json.version>
         <lettuce-core.version>6.3.1.RELEASE</lettuce-core.version>
     </properties>
 
+
+
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.escapedoom</groupId>
+                <artifactId>gamesession-rest</artifactId>
+                <version>${gamesession.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.escapedoom</groupId>
+                <artifactId>gamesession-shared</artifactId>
+                <version>${gamesession.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.escapedoom</groupId>
+                <artifactId>gamesession-dataaccess</artifactId>
+                <version>${gamesession.version}</version>
+            </dependency>
             <!-- Spring Boot Starters -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -81,12 +110,13 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson-databind.version}</version>
+                <version>${jackson.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${jackson-jsr310.version}</version>
+                <version>${jackson.version}</version>
             </dependency>
 
             <!-- PostgreSQL Database -->
@@ -133,8 +163,31 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Compiler Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                </plugin>
+
+                <!-- Surefire Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <!-- Resources Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

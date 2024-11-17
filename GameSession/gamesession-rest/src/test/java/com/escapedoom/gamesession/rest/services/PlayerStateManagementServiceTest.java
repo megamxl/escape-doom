@@ -1,11 +1,11 @@
 package com.escapedoom.gamesession.rest.services;
 
-import com.escapedoom.gamesession.rest.data.EscapeRoomState;
-import com.escapedoom.gamesession.rest.data.OpenLobbys;
-import com.escapedoom.gamesession.rest.data.Player;
-import com.escapedoom.gamesession.rest.repositories.OpenLobbyRepository;
-import com.escapedoom.gamesession.rest.repositories.SessionManagementRepository;
+import com.escapedoom.gamesession.dataaccess.entity.OpenLobbys;
+import com.escapedoom.gamesession.dataaccess.entity.Player;
+import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
+import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
+import com.escapedoom.gamesession.shared.EscapeRoomState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

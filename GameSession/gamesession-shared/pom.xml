@@ -6,13 +6,32 @@
 
     <!-- Parent POM for inheritance -->
     <parent>
-        <groupId>com.EscapeDoom</groupId>
+        <groupId>com.escapedoom</groupId>
         <artifactId>GameSession</artifactId>
         <version>0.0.1</version>
     </parent>
 
     <!-- Module Information -->
     <artifactId>gamesession-shared</artifactId>
-    <packaging>pom</packaging>
-
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

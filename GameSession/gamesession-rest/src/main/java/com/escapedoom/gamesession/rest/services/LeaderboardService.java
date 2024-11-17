@@ -1,8 +1,8 @@
 package com.escapedoom.gamesession.rest.services;
 
-import com.escapedoom.gamesession.rest.data.Player;
-import com.escapedoom.gamesession.rest.data.escapeRoomDtos.LeaderboardDao;
-import com.escapedoom.gamesession.rest.repositories.SessionManagementRepository;
+import com.escapedoom.gamesession.dataaccess.entity.Player;
+import com.escapedoom.gamesession.rest.model.escaperoom.LeaderboardDao;
+import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,6 @@ import java.util.Optional;
 public class LeaderboardService {
 
     private final SessionManagementRepository repository;
-
 
     public List<LeaderboardDao> getScoreBoard(Long escaperoomID) {
         List<LeaderboardDao> playerScores = new ArrayList<>();

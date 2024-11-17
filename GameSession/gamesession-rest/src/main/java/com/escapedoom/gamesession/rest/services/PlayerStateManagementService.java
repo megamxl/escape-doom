@@ -1,18 +1,18 @@
 package com.escapedoom.gamesession.rest.services;
 
-import com.escapedoom.gamesession.rest.data.EscapeRoomDao;
-import com.escapedoom.gamesession.rest.data.codeCompiling.*;
-import com.escapedoom.gamesession.rest.data.response.JoinResponse;
-import com.escapedoom.gamesession.rest.data.response.StageResponse;
-import com.escapedoom.gamesession.rest.data.response.StatusReturn;
-import com.escapedoom.gamesession.rest.repositories.*;
-import com.escapedoom.gamesession.rest.services.util.NameGeneratorUtil;
+import com.escapedoom.gamesession.dataaccess.*;
+import com.escapedoom.gamesession.dataaccess.entity.*;
+import com.escapedoom.gamesession.shared.CompilingStatus;
+import com.escapedoom.gamesession.shared.EscapeRoomState;
+import com.escapedoom.gamesession.rest.model.code.*;
+import com.escapedoom.gamesession.rest.model.response.JoinResponse;
+import com.escapedoom.gamesession.rest.model.response.StageResponse;
+import com.escapedoom.gamesession.rest.model.response.StatusReturn;
+import com.escapedoom.gamesession.rest.utils.NameGeneratorUtil;
 import com.escapedoom.gamesession.rest.utils.CodeSniptes;
 import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
-import com.escapedoom.gamesession.rest.configuration.redis.KafkaConfigProperties;
-import com.escapedoom.gamesession.rest.data.EscapeRoomState;
-import com.escapedoom.gamesession.rest.data.OpenLobbys;
-import com.escapedoom.gamesession.rest.data.Player;
+import com.escapedoom.gamesession.rest.config.redis.KafkaConfigProperties;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;

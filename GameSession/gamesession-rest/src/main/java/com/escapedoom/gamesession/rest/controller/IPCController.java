@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.escapedoom.gamesession.rest.controller.UrlConstants.IPC_INFO_URL;
-import static com.escapedoom.gamesession.rest.controller.UrlConstants.START_GAME_URL;
+import static com.escapedoom.gamesession.rest.Constants.IPC_INFO_URL;
+import static com.escapedoom.gamesession.rest.Constants.START_GAME_URL;
 
 @RequiredArgsConstructor
 @RestController
