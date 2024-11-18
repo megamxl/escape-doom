@@ -112,7 +112,7 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 | ID    | Requirement                                                                                                                                  | Fulfilled | Responsible Developer |
 |-------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
 |       | Must                                                                                                                                         |           |                       |
-| CE-01 | The system must be refactored according to the [Go project layout standard](https://github.com/golang-standards/project-layout).             |           | @Maxl                 |
+| CE-01 | The system must be refactored according to the [Go project layout standard](https://github.com/golang-standards/project-layout).             |     X     | @Maxl                 |
 | CE-02 | The system must establish the Kafka connection through a runtime-loaded configuration.                                                       |           | @Maxl                 |
 | CE-03 | The system should be modular enough to allow the code executor engine to be replaceable, if the new implementation adheres to the interface. |           | @Maxl                 |
 |       | Should                                                                                                                                       |           |                       |
