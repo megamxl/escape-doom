@@ -2,19 +2,42 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="GameSession" />
         <module name="LectorPortalBackend" />
       </profile>
+      <profile name="Annotation profile for lector-portal" enabled="true">
+        <sourceOutputDir name="../target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="lector-portal-shared" />
+        <module name="gamesession-dataaccess" />
+        <module name="gamesession-shared" />
+        <module name="lector-portal-rest" />
+        <module name="lector-portal-dataaccess" />
+        <module name="gamesession-rest" />
+      </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="gamesession-web" target="17" />
+      <module name="lector-portal-service" target="17" />
+      <module name="lector-portal-web" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="GameSession" options="-parameters" />
+      <module name="GameSession" options="" />
+      <module name="LectorPortal" options="" />
       <module name="LectorPortalBackend" options="-parameters" />
+      <module name="gamesession-dataaccess" options="" />
+      <module name="gamesession-rest" options="" />
+      <module name="gamesession-shared" options="" />
+      <module name="lector-portal-dataaccess" options="" />
+      <module name="lector-portal-rest" options="" />
+      <module name="lector-portal-shared" options="" />
     </option>
   </component>
 </project>

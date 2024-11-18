@@ -55,7 +55,7 @@ const EscapeView = () => {
         "language": "Java",
         "code": code,
         "codeRiddleID": 1,
-        "dateTima": null
+        "dateTime": null
     })
 
     const getStageData = getStage(sessionID)
@@ -94,7 +94,7 @@ const EscapeView = () => {
             "code": value,
             //@ts-ignore
             "codeRiddleID":  sceneInfo.codeRiddleID,
-            "dateTima": null
+            "dateTime": null
         })
     }
 

@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/LectorPortal
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    user: myuser
+    password: mypassword
+    baseline-description: "init"
+    baseline-version: 0
+gamesesion:
+  url: http://localhost:8090
+logging:
+  level:
+    root: info
+
+jwt:
+  key: 703273357638792F423F4528482B4D6251655468576D597135897677397A2443
+cors:
+  allowed:
+    origins: http://localhost

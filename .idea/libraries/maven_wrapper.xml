@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="maven-wrapper">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/GameSession/.mvn/wrapper/maven-wrapper.jar!/" />
+      <root url="jar://$PROJECT_DIR$/LectorPortal/.mvn/wrapper/maven-wrapper.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
