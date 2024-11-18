@@ -4,7 +4,9 @@ import {PlayerProgression} from "@/app/types/leaderboard/playerProgression";
 const ENDPOINT = "/leaderboard"
 
 export const getLeaderboard = async (lobbyId: number): Promise<PlayerProgression[]> => {
-    const { data } = await gameSessionClient.get(`${ENDPOINT}/${lobbyId}`);
+    let { data } = await gameSessionClient.get<PlayerProgression[]>(`${ENDPOINT}/${lobbyId}`);
+    // data.push(...data); // For testing
+    // data[2].score = 200; // For testing
     return sortLeaderboardData(data);
 }
 

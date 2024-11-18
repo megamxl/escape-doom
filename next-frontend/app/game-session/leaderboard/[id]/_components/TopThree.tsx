@@ -1,9 +1,19 @@
 import React from 'react';
+import {PlayerProgression} from "@/app/types/leaderboard/playerProgression";
+import PedestalPlace from "@/app/game-session/leaderboard/[id]/_components/PedestalPlace";
 
-const TopThree = () => {
+type TopThreeProps = {
+    topThree: PlayerProgression[]
+}
+
+const TopThree = ({topThree}: TopThreeProps) => {
+    const [first, second, third] = topThree.slice(0, 3);
+
     return (
-        <div>
-            We are the top three
+        <div className={"flex flex-row items-end gap-4"}>
+            <PedestalPlace player={second} place={2} />
+            <PedestalPlace player={first} place={1} />
+            <PedestalPlace player={third} place={3} />
         </div>
     );
 };

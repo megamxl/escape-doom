@@ -1,29 +1,43 @@
 'use client'
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useGetLeaderboard} from "@/app/utils/api/leaderboard/useGetLeaderboard";
 import TopThree from "@/app/game-session/leaderboard/[id]/_components/TopThree";
 import LeaderboardRankEntry from "@/app/game-session/leaderboard/[id]/_components/LeaderboardRankEntry";
+import {formatTime} from "@/app/utils/formatTime";
 
 const Leaderboard = ({boardID}: { boardID: number }) => {
 
-    const {data, isError, isFetching} = useGetLeaderboard(boardID)
+    const {data, isError, isFetching} = useGetLeaderboard(boardID);
+    const startTime = 1000 * 60 * 60 * 2 // TODO: Let backend give me this info
+    const [remainingTime, setRemainingTime] = useState(startTime) // 2 hours TODO: Let backend give me this info
 
     useEffect(() => {
-    }, []);
+        if (remainingTime <= 0) return;
+
+        // Creates interval that subtracts 1 every second => Countdown
+        const interval = setInterval(() => {
+            setRemainingTime(prev => Math.max(prev - 1000, 0));
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [remainingTime]);
 
     return (
-        <div className={"flex flex-col gap-2 justify-around content-center"}>
-            <div> {boardID} </div>
-            <TopThree />
-            {
-                data ? data.slice(0).map((player, idx) => {
+        <div className={"flex flex-col w-5/6 lg:w-1/2 mt-4 gap-8 justify-center m-auto"}>
+            <p className={"text-8xl font-bold self-center"}> {formatTime(remainingTime)} </p>
+
+            {data ? <TopThree topThree={data.slice(0, 3)}/> : "Loading"}
+
+            <div className={"flex flex-col gap-3"}>
+                {
+                    data ? data.slice(3).map((player, idx) => {
                         return (
-                            <LeaderboardRankEntry rankingInfo={player} index={idx} key={idx}  />
+                            <LeaderboardRankEntry rankingInfo={player} index={idx + 3} key={idx + 3}/>
                         )
-                    })
-                    : <h2> ...Loading </h2>
-            }
+                    }) : null
+                }
+            </div>
         </div>
     );
 };
