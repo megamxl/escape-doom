@@ -5,10 +5,10 @@ import { useState } from "react";
 import { NodeInstance, NodeInterface } from "./NodeInterface";
 
 enum NodeType {
-    Console,
-    Story,
-    Details,
-    Zoom
+    CONSOLE,
+    DETAILS,
+    STORY,
+    ZOOM
 }
 
 interface IconButtonInt {
@@ -194,13 +194,13 @@ export const ZoomNode = ({pos, nodeInfos}: NodeInstance) => {
 
 const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeInterface) => {
     switch(type) {
-        case "Console":
+        case "CONSOLE":
             return ConsoleNode({pos, nodeInfos}, codeSetter)
-        case "Story":
+        case "DETAILS":
             return StoryNode({pos, nodeInfos})
-        case "Details":
+        case "STORY":
             return DetailsNode({pos, nodeInfos})
-        case "Zoom":
+        case "ZOOM":
             return ZoomNode({pos, nodeInfos})
         default:
             console.error(`Invalid Node Type: ${type}`)

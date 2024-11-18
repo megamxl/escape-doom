@@ -39,13 +39,13 @@ func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) stri
 	dockerfile := "java.Dockerfile"
 	samplefile := "app.java"
 	switch {
-	case input.Language == "Java":
+	case input.Language == "JAVA":
 		dockerfile = "internal/engine/docker-based/java.Dockerfile"
 		samplefile = "app.java"
-	case input.Language == "Javascript":
+	case input.Language == "JAVASCRIPT":
 		dockerfile = "internal/engine/docker-based/javascript.Dockerfile"
 		samplefile = "app.js"
-	case input.Language == "Python":
+	case input.Language == "PYTHON":
 		dockerfile = "internal/engine/docker-based/python.Dockerfile"
 		samplefile = "app.py"
 	}

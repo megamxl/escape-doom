@@ -1,8 +1,9 @@
 export enum NodeType {
-    Console = 'Console',
-    Story = 'Story',
-    Details = 'Details',
-    Zoom = 'Zoom'
+
+    CONSOLE = 'CONSOLE',
+    DETAILS = 'DETAILS',
+    STORY = 'STORY',
+    ZOOM = 'ZOOM'
 }
 
 export interface NodeInterface {
