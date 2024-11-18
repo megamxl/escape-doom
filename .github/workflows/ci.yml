@@ -11,6 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module:
+          - LectorPortal
+          - GameSession
 
     services:
       postgres:
@@ -43,6 +48,9 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
+      - name: Navigate to Module Directory
+        run: cd ${{ matrix.module }}
 
       - name: Run Maven tests
         run: mvn clean test
