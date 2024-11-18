@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         module:
-          - LectorPortal
           - GameSession
+          - LectorPortal
 
     services:
       postgres:
@@ -49,10 +49,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Navigate to Module Directory
-        run: cd ${{ matrix.module }}
-
-      - name: Run Maven tests
+      - name: Run Maven tests for ${{ matrix.module }}
+        working-directory: ${{ matrix.module }}
         run: mvn clean test
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/LectorPortal
