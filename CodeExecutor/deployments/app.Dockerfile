@@ -10,6 +10,7 @@ FROM docker:27.4.0-rc.1-cli-alpine3.20
 RUN apk add --no-cache libc6-compat
 COPY --from=0 /opt/app/main main
 COPY --from=0 /opt/app/docker-network.properties docker-network.properties
+COPY --from=0 /opt/app/internal/engine/docker-based/ /internal/engine/docker-based
 RUN chmod 777 main
 
 ENTRYPOINT ["./main", "docker-network.properties"]
