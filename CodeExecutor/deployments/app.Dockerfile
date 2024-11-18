@@ -1,23 +1,16 @@
-FROM paxy0/escapedoom-golang-base AS builder
-
-ENV PATH="/go/bin:${PATH}"
-ENV GO111MODULE=on
-ENV CGO_ENABLED=1
+FROM golang:1.23
 ENV GOOS=linux
 ENV GOARCH=amd64
-
-WORKDIR /go/src
-
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
-
-RUN apk -U add ca-certificates
-RUN apk update && apk upgrade && apk add pkgconf git bash build-base sudo
-RUN git clone https://github.com/edenhill/librdkafka.git && cd librdkafka && ./configure --prefix /usr && make && make install
-
+WORKDIR /opt/app
 COPY . .
 
-RUN go build -tags musl --ldflags "-extldflags -static" -o main .
+RUN go build -o /opt/app/main github.com/megamxl/escape-doom/CodeExecutor/cmd
 
-ENTRYPOINT ["./main", "getting-started.properties"]
+FROM docker:27.4.0-rc.1-cli-alpine3.20
+RUN apk add --no-cache libc6-compat
+COPY --from=0 /opt/app/main main
+COPY --from=0 /opt/app/docker-network.properties docker-network.properties
+COPY --from=0 /opt/app/internal/engine/docker-based/ /internal/engine/docker-based
+RUN chmod 777 main
+
+ENTRYPOINT ["./main", "docker-network.properties"]
