@@ -1,6 +1,6 @@
 package com.escapedoom.gamesession.rest.controller;
 
-import com.escapedoom.gamesession.rest.service.PlayerStateManagementService;
+import com.escapedoom.gamesession.rest.service.NotificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +16,10 @@ import static com.escapedoom.gamesession.rest.Constants.START_GAME_URL;
 @RequestMapping(IPC_INFO_URL)
 public class IPCController {
 
-    private final PlayerStateManagementService playerStateManagementService;
+    private final NotificationService notificationService;
 
     @GetMapping(START_GAME_URL)
-    public void informAboutStartedGame(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
-        playerStateManagementService.informAboutStart(escaperoom_id);
+    public void startEscapeRoom(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
+        notificationService.notifyEscapeRoomStart(escaperoom_id);
     }
 }

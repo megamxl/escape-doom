@@ -20,6 +20,6 @@ public class LectorPortalBackend implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //escaperoomService.createADummyRoom();
+        escaperoomService.createADummyRoom();
     }
 }

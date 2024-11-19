@@ -13,4 +13,5 @@ public class CodeStatus {
 
     private CState status;
     private String output;
+
 }
