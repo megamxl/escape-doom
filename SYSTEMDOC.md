@@ -35,13 +35,13 @@ This document aims to define the current state and establish new goals to transi
 
 ### 1st Semester
 
-#### Initial Refactoring: 
+#### Initial Refactoring:
 
 Since the architecture as well as the implementation lack standards and maintainability, it is crucial to take the current state of the project and transform it into a maintainable and readable state. For this task, each team member already has a part of the system to look through and define what has to be changed to get a maintainable code base.
 - Key Actions:
   - Decouple existing components to increase modularity.
   - Eliminate in-memory state.
-  - Replace bad technology choices 
+  - Replace bad technology choices
 
 #### Requirements Analysis / Microservices:
 Since the main goal of our group aside from building a usable product is to restructure the current architecture to a true microservice architecture, we have to invest time into this restructuring. Therefore, the team has to learn how to really construct microservices and plan the execution for the next semester.
@@ -54,19 +54,19 @@ Since the main goal of our group aside from building a usable product is to rest
 The escape room is a system that is planned to be combined with cutting-edge technology, as well as features that aren't known to be technically feasible in the time given. Therefore, there are technologies that need to be assessed and played around with before being able to decide if they are usable and feasible to implement in the next semester. For a technology to be considered as working a prototype or a report / presentation needs to be built.
 - Key Actions:
   - Explore, evaluate and select new technologies.
-  - Provide a holistic overview of the future of our product 
+  - Provide a holistic overview of the future of our product
 
 ### 2nd Semester visions
 
 #### Microservice Development and Testing:
-  - Develop the individual microservices based on the identified requirements and patterns.
-  - Test the new modular structure to ensure that each microservice operates independently and integrates effectively within the overall system.
-  - Deployment documentation
+- Develop the individual microservices based on the identified requirements and patterns.
+- Test the new modular structure to ensure that each microservice operates independently and integrates effectively within the overall system.
+- Deployment documentation
 
 #### Handover Preparation:
-  - Finalize the fully refactored and modularized microservice architecture.
-  - Finalize documentation to ensure that the product is maintainable.
-  - Finalize arc42 architecture documentation.
+- Finalize the fully refactored and modularized microservice architecture.
+- Finalize documentation to ensure that the product is maintainable.
+- Finalize arc42 architecture documentation.
 
 ---
 
@@ -112,7 +112,7 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 | ID    | Requirement                                                                                                                                  | Fulfilled | Responsible Developer |
 |-------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
 |       | Must                                                                                                                                         |           |                       |
-| CE-01 | The system must be refactored according to the [Go project layout standard](https://github.com/golang-standards/project-layout).             |           | @Maxl                 |
+| CE-01 | The system must be refactored according to the [Go project layout standard](https://github.com/golang-standards/project-layout).             |     X     | @Maxl                 |
 | CE-02 | The system must establish the Kafka connection through a runtime-loaded configuration.                                                       |           | @Maxl                 |
 | CE-03 | The system should be modular enough to allow the code executor engine to be replaceable, if the new implementation adheres to the interface. |           | @Maxl                 |
 |       | Should                                                                                                                                       |           |                       |

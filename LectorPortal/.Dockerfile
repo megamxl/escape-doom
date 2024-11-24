@@ -13,4 +13,4 @@ COPY --from=builder /app/target/*.jar /
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","LectorPortalBackend-0.0.1.jar"]
+ENTRYPOINT ["java","-jar","lector.portal.rest.lector-portal-rest-0.0.1.jar"]

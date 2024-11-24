@@ -13,4 +13,4 @@ COPY --from=builder /app/target/*.jar /
 
 EXPOSE 8090
 
-ENTRYPOINT ["java","-jar","GameSession-0.0.1.jar"]
+ENTRYPOINT ["java","-jar","gamesession-rest-0.0.1.jar"]

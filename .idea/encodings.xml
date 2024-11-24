@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/GameSession/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/GameSession/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/LectorPortal/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/LectorPotral/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-dataaccess/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-dataaccess/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-rest/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-rest/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GameSession/gamesession-web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LectorPortal/lector-portal-dataaccess/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LectorPortal/lector-portal-rest/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LectorPortal/lector-portal-shared/src/main/java" charset="UTF-8" />
   </component>
 </project>
