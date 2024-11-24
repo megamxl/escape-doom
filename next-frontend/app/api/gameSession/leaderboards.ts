@@ -1,5 +1,5 @@
 import {gameSessionClient} from "@/app/api/axios";
-import {PlayerProgression} from "@/app/types/leaderboard/playerProgression";
+import {PlayerProgression} from "@/app/types/leaderboard/player-progression";
 
 const ENDPOINT = "/leaderboard"
 

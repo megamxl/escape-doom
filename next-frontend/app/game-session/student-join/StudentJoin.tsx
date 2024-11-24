@@ -4,17 +4,29 @@ import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {Alert, Button, Card, CardContent, Grid2, Snackbar, Stack, TextField, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
 import { common } from '@mui/material/colors';
+import {useLobbyJoin} from "@/app/utils/api/student-join/useLobbyJoin";
+import {redirect} from "next/navigation";
 
 const StudentJoin = () => {
 
     const [roomPin, setRoomPin] = useState('')
     const [snackbar, setSnackbar] = useState(false)
+    const {refetch} = useLobbyJoin(roomPin)
 
     const handleUserInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setRoomPin(e.target.value)
     }
 
-    const sendID = (e: FormEvent<HTMLFormElement>): void => {
+    const sendID = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const {data, isError, error} = await refetch();
+        if (!isError && data) {
+            const sessionID = data.sessionId
+            redirect("")
+        }
+
+
+
 
     }
 

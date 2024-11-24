@@ -1,13 +1,13 @@
 import {lectorClient} from "@/app/api/axios";
 import {EscapeRoom} from "@/app/lector-portal/dashboard/types";
 import {RoomState} from "@/app/lector-portal/dashboard/_components/RoomCard";
-import {_getToken} from "@/app/utils/token-handler";
+import {getToken} from "@/app/utils/token-handler";
 import {AxiosRequestConfig} from "axios";
 
 const ENDPOINT = "/portal-escape-room"
 
 const headers: AxiosRequestConfig = {
-    headers: { Authorization: `Bearer ${_getToken()}`, }
+    headers: { Authorization: `Bearer ${getToken()}`, }
 }
 
 const getAllRooms = async (): Promise<EscapeRoom[]> => {

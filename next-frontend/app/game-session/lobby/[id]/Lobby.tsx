@@ -1,13 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { Backdrop, Box, CircularProgress, Divider, Grid, Grow, Paper, Stack, Typography } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import {Backdrop, CircularProgress, Divider, Grid2, Grow, Paper, Stack, Typography} from "@mui/material";
 import { common } from "@mui/material/colors";
 import { redirect, useParams } from 'next/navigation'
 import UserCard from "./_components/UserCard";
 import { BASE_URLS } from "@/app/constants/paths";
-//TODO session muss noch eingebaut werden
-//import { getSessionId } from "../../utils/GameSessionHandler";
+import {getSessionId} from "@/app/utils/game-session-handler";
 
 const Lobby = () => {
 
@@ -37,8 +36,7 @@ const Lobby = () => {
         }
 
         if (countDown === 0) {
-            //const sessionId = getSessionId();
-            const sessionId = 1;
+            const sessionId = getSessionId();
             setIsStarted(false);
             setCountDown(5);
             redirect(`/session/${sessionId}`);
@@ -51,8 +49,7 @@ const Lobby = () => {
         };
     }, [countDown, isStarted]);
     useEffect(() => {
-        //const sessionId = getSessionId()
-        const sessionId = 1;
+        const sessionId = getSessionId()
 
         fetch(`${BASE_URLS.VITE_GAME_BASE_URL}/join/status/${sessionId}`)
             .then(response => response.json())
@@ -86,7 +83,7 @@ const Lobby = () => {
                     redirect(`/session/${sessionId}`);
                 }
             }).catch(error => {
-            console.log("error in ststus lobby reqest")
+            console.log(`error in ststus lobby reqest: ${error}`)
             // navigate("/")
         })
     }, [])
@@ -108,7 +105,7 @@ const Lobby = () => {
                     <CircularProgress size={30} thickness={5} sx={{margin: 2, marginRight: 10}} />
                 </Stack>
             </Stack>
-            <Grid
+            <Grid2
                 container
                 direction="row"
                 alignItems="center"
@@ -119,13 +116,13 @@ const Lobby = () => {
             >
                 { users.map((playerName, index) => (
 
-                    <Grid key={index} xs={4} item p={1}>
+                    <Grid2 key={index} size={{xs: 4}} p={1}>
                         <UserCard playerName={playerName} isMainUsr={name === playerName}/>
-                    </Grid>
+                    </Grid2>
 
                 ))
                 }
-            </Grid>
+            </Grid2>
             <Backdrop TransitionComponent={Grow} open={isStarted}>
                 <Stack>
                     <Typography fontSize="8rem"> Starting in </Typography>
