@@ -20,7 +20,7 @@ type output struct {
 	err error
 }
 
-func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) string {
+func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap, outgoing string) string {
 
 	shouldExecute := true
 
@@ -81,15 +81,13 @@ func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) stri
 		fmt.Println("lel not deleted")
 	}
 
-	messaging.SendMessage("computedCode", configMap, input, curr)
+	messaging.SendMessage(outgoing, configMap, input, curr)
 
 	return curr
 }
 
-// TODO MAKE ALL RETURNS USEFUL
 func executeDocker(dockerFileName string, name string) string {
 
-	fmt.Println("Welcome")
 	dockerBuild := exec.Command("docker", "build", "-t", name, "-f", dockerFileName, ".")
 	dockerBuild.Dir = name + "/"
 	var errb bytes.Buffer
@@ -103,8 +101,6 @@ func executeDocker(dockerFileName string, name string) string {
 
 		return "COMPILE ERROR"
 	}
-	// otherwise, print the output from running the command
-
 	ch := make(chan output)
 
 	go func() {
