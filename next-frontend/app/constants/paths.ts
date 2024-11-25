@@ -1,5 +1,10 @@
+import assert from "assert";
+
+assert(process.env.NEXT_PUBLIC_LECTOR_PORTAL_BASE_URL, "env variable not set: NEXT_PUBLIC_LECTOR_PORTAL_BASE_URL")
+assert(process.env.NEXT_PUBLIC_GAME_SESSION_BASE_URL, "env variable not set: NEXT_PUBLIC_GAME_SESSION_BASE_URL")
+
 export class LECTOR_PORTAL_API {
-    public static BASE_API = "http://localhost:8080/api/v1"
+    public static BASE_API = process.env.NEXT_PUBLIC_LECTOR_PORTAL_BASE_URL
 }
 
 export class LECTOR_PORTAL_APP_PATHS {
@@ -9,7 +14,7 @@ export class LECTOR_PORTAL_APP_PATHS {
 }
 
 export class GAME_SESSION_API {
-    public static BASE_API = "http://localhost:8090/api"
+    public static BASE_API = process.env.NEXT_PUBLIC_GAME_SESSION_BASE_URL
     public static SESSION = `${this.BASE_API}/session`
 }
 
@@ -20,8 +25,3 @@ export class GAME_SESSION_APP_PATHS {
     public static LOBBY = `${this.BASE_PATH}/lobby`
     public static LEADERBOARD = `${this.BASE_PATH}/leaderboard`
 }
-
-export const BASE_URLS = {
-    VITE_LECTOR_BASE_URL: "http://localhost:8080/api/v1",
-    VITE_GAME_BASE_URL: "http://localhost:8090/api"
-} as const;

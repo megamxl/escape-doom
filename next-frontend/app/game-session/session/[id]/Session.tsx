@@ -6,6 +6,8 @@ import {StageState} from "@/app/types/game-session/StageState";
 import {CodeExecResponse} from "@/app/types/game-session/CodeExecResponse";
 import {SubmittedCodeBody} from "@/app/types/game-session/SubmittedCodeBody";
 import {CodeLanguage} from "@/app/enums/CodeLanguage";
+import {NodeType} from "@/app/types/node-type";
+import Node from './_components/Nodes/Node';
 
 const Session = ({sessionID}: {sessionID: string}) => {
 
@@ -37,10 +39,16 @@ const Session = ({sessionID}: {sessionID: string}) => {
         monacoEditorRef.current = editor
     }
 
-    return (
-        <div>
+    const [code, setCode] = useState<string>("Initial code");
 
-        </div>
+    return (
+        <Node
+            key={5}
+            pos={{x: 900, y: 300}}
+            nodeInfos={{ story: "Node story info" }}
+            type={NodeType.STORY}
+            codeSetter={setCode}
+        />
     );
 };
 
