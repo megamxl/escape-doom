@@ -25,7 +25,7 @@ const StudentJoin = () => {
     const sendID = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Trying to get lobby of id: " + roomPin + "Current session: ", session)
-        const {data, isError, error} = await refetch();
+        const {data, isError} = await refetch();
 
         if (session) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${session}`)
 
@@ -46,11 +46,6 @@ const StudentJoin = () => {
                     redirect(`${GAME_SESSION_APP_PATHS.LOBBY}/${roomPin}`)
                     break;
                 case RoomState.STOPPED:
-                    //TODO: Remove this if backend is fixed
-                    setSession(responseSessionID)
-                    redirect(`${GAME_SESSION_APP_PATHS.LOBBY}/${roomPin}`)
-                    //END_TODO
-                    break;
                     setSession("")
                     setSnackbar(true)
                     break;
