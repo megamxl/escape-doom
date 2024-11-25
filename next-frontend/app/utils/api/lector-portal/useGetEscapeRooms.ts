@@ -1,6 +1,6 @@
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {changeRoomState, getAllRooms} from "@/app/api/lectorPortal/portal";
-import {RoomState} from "@/app/lector-portal/dashboard/_components/RoomCard";
+import {RoomState} from "@/app/enums/RoomState";
 
 export const useGetEscapeRooms = () => {
     return useQuery({

@@ -1,5 +1,5 @@
 import React, {HTMLAttributes} from 'react';
-import {PlayerProgression} from "@/app/types/leaderboard/playerProgression";
+import {PlayerProgression} from "@/app/types/leaderboard/player-progression";
 
 type RankEntryProps = {
     rankingInfo: PlayerProgression,

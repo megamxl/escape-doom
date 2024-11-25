@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Alert,
     Button,
@@ -17,10 +17,9 @@ import {
     Typography
 } from "@mui/material";
 import {AccessTime, Circle, Close, OpenInBrowser, PlayArrow} from "@mui/icons-material";
-import axios from "axios";
-import {LECTOR_PORTAL_API_PATHS} from "@/app/constants/paths";
 import {useChangeRoomState} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
-import {getDefaultAutoSelectFamily} from "node:net";
+import {RoomState} from "@/app/enums/RoomState";
+import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 
 type RoomCardCreationProps = {
     name: string,
@@ -35,12 +34,6 @@ type RoomCardState = {
     Status: RoomState,
     ID: number,
     Time: number
-}
-
-export enum RoomState {
-    STOPPED = "STOPPED",
-    JOINABLE = "JOINABLE",
-    PLAYING = "PLAYING"
 }
 
 const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCreationProps) => {
@@ -100,7 +93,7 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
                     |
                     {roomInfo.ID !== 0 ?
                         <Link target="_blank" rel="noopener" sx={{fontSize: 14}}
-                              href={"/leaderboard/" + roomInfo.ID}>Leaderboard</Link>
+                              href={`${GAME_SESSION_APP_PATHS.LEADERBOARD}/${roomInfo.ID}`}>Leaderboard</Link>
                         : ''
                     }
                 </div>

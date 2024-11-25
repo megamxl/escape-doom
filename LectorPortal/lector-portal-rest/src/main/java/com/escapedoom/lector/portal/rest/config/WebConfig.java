@@ -6,8 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -17,6 +23,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 })
 public class WebConfig implements WebMvcConfigurer {
 
+    @Value("${cors.allowed.origins}")
+    private String[] allowedOrigins;
+
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -25,14 +34,11 @@ public class WebConfig implements WebMvcConfigurer {
         return objectMapper;
     }
 
-    @Value("${cors.allowed.origins}")
-    private String[] allowedOrigins;
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/v1/auth/**")
-                .allowedOrigins(allowedOrigins)
-                .allowedMethods("POST", "GET", "OPTIONS")
-                .allowCredentials(true);
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/api/v1/**")
+//                .allowedOrigins(allowedOrigins)
+//                .allowedMethods("POST", "GET", "OPTIONS")
+//                .allowCredentials(true);
+//    }
 }

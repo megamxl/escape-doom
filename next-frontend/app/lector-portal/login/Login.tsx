@@ -5,9 +5,9 @@ import {Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography} 
 import {LockOutlined} from "@mui/icons-material";
 import {useToken} from "@/app/utils/token-handler";
 import {AuthCreds} from "@/app/api/lectorPortal/login";
-import useAuthentication from "@/app/utils/api/login/useAuthentication";
+import {useAuthentication} from "@/app/utils/api/login/useAuthentication";
 import {redirect, RedirectType} from "next/navigation";
-import {APP_PATHS} from "@/app/constants/paths";
+import {LECTOR_PORTAL_APP_PATHS} from "@/app/constants/paths";
 
 const Login = () => {
 
@@ -23,7 +23,7 @@ const Login = () => {
         if (!refetchResponse.isError) {
             // @ts-ignore
             setToken(refetchResponse.data?.token)
-            redirect(APP_PATHS.LECTOR_DASHBOARD, RedirectType.push)
+            redirect(LECTOR_PORTAL_APP_PATHS.DASHBOARD, RedirectType.push)
         } else {
             setOpen(true)
         }

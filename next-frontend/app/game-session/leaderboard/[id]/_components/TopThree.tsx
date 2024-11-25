@@ -1,5 +1,5 @@
 import React from 'react';
-import {PlayerProgression} from "@/app/types/leaderboard/playerProgression";
+import {PlayerProgression} from "@/app/types/leaderboard/player-progression";
 import PedestalPlace from "@/app/game-session/leaderboard/[id]/_components/PedestalPlace";
 
 type TopThreeProps = {
