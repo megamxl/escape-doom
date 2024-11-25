@@ -5,10 +5,10 @@ import {Backdrop, CircularProgress, Divider, Grid2, Grow, Paper, Stack, Typograp
 import { common } from "@mui/material/colors";
 import { redirect } from 'next/navigation'
 import UserCard from "./_components/UserCard";
-import { BASE_URLS } from "@/app/constants/paths";
 import {useSession} from "@/app/utils/game-session-handler";
 import {useLobbyStatus} from "@/app/utils/api/student-join/useLobbyStatus";
 import {LobbyState} from "@/app/types/lobby/LobbyState";
+import {LECTOR_PORTAL_API} from "@/app/constants/paths";
 
 const Lobby = ({lobbyID}: {lobbyID: number}) => {
 
@@ -28,42 +28,34 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
         if (isError) {
 
         } else if (data) {
-            //TODO: Change this to WebSockets!!
-            // fetch(`${BASE_URLS.VITE_GAME_BASE_URL}/join/status/${sessionID}`)
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         if (data.state === "JOINABLE") {
-            //             const url = `${BASE_URLS.VITE_GAME_BASE_URL}/join/lobby/${sessionID}`
-            //             const source = new EventSource(url)
-            //             source.onerror = (event) => {
-            //                 console.log("errors")
-            //                 //navigate("/")
-            //             };
-            //             source.addEventListener("yourName", (e) => {
-            //                 const parsedData = e.data
-            //                 setName(parsedData)
-            //             })
-            //
-            //             source.addEventListener("allNames", (e) => {
-            //                 const parsedData = JSON.parse(e.data)
-            //                 setUsers(parsedData.players)
-            //             })
-            //
-            //             source.addEventListener("started", (e) => {
-            //                 setIsStarted(true)
-            //                 source.close()
-            //             })
-            //
-            //             return () => {
-            //                 source.close()
-            //             }
-            //         } else {
-            //             redirect(`/session/${sessionID}`);
-            //         }
-            //     }).catch(error => {
-            //     console.log(`error in ststus lobby reqest: ${error}`)
-            //     redirect("/")
-            // })
+
+            if (data.state === "JOINABLE") {
+                const url = `${LECTOR_PORTAL_API.BASE_API}/join/lobby/${sessionID}`
+                const source = new EventSource(url)
+                source.onerror = (event) => {
+                    console.log("errors")
+                    //navigate("/")
+                };
+                source.addEventListener("yourName", (e) => {
+                    const parsedData = e.data
+                    setLobbyState(prev => ({...prev, name: parsedData}))
+                })
+
+                source.addEventListener("allNames", (e) => {
+                    const parsedData = JSON.parse(e.data)
+                    setLobbyState(prev => ({...prev, users: parsedData.players}))
+                })
+
+                source.addEventListener("started", (e) => {
+                    setLobbyState(prev => ({...prev, isStarted: true}))
+                    source.close()
+                })
+                return () => {
+                    source.close()
+                }
+            } else {
+                redirect(`/session/${sessionID}`);
+            }
         }
     }, [])
 

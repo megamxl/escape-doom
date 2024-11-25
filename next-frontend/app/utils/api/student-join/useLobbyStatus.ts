@@ -1,5 +1,5 @@
 import {useQuery} from "@tanstack/react-query";
-import {getLobbyStatus, postJoinLobby} from "@/app/api/gameSession/student-join";
+import {getLobbyStatus} from "@/app/api/gameSession/student-join";
 
 export const useLobbyStatus = (roomPin: string) => {
     return useQuery({

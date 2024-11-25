@@ -1,13 +1,12 @@
 'use client'
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Box, Divider, Grid2, Stack, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
 import RoomCard from "@/app/lector-portal/dashboard/_components/RoomCard";
 import {useGetEscapeRooms} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
 import RoomCardSkeleton from "@/app/lector-portal/dashboard/_components/RoomCardSkeleton";
 import {redirect} from "next/navigation";
-import {useLectorToken} from "@/app/utils/token-handler";
 
 const LectorPortalDashboard = () => {
 

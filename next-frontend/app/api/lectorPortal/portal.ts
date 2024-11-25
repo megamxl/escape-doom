@@ -1,6 +1,6 @@
 import {lectorClient} from "@/app/api/axios";
 import {EscapeRoom} from "@/app/lector-portal/dashboard/types";
-import {LECTOR_SESSION_STORAGE_STRING} from "@/app/utils/token-handler";
+import {LECTOR_SESSION_STORAGE_STRING} from "@/app/utils/lector-token-handler";
 import {AxiosRequestConfig} from "axios";
 import {RoomState} from "@/app/enums/RoomState";
 import {getSessionStorageItem} from "@/app/utils/session-storage-handler";
