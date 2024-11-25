@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@CrossOrigin
+
 @RestController
 @RequestMapping(Constants.API_JOIN_PATH)
 public class JoinController {
@@ -25,7 +25,7 @@ public class JoinController {
     private final PlayerStateManagementService playerStateManagementService;
 
     // method for joining / subscribing
-    @CrossOrigin
+    
     @GetMapping(value = Constants.ESCAPE_ROOM_URL, consumes = MediaType.ALL_VALUE)
     public JoinResponse sessionId(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
         return playerStateManagementService.mangeStateBySessionID(httpSession.getSession().getId(), escaperoom_id);

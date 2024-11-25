@@ -1,8 +1,8 @@
 const sessionString = 'sessionId'
 
 //TODO: Change back to localeStorage when deploying
-export const getSessionId = (): string => {
-    return sessionStorage?.getItem(sessionString) || ""
+export const getSessionId = () => {
+    return sessionStorage?.getItem(sessionString)
 }
 
 export const setSessionId = (sessionId: string) => {

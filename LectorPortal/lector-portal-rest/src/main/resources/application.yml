@@ -30,4 +30,4 @@ jwt:
   key: 703273357638792F423F4528482B4D6251655468576D597135897677397A2443
 cors:
   allowed:
-    origins: http://localhost
+    origins: http://localhost:3000

@@ -12,32 +12,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+
 @RequestMapping("/api/v1/portal-escape-room")
 @RequiredArgsConstructor
 public class EscapeRoomPortalController {
 
     private final EscaperoomService service;
 
-    @CrossOrigin
+    
     @GetMapping("/getAll")
+    
     ResponseEntity<List<EscaperoomDTO>> getAllEscapeRoom() {
         return ResponseEntity.ok(service.getAllRoomsByAnUser());
     }
 
     @PostMapping("/saveEscaperoom")
+    
     EscapeRoomDto saveEscapeRoom() {
         return  service.createADummyRoom();
     }
 
-    @CrossOrigin
+    
     @PostMapping(value = "openEscapeRoom/{escapeRoomId}")
+    
     public ResponseEntity<String> openEscapeRoom(@PathVariable("escapeRoomId") Long lobbyId) {
         return ResponseEntity.ok(service.openEscapeRoom(lobbyId));
     }
 
-    @CrossOrigin
+    
     @PostMapping(value = "startEscapeRoom/{escapeRoomId}/{minutes}")
+    
     public ResponseEntity<String> startEscapeRoom(
             @PathVariable("escapeRoomId") Long lobbyId,
             @PathVariable("minutes") Long minutes
@@ -45,8 +49,9 @@ public class EscapeRoomPortalController {
         return ResponseEntity.ok(service.changeEscapeRoomState(lobbyId, EscapeRoomState.PLAYING ,minutes));
     }
 
-    @CrossOrigin
+    
     @PostMapping(value = "stopEscapeRoom/{escapeRoomId}")
+    
     public ResponseEntity<String> stopEscapeRoom(@PathVariable("escapeRoomId") Long lobbyId) {
         return ResponseEntity.ok(service.changeEscapeRoomState(lobbyId, EscapeRoomState.STOPPED,null));
     }

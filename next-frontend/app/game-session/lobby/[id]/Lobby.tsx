@@ -8,14 +8,13 @@ import UserCard from "./_components/UserCard";
 import { BASE_URLS } from "@/app/constants/paths";
 import {getSessionId} from "@/app/utils/game-session-handler";
 
-const Lobby = () => {
+const Lobby = ({lobbyID}: {lobbyID: number}) => {
 
     const [name, setName] = useState('')
     const [users, setUsers] = useState([])
     const [countDown, setCountDown] = useState(5)
     const [isStarted, setIsStarted] = useState(false)
 
-    const lobbyID  = useParams<{ id: string }>()
     useEffect(() => {
         //@ts-ignore
         let interval;
@@ -84,7 +83,7 @@ const Lobby = () => {
                 }
             }).catch(error => {
             console.log(`error in ststus lobby reqest: ${error}`)
-            // navigate("/")
+            redirect("/")
         })
     }, [])
 
@@ -92,7 +91,7 @@ const Lobby = () => {
         <>
             <Paper sx={{width: "50%", margin: "auto", padding: 2, marginY: 2}}>
                 <Typography align="center" color={common.white} variant="h4"> Join at {window.location.host} with GamePin: </Typography>
-                <Typography align="center" color={common.white} variant="h2"> { lobbyID.id } </Typography>
+                <Typography align="center" color={common.white} variant="h2"> { lobbyID } </Typography>
             </Paper>
             <Divider  />
             <Stack direction="row" justifyContent="space-between">
