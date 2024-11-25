@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Alert,
     Button,
@@ -30,7 +30,7 @@ type RoomCardCreationProps = {
     escapeRoomState: RoomState,
 }
 
-type RoomCardState = {
+export type RoomCardState = {
     Status: RoomState,
     ID: number,
     Time: number
@@ -46,7 +46,7 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
 
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const handleClose = () => setSnackbarOpen(false)
-    const changeRoomState = useChangeRoomState(roomInfo.Status, roomInfo.ID, roomInfo.Time)
+    const updateRoomState = useChangeRoomState(id, setRoomInfo, roomInfo.Time)
 
     const statusLedColor = (() => {
         switch (roomInfo.Status) {
@@ -57,16 +57,8 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
         }
     })();
 
-    const handleStateChange = async (newState: RoomState) => {
-        const stateBeforeUpdate = roomInfo
-
-        setRoomInfo({...roomInfo, Status: newState});
-        changeRoomState.mutate()
-
-        if (changeRoomState.isError) {
-            setRoomInfo(stateBeforeUpdate);
-            setSnackbarOpen(true)
-        }
+    const handleStateChange = async (newStatus: RoomState) => {
+        updateRoomState.mutate(newStatus)
     }
 
     return (
@@ -101,9 +93,9 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
             </CardContent>
             <CardActions sx={{justifyContent: "space-between"}}>
                 <Circle sx={{color: statusLedColor}}> </Circle>
-                <Button onClick={() => handleStateChange(RoomState.JOINABLE)} startIcon={<OpenInBrowser/>}> Open </Button>
-                <Button onClick={() => handleStateChange(RoomState.PLAYING)} startIcon={<PlayArrow/>}> Start </Button>
-                <Button onClick={() => handleStateChange(RoomState.STOPPED)} startIcon={<Close/>}> Close </Button>
+                <Button onClick={() => handleStateChange(RoomState.JOINABLE)} disabled={roomInfo.Status == RoomState.JOINABLE} startIcon={<OpenInBrowser/>}> Open </Button>
+                <Button onClick={() => handleStateChange(RoomState.PLAYING)} disabled={roomInfo.Status == RoomState.PLAYING} startIcon={<PlayArrow/>}> Start </Button>
+                <Button onClick={() => handleStateChange(RoomState.STOPPED)} disabled={roomInfo.Status == RoomState.STOPPED} startIcon={<Close/>}> Close </Button>
                 <Stack direction="row" alignItems={"center"} gap={.5}>
                     <AccessTime/>
                     <FormControl>

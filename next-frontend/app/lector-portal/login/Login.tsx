@@ -3,7 +3,7 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography} from "@mui/material";
 import {LockOutlined} from "@mui/icons-material";
-import {useToken} from "@/app/utils/token-handler";
+import {getToken, useLectorToken} from "@/app/utils/token-handler";
 import {AuthCreds} from "@/app/api/lectorPortal/login";
 import {useAuthentication} from "@/app/utils/api/login/useAuthentication";
 import {redirect, RedirectType} from "next/navigation";
@@ -13,7 +13,7 @@ const Login = () => {
 
     const [open, setOpen] = useState(false)
     const [loginData, setLoginData] = useState<AuthCreds>({email: "", password: ""})
-    const [_, setToken] = useToken()
+    const [token, setToken] = useLectorToken()
 
     const {refetch} = useAuthentication(loginData)
 

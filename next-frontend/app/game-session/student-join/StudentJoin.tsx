@@ -8,13 +8,15 @@ import {useLobbyJoin} from "@/app/utils/api/student-join/useLobbyJoin";
 import {redirect} from "next/navigation";
 import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 import {RoomState} from "@/app/enums/RoomState";
-import {getSessionId, removeSessionId, setSessionId} from "@/app/utils/game-session-handler";
+import {useSession} from "@/app/utils/game-session-handler";
 
 const StudentJoin = () => {
 
     const [roomPin, setRoomPin] = useState('');
     const [snackbar, setSnackbar] = useState(false);
-    const { refetch } = useLobbyJoin(roomPin);
+
+    const [session, setSession] = useSession();
+    const {refetch} = useLobbyJoin(roomPin);
 
     const handleUserInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setRoomPin(e.target.value);
@@ -22,31 +24,38 @@ const StudentJoin = () => {
 
     const sendID = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Trying to get lobby of id: " + roomPin + "Current session: ", session)
         const {data, isError, error} = await refetch();
 
-        const curSessionID = getSessionId()
-
-        if (curSessionID) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${curSessionID}`)
+        if (session) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${session}`)
 
         if (isError) {
             //TODO: HandleError
         } else if (data) {
             const responseSessionID = data.sessionId
 
+            console.log(data)
+
             switch (data.state) {
                 case RoomState.PLAYING:
-                    setSessionId(responseSessionID)
+                    setSession(responseSessionID)
                     redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${responseSessionID}`)
                     break;
                 case RoomState.JOINABLE:
-                    setSessionId(responseSessionID)
+                    setSession(responseSessionID)
                     redirect(`${GAME_SESSION_APP_PATHS.LOBBY}/${roomPin}`)
                     break;
                 case RoomState.STOPPED:
-                    removeSessionId()
+                    //TODO: Remove this if backend is fixed
+                    setSession(responseSessionID)
+                    redirect(`${GAME_SESSION_APP_PATHS.LOBBY}/${roomPin}`)
+                    //END_TODO
+                    break;
+                    setSession("")
                     setSnackbar(true)
                     break;
-                default: console.log("Lobby is in an unknown state");
+                default:
+                    console.log("Lobby is in an unknown state");
             }
         }
     }

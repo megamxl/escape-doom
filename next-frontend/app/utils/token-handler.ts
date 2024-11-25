@@ -1,21 +1,16 @@
 import {useState} from "react";
+import {getSessionStorageItem, setSessionStorageItem} from "@/app/utils/session-storage-handler";
 
-const tokenString = 'token';
+export const LECTOR_SESSION_STORAGE_STRING = 'token';
 
-//TODO: Change back to localeStorage when deploying
-export const getToken = () => {
-    if (typeof window !== "undefined") {
-        return sessionStorage.getItem(tokenString)
-    }
-}
+export const useLectorToken = () => {
+    const [token, setToken] = useState<string>(() => {
+        return getSessionStorageItem(LECTOR_SESSION_STORAGE_STRING)
+    })
 
-export const useToken = () => {
-    const [token, setToken] = useState(getToken || null)
-
-    const _setToken = (newToken: string) => {
-        sessionStorage.setItem(tokenString, newToken)
-        setToken(newToken)
+    const setLectorToken = (newToken: string) => {
+        setSessionStorageItem(LECTOR_SESSION_STORAGE_STRING, newToken, setToken)
     }
 
-    return [token, _setToken]
+    return [token, setLectorToken] as const;
 }

@@ -3,17 +3,69 @@
 import React, { useEffect, useState } from 'react';
 import {Backdrop, CircularProgress, Divider, Grid2, Grow, Paper, Stack, Typography} from "@mui/material";
 import { common } from "@mui/material/colors";
-import { redirect, useParams } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import UserCard from "./_components/UserCard";
 import { BASE_URLS } from "@/app/constants/paths";
-import {getSessionId} from "@/app/utils/game-session-handler";
+import {useSession} from "@/app/utils/game-session-handler";
+import {useLobbyStatus} from "@/app/utils/api/student-join/useLobbyStatus";
+import {LobbyState} from "@/app/types/lobby/LobbyState";
 
 const Lobby = ({lobbyID}: {lobbyID: number}) => {
 
-    const [name, setName] = useState('')
-    const [users, setUsers] = useState([])
-    const [countDown, setCountDown] = useState(5)
-    const [isStarted, setIsStarted] = useState(false)
+    const [lobbyState, setLobbyState] = useState<LobbyState>({
+        name: '',
+        users: [],
+        countdown: 5,
+        isStarted: false
+    })
+
+    const [sessionID, setSessionID] = useSession();
+
+    const {data, isError, error} = useLobbyStatus(sessionID)
+
+    useEffect(() => {
+
+        if (isError) {
+
+        } else if (data) {
+            //TODO: Change this to WebSockets!!
+            // fetch(`${BASE_URLS.VITE_GAME_BASE_URL}/join/status/${sessionID}`)
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.state === "JOINABLE") {
+            //             const url = `${BASE_URLS.VITE_GAME_BASE_URL}/join/lobby/${sessionID}`
+            //             const source = new EventSource(url)
+            //             source.onerror = (event) => {
+            //                 console.log("errors")
+            //                 //navigate("/")
+            //             };
+            //             source.addEventListener("yourName", (e) => {
+            //                 const parsedData = e.data
+            //                 setName(parsedData)
+            //             })
+            //
+            //             source.addEventListener("allNames", (e) => {
+            //                 const parsedData = JSON.parse(e.data)
+            //                 setUsers(parsedData.players)
+            //             })
+            //
+            //             source.addEventListener("started", (e) => {
+            //                 setIsStarted(true)
+            //                 source.close()
+            //             })
+            //
+            //             return () => {
+            //                 source.close()
+            //             }
+            //         } else {
+            //             redirect(`/session/${sessionID}`);
+            //         }
+            //     }).catch(error => {
+            //     console.log(`error in ststus lobby reqest: ${error}`)
+            //     redirect("/")
+            // })
+        }
+    }, [])
 
     useEffect(() => {
         //@ts-ignore
@@ -21,7 +73,7 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
         const handleVisibilityChange = () => {
             if (document.visibilityState === "visible") {
                 interval = setInterval(() => {
-                    setCountDown((prevCountDown) => prevCountDown - 1);
+                    setLobbyState({...lobbyState, countdown: lobbyState.countdown - 1});
                 }, 1000);
             } else {
                 //@ts-ignore
@@ -29,16 +81,14 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
             }
         };
 
-        if (isStarted) {
+        if (lobbyState.isStarted) {
             document.addEventListener("visibilitychange", handleVisibilityChange);
             handleVisibilityChange();
         }
 
-        if (countDown === 0) {
-            const sessionId = getSessionId();
-            setIsStarted(false);
-            setCountDown(5);
-            redirect(`/session/${sessionId}`);
+        if (lobbyState.countdown === 0) {
+            setLobbyState({...lobbyState, isStarted: false, countdown: 5})
+            redirect(`/session/${sessionID}`);
         }
 
         return () => {
@@ -46,46 +96,7 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
             clearInterval(interval);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, [countDown, isStarted]);
-    useEffect(() => {
-        const sessionId = getSessionId()
-
-        fetch(`${BASE_URLS.VITE_GAME_BASE_URL}/join/status/${sessionId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.state === "JOINABLE") {
-                    const url = `${BASE_URLS.VITE_GAME_BASE_URL}/join/lobby/${sessionId}`
-                    const source = new EventSource(url)
-                    source.onerror = (event) => {
-                        console.log("errors")
-                        //navigate("/")
-                    };
-                    source.addEventListener("yourName", (e) => {
-                        const parsedData = e.data
-                        setName(parsedData)
-                    })
-
-                    source.addEventListener("allNames", (e) => {
-                        const parsedData = JSON.parse(e.data)
-                        setUsers(parsedData.players)
-                    })
-
-                    source.addEventListener("started", (e) => {
-                        setIsStarted(true)
-                        source.close()
-                    })
-
-                    return () => {
-                        source.close()
-                    }
-                } else {
-                    redirect(`/session/${sessionId}`);
-                }
-            }).catch(error => {
-            console.log(`error in ststus lobby reqest: ${error}`)
-            redirect("/")
-        })
-    }, [])
+    }, [lobbyState.countdown, lobbyState.isStarted]);
 
     return (
         <>
@@ -96,7 +107,7 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
             <Divider  />
             <Stack direction="row" justifyContent="space-between">
                 <Stack marginLeft={10} direction="column">
-                    <Typography fontSize={"2.5rem"} fontWeight="bold" align="center"> {users.length} </Typography>
+                    <Typography fontSize={"2.5rem"} fontWeight="bold" align="center"> {lobbyState.users.length} </Typography>
                     <Typography fontSize={"1.5rem"} fontWeight="bold"> Players </Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center">
@@ -113,19 +124,19 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
                 columnSpacing={3}
                 rowSpacing={3}
             >
-                { users.map((playerName, index) => (
+                { lobbyState.users.map((playerName, index) => (
 
                     <Grid2 key={index} size={{xs: 4}} p={1}>
-                        <UserCard playerName={playerName} isMainUsr={name === playerName}/>
+                        <UserCard playerName={playerName} isMainUsr={lobbyState.name === playerName}/>
                     </Grid2>
 
                 ))
                 }
             </Grid2>
-            <Backdrop TransitionComponent={Grow} open={isStarted}>
+            <Backdrop TransitionComponent={Grow} open={lobbyState.isStarted}>
                 <Stack>
                     <Typography fontSize="8rem"> Starting in </Typography>
-                    <Typography align="center" fontSize="10rem"> {countDown} </Typography>
+                    <Typography align="center" fontSize="10rem"> {lobbyState.countdown} </Typography>
                 </Stack>
             </Backdrop>
         </>

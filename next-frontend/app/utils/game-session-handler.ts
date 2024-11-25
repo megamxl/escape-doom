@@ -1,14 +1,16 @@
+import {useState} from "react";
+import {getSessionStorageItem, setSessionStorageItem} from "@/app/utils/session-storage-handler";
+
 const sessionString = 'sessionId'
 
-//TODO: Change back to localeStorage when deploying
-export const getSessionId = () => {
-    return sessionStorage?.getItem(sessionString)
-}
+export const useSession = () => {
+    const [session, setSession] = useState<string>(() => {
+        return getSessionStorageItem(sessionString)
+    })
 
-export const setSessionId = (sessionId: string) => {
-    return sessionStorage.setItem(sessionString, sessionId)
-}
+    const setGameSession = (newSession: string) => {
+        setSessionStorageItem(sessionString, newSession, setSession)
+    }
 
-export const removeSessionId = () => {
-    sessionStorage.removeItem(sessionString)
-};
+    return [session, setGameSession] as const;
+}

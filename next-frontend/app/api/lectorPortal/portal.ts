@@ -1,13 +1,14 @@
 import {lectorClient} from "@/app/api/axios";
 import {EscapeRoom} from "@/app/lector-portal/dashboard/types";
-import {getToken} from "@/app/utils/token-handler";
+import {LECTOR_SESSION_STORAGE_STRING} from "@/app/utils/token-handler";
 import {AxiosRequestConfig} from "axios";
 import {RoomState} from "@/app/enums/RoomState";
+import {getSessionStorageItem} from "@/app/utils/session-storage-handler";
 
 const ENDPOINT = "/portal-escape-room"
 
 const headers: AxiosRequestConfig = {
-    headers: { Authorization: `Bearer ${getToken()}`, }
+    headers: { Authorization: `Bearer ${getSessionStorageItem(LECTOR_SESSION_STORAGE_STRING)}`}
 }
 
 const getAllRooms = async (): Promise<EscapeRoom[]> => {
@@ -20,7 +21,7 @@ const changeRoomState = async (state: RoomState, id: number, time?: number) => {
         case RoomState.PLAYING: return (await startRoom(id, time!));
         case RoomState.JOINABLE: return (await openRoom(id));
         case RoomState.STOPPED: return (await stopRoom(id));
-        default: console.log("No valid state given", state); break;
+        default: console.error("No valid state given", state); return "-1";
     }
 }
 

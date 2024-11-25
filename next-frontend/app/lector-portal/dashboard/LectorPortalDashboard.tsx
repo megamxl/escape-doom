@@ -7,11 +7,10 @@ import RoomCard from "@/app/lector-portal/dashboard/_components/RoomCard";
 import {useGetEscapeRooms} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
 import RoomCardSkeleton from "@/app/lector-portal/dashboard/_components/RoomCardSkeleton";
 import {redirect} from "next/navigation";
-import {useToken} from "@/app/utils/token-handler";
+import {useLectorToken} from "@/app/utils/token-handler";
 
 const LectorPortalDashboard = () => {
 
-    const [token, _] = useToken()
     const {data, isPending, isError, error} = useGetEscapeRooms()
 
     useEffect(() => {
