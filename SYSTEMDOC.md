@@ -125,20 +125,20 @@ The escape room is a system that is planned to be combined with cutting-edge tec
 
 ### Frontend
 
-| ID    | Requirement                                                                                                                                    | Fulfilled | Responsible Developer |
-|-------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
-|       | Must                                                                                                                                           |           |                       |
+| ID    | Requirement                                                                                                                                   | Fulfilled | Responsible Developer |
+|-------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
+|       | Must                                                                                                                                          |           |                       |
 | FE-01 | The system must be refactored to adhere to [Next.js standards](https://github.com/dwarvesf/nextjs-boilerplate/blob/master/docs/CODE_STYLE.md). |           | @Thommy               |
-| FE-02 | The system must be migrated from pure React to Next.js?             K                                                                          |           | @Thommy               |
-| FE-03 | The system must provide end-to-end (E2E) testing solution.                                                                                     |           | @Thommy               |
-| FE-04 | The system must prepare the code structure to support a transition from SSE (Server-Sent Events) to WebSockets (WS).                           |           | @Jaquie               |
-|       | Should                                                                                                                                         |           |                       |
-| FE-05 | The system source code should be structured that all files for the lector portal frontend are in one folder.                                   |           | @Anas                 |
-|       | Could                                                                                                                                          |           |                       |
-| FE-06 | The system could leverage Next.js features to improve data fetching latency via Server Components.                                             |           | @Thommy               |
-| FE-07 | The system could enhance integration with TanStack Query.                                                                                      |           | @Anas                 |
-|       | Won't                                                                                                                                          |           |                       |
-| FE-08 | The system won't split the frontend into multiple packages this semester.                                                                      |           |                       |
+| FE-02 | The system must be migrated from pure React to Next.js?                                                                                       |           | @Thommy               |
+| FE-03 | The system must provide end-to-end (E2E) testing solution.                                                                                    |           | @Thommy               |
+| FE-04 | The system must prepare the code structure to support a transition from SSE (Server-Sent Events) to WebSockets (WS).                          |           | @Jaquie               |
+|       | Should                                                                                                                                        |           |                       |
+| FE-05 | The system source code should be structured that all files for the lector portal frontend are in one folder.                                  |           | @Anas                 |
+|       | Could                                                                                                                                         |           |                       |
+| FE-06 | The system could leverage Next.js features to improve data fetching latency via Server Components.                                            |           | @Thommy               |
+| FE-07 | The system could enhance integration with TanStack Query.                                                                                     |           | @Anas                 |
+|       | Won't                                                                                                                                         |           |                       |
+| FE-08 | The system won't split the frontend into multiple packages this semester.                                                                     |           |                       |
 
 ## Requirements Microservices
 
