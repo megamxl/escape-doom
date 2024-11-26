@@ -56,3 +56,4 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/LectorPortal
           SPRING_DATASOURCE_USERNAME: myuser
           SPRING_DATASOURCE_PASSWORD: mypassword
+          SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
