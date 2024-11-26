@@ -31,6 +31,11 @@ public class EscapeRoomStage {
     @Column(name = "outputid")
     private Long outputID;
 
+    /** uncomment if facing problems **/
+    //@JsonIgnore
+    //@ManyToOne( cascade = CascadeType.ALL)
+    //@Fetch(FetchMode.JOIN)
+    //@JoinColumn(name = "escapeRoomID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "escape_roomid")
     private Escaperoom escaperoom;
