@@ -49,6 +49,17 @@ func ReadKafkaConfig(configFile string) kafka.ConfigMap {
 
 	m := make(map[string]kafka.ConfigValue)
 
+	config := ReadConfig(configFile)
+
+	m["bootstrap.servers"] = config["bootstrap.servers"]
+
+	return m
+}
+
+func ReadConfig(configFile string) map[string]string {
+
+	m := make(map[string]string)
+
 	file, err := os.Open(configFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to open file: %s", err)

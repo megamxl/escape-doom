@@ -14,8 +14,6 @@ import (
 )
 
 func main() {
-	fmt.Println("hello")
-
 	if len(os.Args) != 2 {
 		fmt.Fprintf(os.Stderr, "Usage: %s <config-file-path>\n",
 			os.Args[0])
@@ -29,14 +27,34 @@ func main() {
 
 	c, err := kafka.NewConsumer(&conf)
 
+	conf = messaging.ReadKafkaConfig(configFile)
+
 	if err != nil {
 		fmt.Printf("Failed to create consumer: %s", err)
 		os.Exit(1)
 	}
 
-	//TODO Change for real thing
-	topic := "codeCompiler"
+	confComplete := messaging.ReadConfig(configFile)
+
+	topicIncoming, exists := confComplete["topic.incoming"]
+	if !exists || topicIncoming == "" {
+		fmt.Println("Error: 'topic.incoming' is not defined in the configuration")
+		os.Exit(1)
+	}
+
+	outgoing, exists := confComplete["topic.outgoing"]
+	if !exists || topicIncoming == "" {
+		fmt.Println("Error: 'topic.outgoing' is not defined in the configuration")
+		os.Exit(1)
+	}
+
+	// Convert to string if necessary (depending on type in your conf map)
+	topic := fmt.Sprintf("%v", topicIncoming)
+	fmt.Printf("Subscribed to topic: %s\n", topic)
+
+	// Subscribe to the topic
 	err = c.SubscribeTopics([]string{topic}, nil)
+
 	// Set up a channel for handling Ctrl-C, etc
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
@@ -54,8 +72,8 @@ func main() {
 				// Errors are informational and automatically handled by the consumer
 				continue
 			}
-			fmt.Printf("Consumed event from topic %s value = %s\n",
-				*ev.TopicPartition.Topic, string(ev.Value))
+			fmt.Printf("Consumed event from topic %s \n",
+				*ev.TopicPartition.Topic)
 
 			var request constants.Request
 
@@ -63,9 +81,8 @@ func main() {
 			if err2 != nil {
 				fmt.Println(err2)
 			}
-			fmt.Println("the request is", request.Code)
 
-			go docker_based.SetupForExecution(&request, conf)
+			go docker_based.SetupForExecution(&request, conf, outgoing)
 		}
 	}
 	_ = c.Close()
