@@ -52,5 +52,4 @@ jobs:
       - name: Run Maven tests for ${{ matrix.module }}
         working-directory: ${{ matrix.module }}
         run: mvn clean test
-        env:
 
