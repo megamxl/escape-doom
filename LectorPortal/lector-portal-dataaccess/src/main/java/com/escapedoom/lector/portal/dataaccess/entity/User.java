@@ -16,11 +16,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
 @Table(name = "user_info")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_info_seq")
     private Long userId;
     private String lastname;
     private String firstname;
@@ -67,4 +67,14 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
+    }
+
 }

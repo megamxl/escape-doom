@@ -1,0 +1,55 @@
+name: Multi-Module Java CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module:
+          - GameSession
+          - LectorPortal
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: LectorPortal
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U myuser -d LectorPortal"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run Maven tests for ${{ matrix.module }}
+        working-directory: ${{ matrix.module }}
+        run: mvn clean test
+
