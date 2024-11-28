@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
+	"log"
 
 	"os"
 	"strings"
@@ -15,7 +16,7 @@ func SendMessage(topic string, conf kafka.ConfigMap, input *constants.Request, o
 	p, err := kafka.NewProducer(&conf)
 
 	if err != nil {
-		fmt.Printf("Failed to create producer: %s", err)
+		log.Printf("Failed to create producer: %s", err)
 		os.Exit(1)
 	}
 
@@ -26,9 +27,9 @@ func SendMessage(topic string, conf kafka.ConfigMap, input *constants.Request, o
 			switch ev := e.(type) {
 			case *kafka.Message:
 				if ev.TopicPartition.Error != nil {
-					fmt.Printf("Failed to deliver message: %v\n", ev.TopicPartition)
+					log.Printf("Failed to deliver message: %v\n", ev.TopicPartition)
 				} else {
-					fmt.Printf("Produced event to topic %s: key = %-10s value = %s\n",
+					log.Printf("Produced event to topic %s: key = %-10s value = %s\n",
 						*ev.TopicPartition.Topic, string(ev.Key), string(ev.Value))
 				}
 			}
@@ -79,7 +80,7 @@ func ReadConfig(configFile string) map[string]string {
 	}
 
 	if err := scanner.Err(); err != nil {
-		fmt.Printf("Failed to read file: %s", err)
+		log.Printf("Failed to read file: %s", err)
 		os.Exit(1)
 	}
 
