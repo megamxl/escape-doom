@@ -1,7 +1,7 @@
 import {CodeLanguage} from "@/app/enums/CodeLanguage";
 
 export type SubmittedCodeBody = {
-    sessionID: string,
+    playerSessionId: string,
     language: CodeLanguage,
     code: string,
     codeRiddleID: number,

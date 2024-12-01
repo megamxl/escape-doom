@@ -1,9 +1,9 @@
-import React from 'react';
-import { Settings, Search, Visibility, AutoStories } from "@mui/icons-material";
-import { Backdrop, Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography } from "@mui/material";
-import { amber, blue, deepPurple, purple } from "@mui/material/colors";
-import { useState } from "react";
-import { NodeInstance, NodeInterface, NodeType } from "../../NodeInterface";
+import React, {useState} from 'react';
+import {AutoStories, Search, Settings, Visibility} from "@mui/icons-material";
+import {Backdrop, Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography} from "@mui/material";
+import {amber, blue, deepPurple, purple} from "@mui/material/colors";
+import {NodeInstance, NodeInterface} from "../../NodeInterface";
+import {NodeType} from "@/app/types/node-type";
 
 interface IconButtonInt {
     pos: {x: number, y: number},
@@ -188,13 +188,13 @@ export const ZoomNode = ({pos, nodeInfos}: NodeInstance) => {
 
 const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeInterface) => {
     switch(type) {
-        case "CONSOLE":
+        case NodeType.CONSOLE:
             return ConsoleNode({pos, nodeInfos}, codeSetter)
-        case "DETAILS":
+        case NodeType.DETAILS:
             return StoryNode({pos, nodeInfos})
-        case "STORY":
+        case NodeType.STORY:
             return DetailsNode({pos, nodeInfos})
-        case "ZOOM":
+        case NodeType.ZOOM:
             return ZoomNode({pos, nodeInfos})
         default:
             console.error(`Invalid Node Type: ${type}`)

@@ -22,5 +22,11 @@ export const getStageInformation = async (sessionID: string): Promise<StageInfoR
 }
 
 export const postSubmitCode = async (codeBody: SubmittedCodeBody) => {
+    const { data } = await gameSessionClient.post(`${ENDPOINT}/submitCode`, codeBody)
+    return data;
+}
 
+export const getCodeResult = async (sessionID: string) => {
+    const { data } = await gameSessionClient.get(`${ENDPOINT}/getCode/${sessionID}`)
+    return data;
 }

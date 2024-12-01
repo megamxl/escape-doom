@@ -1,10 +1,4 @@
-export enum NodeType {
-
-    CONSOLE = 'CONSOLE',
-    DETAILS = 'DETAILS',
-    STORY = 'STORY',
-    ZOOM = 'ZOOM'
-}
+import {NodeType} from "@/app/types/node-type";
 
 export interface NodeInterface {
     type: NodeType

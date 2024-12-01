@@ -1,6 +1,6 @@
 import {HttpStatusCode} from "axios";
 
 export type CodeExecResponse = {
-    status: HttpStatusCode,
+    status: string,
     output: string
 }

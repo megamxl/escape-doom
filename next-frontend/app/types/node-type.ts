@@ -1,7 +1,7 @@
 export enum NodeType {
 
-    CONSOLE = 'CONSOLE',
-    DETAILS = 'DETAILS',
-    STORY = 'STORY',
-    ZOOM = 'ZOOM'
+    CONSOLE = 'Console',
+    DETAILS = 'Details',
+    STORY = 'Story',
+    ZOOM = 'Zoom'
 }

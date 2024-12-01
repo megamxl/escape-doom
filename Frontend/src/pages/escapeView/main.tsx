@@ -30,10 +30,10 @@ const EscapeView = () => {
     const navigate = useNavigate()
     const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-    const backgroundRef = useRef(null)
-    const [backgroundWidth, setBackgroundWidth] = useState(0);
-    const [backgroundHeight, setBackgroundHeight] = useState(0);
-    const [imgHeight, setImgHeight] = useState(0);
+//    const backgroundRef = useRef(null)
+//    const [backgroundWidth, setBackgroundWidth] = useState(0);
+//    const [backgroundHeight, setBackgroundHeight] = useState(0);
+//    const [imgHeight, setImgHeight] = useState(0);
 
     const [code, setCode] = useState(`// To figure out what to do click on 
 // - Purple Icons for the story / context for the riddle
