@@ -18,8 +18,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 @AutoConfigureMockMvc
+@SpringBootTest(properties = {
+        "spring.kafka.bootstrap-servers=localhost:9092",
+        "spring.kafka.consumer.group-id=test-group"
+})
 class JoinControllerTest {
 
     @Autowired
