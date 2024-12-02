@@ -6,7 +6,7 @@ import {NodeInstance, NodeState} from "@/app/types/game-session/NodeState";
 import {NodeType} from "@/app/types/game-session/NodeType";
 
 interface IconButtonInt {
-    pos: {x: number, y: number},
+    pos: { x: number, y: number },
     color: string,
     icon: any,
     openfunction: React.Dispatch<React.SetStateAction<boolean>>
@@ -36,18 +36,21 @@ const IconButtonProp: React.FC<IconButtonInt> = ({pos, color, icon, openfunction
     )
 }
 
-export const ConsoleNode = ({pos, nodeInfos}: NodeInstance, codeSetter: React.Dispatch<React.SetStateAction<string>>) => {
+export const ConsoleNode = ({
+                                pos,
+                                nodeInfos
+                            }: NodeInstance, codeSetter: React.Dispatch<React.SetStateAction<string>>) => {
     const [isOpen, setIsOpen] = useState(false)
-    return(
+    return (
         <>
             <IconButtonProp
                 pos={pos}
                 color={amber[600]}
-                icon={<Settings fontSize='small' />}
+                icon={<Settings fontSize='small'/>}
                 openfunction={setIsOpen}
             />
             <Backdrop sx={{zIndex: (theme) => theme.zIndex.drawer + 1}} open={isOpen} onClick={() => setIsOpen(false)}>
-                <Card sx={{ minWidth: minWidthConst, maxWidth: maxWidthConst }}>
+                <Card sx={{minWidth: minWidthConst, maxWidth: maxWidthConst}}>
                     <Stack
                         direction="row"
                         alignItems={"center"}
@@ -75,7 +78,9 @@ export const ConsoleNode = ({pos, nodeInfos}: NodeInstance, codeSetter: React.Di
                             <Typography> {nodeInfos.exampleInput} </Typography>
                         </Box>
                         <Stack direction={"row"} justifyContent={"end"}>
-                            <Button sx={{backgroundColor: amber[600]}} variant="contained" onClick={() => {codeSetter(nodeInfos.codeSnipped)}}> Connect </Button>
+                            <Button sx={{backgroundColor: amber[600]}} variant="contained" onClick={() => {
+                                codeSetter(nodeInfos.codeSnipped)
+                            }}> Connect </Button>
                         </Stack>
                     </CardContent>
                 </Card>
@@ -89,7 +94,7 @@ export const StoryNode = ({pos, nodeInfos}: NodeInstance) => {
 
     const mainColor = purple[400];
 
-    return(
+    return (
         <>
             <IconButtonProp
                 pos={pos}
@@ -98,7 +103,7 @@ export const StoryNode = ({pos, nodeInfos}: NodeInstance) => {
                 openfunction={setIsOpen}
             />
             <Backdrop sx={{zIndex: (theme) => theme.zIndex.drawer + 1}} open={isOpen} onClick={() => setIsOpen(false)}>
-                <Card sx={{ minWidth: minWidthConst, maxWidth: maxWidthConst }}>
+                <Card sx={{minWidth: minWidthConst, maxWidth: maxWidthConst}}>
                     <Stack
                         direction="row"
                         alignItems={"center"}
@@ -133,11 +138,11 @@ export const DetailsNode = ({pos, nodeInfos}: NodeInstance) => {
             <IconButtonProp
                 pos={pos}
                 color={mainColor}
-                icon={<Search fontSize='small' />}
+                icon={<Search fontSize='small'/>}
                 openfunction={setIsOpen}
             />
             <Backdrop sx={{zIndex: (theme) => theme.zIndex.drawer + 1}} open={isOpen} onClick={() => setIsOpen(false)}>
-                <Card sx={{ minWidth: minWidthConst, maxWidth: maxWidthConst }}>
+                <Card sx={{minWidth: minWidthConst, maxWidth: maxWidthConst}}>
                     <Stack
                         direction="row"
                         alignItems={"center"}
@@ -156,7 +161,11 @@ export const DetailsNode = ({pos, nodeInfos}: NodeInstance) => {
                     <CardContent>
                         <Stack direction="row" height="400px" gap={2}>
                             <Box width="80%" height="100%"
-                                 sx={{backgroundImage: `url(${nodeInfos.png})`, backgroundSize: "contain", backgroundRepeat: "no-repeat"}}/>
+                                 sx={{
+                                     backgroundImage: `url(${nodeInfos.png})`,
+                                     backgroundSize: "contain",
+                                     backgroundRepeat: "no-repeat"
+                                 }}/>
                             <Typography mb={2}> {nodeInfos.desc} </Typography>
                         </Stack>
                     </CardContent>
@@ -170,7 +179,9 @@ export const ZoomNode = ({pos, nodeInfos}: NodeInstance) => {
     return (
         <IconButton
             size="small"
-            onClick={() => {window.location.reload()}}
+            onClick={() => {
+                window.location.reload()
+            }}
             sx={{
                 position: "relative",
                 left: pos.x,
@@ -181,13 +192,13 @@ export const ZoomNode = ({pos, nodeInfos}: NodeInstance) => {
                 border: 2,
                 borderRadius: '50%'
             }}>
-            <Visibility fontSize='small' />
+            <Visibility fontSize='small'/>
         </IconButton>
     )
 }
 
 const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeState) => {
-    switch(type) {
+    switch (type) {
         case NodeType.CONSOLE:
             return ConsoleNode({pos, nodeInfos}, codeSetter)
         case NodeType.DETAILS:

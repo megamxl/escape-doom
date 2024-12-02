@@ -9,7 +9,7 @@ import {CodeLanguage} from "@/app/enums/CodeLanguage";
 import Node from './_components/Node';
 import {parseStage} from "@/app/utils/parseJsonString";
 import {RoomState} from "@/app/enums/RoomState";
-import {FormControl, MenuItem, Select, Stack, Typography} from "@mui/material";
+import {CircularProgress, FormControl, MenuItem, Select, Stack, Typography} from "@mui/material";
 import EditorContainer from "@/app/game-session/session/[id]/_components/EditorContainer";
 import {PlayArrow} from "@mui/icons-material";
 import Editor from '@monaco-editor/react';
@@ -34,7 +34,6 @@ const Session = ({sessionID}: { sessionID: string }) => {
     })
 
     const [code, setCode] = useState<string>("Initial code");
-
     const [codeExecutionResponse, setCodeExecutionResponse] = useState<CodeExecResponse>({
         status: compileStatus.WAITING,
         output: ''
@@ -46,14 +45,18 @@ const Session = ({sessionID}: { sessionID: string }) => {
         codeRiddleID: 0,
         dateTime: new Date(Date.now())
     })
-    const {refetch, data: submitCodeData, error, isFetching} = useSubmitCode(submittedCodeBody);
 
-    const {data, isLoading} = useGetStageInformation(sessionID)
-    // const submitCode = useSubmitCode()
+    /* TanStack Query Calls */
+    const {data: stageInformation, isLoading} = useGetStageInformation(sessionID)
+    const {refetch: refetchCodeResult, data: codeResultData} = useGetCodeResult(sessionID);
+    const {refetch: reSubmitCode} = useSubmitCode(submittedCodeBody);
 
-    if (data?.state == RoomState.PLAYING && data?.stage && !stageState.stageScene) {
-        const newStage = parseStage(data.stage);
-        console.log("NewStage:", newStage)
+    const monacoEditorRef = useRef()
+
+    const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+    if (stageInformation?.state == RoomState.PLAYING && stageInformation?.stage && !stageState.stageScene) {
+        const newStage = parseStage(stageInformation.stage);
         if (newStage) {
             setStageState((prev) => ({
                 ...prev,
@@ -62,26 +65,25 @@ const Session = ({sessionID}: { sessionID: string }) => {
         }
     }
 
-    const {
-        refetch: refetchCodeResult,
-        data: codeResultData,
-        isLoading: codeResultisLoading
-    } = useGetCodeResult(sessionID);
-    const monacoEditorRef = useRef()
-
     const handleCodeSubmission = async () => {
-        await refetch();
+        await reSubmitCode();
+        let response = await getCodeResult();
         //TODO anas - das refetch oben funktioniert und ich submitte ins backend
         //aber das getCodeResult stimmt iwi noch nicht
-        await getCodeResult()
-        console.log(codeResultData)
+        // await getCodeResult()
+        // console.log(codeResultData)
     }
 
-    const getCodeResult = async () => {
+    const getCodeResult = async (): Promise<CodeExecResponse | undefined> => {
+        if (codeResultData === undefined) return;
+
         while (codeResultData.status === compileStatus.WAITING) {
+            console.log("Waiting for code compilation completed", codeResultData)
+            await sleep(250);
             await refetchCodeResult();
         }
-        console.log(codeResultData)
+        console.log("Compilation done", codeResultData.status)
+        return codeResultData;
     }
 
     const handleLanguageChange = () => {
@@ -102,8 +104,9 @@ const Session = ({sessionID}: { sessionID: string }) => {
         monacoEditorRef.current = editor
     }
 
-    if (isLoading) return <p>Loading...</p>;
     return (
+        isLoading ? <LoadingDisplay /> :
+
         <Stack direction="row" alignItems="center" height="100vh">
             <Stack direction="column" height="100vh" maxWidth={"31.5vw"}>
                 <EditorContainer>
@@ -132,7 +135,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
                     <Editor
                         height="100%"
                         width="30vw"
-                        language={stageState.language}
+                        language={stageState.language.toLowerCase()}
                         value={code}
                         onMount={handleEditorMount}
                         onChange={handleCodeChange}
@@ -198,5 +201,14 @@ const Session = ({sessionID}: { sessionID: string }) => {
         </Stack>
     );
 };
+
+const LoadingDisplay = () => {
+    return (
+        <Stack height={"100vh"} width={"100vw"} direction={"column"} justifyContent={"center"} gap={4}
+               alignItems={"center"}>
+            <CircularProgress size={"10rem"} variant={"indeterminate"}/>
+            <Typography variant={"h3"}> Loading... </Typography> </Stack>
+    )
+}
 
 export default Session;

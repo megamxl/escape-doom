@@ -1,9 +1,9 @@
 'use client'
 
-import React, {ChangeEvent, FormEvent, useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography} from "@mui/material";
 import {LockOutlined} from "@mui/icons-material";
-import {getToken, useLectorToken} from "@/app/utils/lector-token-handler";
+import {useLectorToken} from "@/app/utils/lector-token-handler";
 import {AuthCreds} from "@/app/api/lectorPortal/login";
 import {useAuthentication} from "@/app/utils/api/login/useAuthentication";
 import {redirect, RedirectType} from "next/navigation";
@@ -21,6 +21,7 @@ const Login = () => {
         e.preventDefault()
         const refetchResponse = await refetch();
         if (!refetchResponse.isError) {
+            console.log(refetchResponse.data?.token)
             // @ts-ignore
             setToken(refetchResponse.data?.token)
             redirect(LECTOR_PORTAL_APP_PATHS.DASHBOARD, RedirectType.push)

@@ -3,6 +3,7 @@ import {LobbyJoinResponse} from "@/app/types/student-join/lobby-join-response";
 import {LobbyStatusResponse} from "@/app/types/student-join/lobby-status-response";
 import {StageInfoResponse} from "@/app/types/game-session/stage-info-response";
 import {SubmittedCodeBody} from "@/app/types/game-session/SubmittedCodeBody";
+import {CodeExecResponse} from "@/app/types/game-session/CodeExecResponse";
 
 const ENDPOINT = "/join"
 
@@ -22,11 +23,12 @@ export const getStageInformation = async (sessionID: string): Promise<StageInfoR
 }
 
 export const postSubmitCode = async (codeBody: SubmittedCodeBody) => {
+    console.log("CodeBody", codeBody)
     const { data } = await gameSessionClient.post(`${ENDPOINT}/submitCode`, codeBody)
     return data;
 }
 
-export const getCodeResult = async (sessionID: string) => {
+export const getCodeResult = async (sessionID: string): Promise<CodeExecResponse> => {
     const { data } = await gameSessionClient.get(`${ENDPOINT}/getCode/${sessionID}`)
     return data;
 }
