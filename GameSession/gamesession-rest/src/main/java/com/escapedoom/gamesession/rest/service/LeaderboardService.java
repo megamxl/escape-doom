@@ -1,4 +1,4 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.entity.Player;
 import com.escapedoom.gamesession.rest.model.escaperoom.LeaderboardDao;

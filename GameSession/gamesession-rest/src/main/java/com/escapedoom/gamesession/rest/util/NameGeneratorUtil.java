@@ -1,4 +1,4 @@
-package com.escapedoom.gamesession.rest.utils;
+package com.escapedoom.gamesession.rest.util;
 
 import lombok.experimental.UtilityClass;
 

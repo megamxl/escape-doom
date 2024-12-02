@@ -1,4 +1,4 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.*;
 import com.escapedoom.gamesession.dataaccess.entity.*;
@@ -8,9 +8,9 @@ import com.escapedoom.gamesession.rest.model.code.*;
 import com.escapedoom.gamesession.rest.model.response.JoinResponse;
 import com.escapedoom.gamesession.rest.model.response.StageResponse;
 import com.escapedoom.gamesession.rest.model.response.StatusReturn;
-import com.escapedoom.gamesession.rest.utils.NameGeneratorUtil;
-import com.escapedoom.gamesession.rest.utils.CodeSniptes;
-import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
+import com.escapedoom.gamesession.rest.util.NameGeneratorUtil;
+import com.escapedoom.gamesession.rest.util.CodeSniptes;
+import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import com.escapedoom.gamesession.rest.config.redis.KafkaConfigProperties;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

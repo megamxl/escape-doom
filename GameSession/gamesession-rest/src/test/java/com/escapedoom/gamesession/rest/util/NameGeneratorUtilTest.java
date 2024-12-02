@@ -1,6 +1,6 @@
-package com.escapedoom.gamesession.rest.services.util;
+package com.escapedoom.gamesession.rest.util;
 
-import com.escapedoom.gamesession.rest.utils.NameGeneratorUtil;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 
@@ -27,7 +27,7 @@ class NameGeneratorUtilTest {
         String generatedName = NameGeneratorUtil.generate();
         String firstNamePart = generatedName.split("(?=[A-Z])")[0];
 
-        assertThat(firstNames)
+        Assertions.assertThat(firstNames)
                 .as("Generated first name should match one from the list.")
                 .contains(firstNamePart);
     }
@@ -37,7 +37,7 @@ class NameGeneratorUtilTest {
         String generatedName = NameGeneratorUtil.generate();
         String lastNamePart = generatedName.split("(?=[A-Z])")[1];
 
-        assertThat(secondNames)
+        Assertions.assertThat(secondNames)
                 .as("Generated last name should match one from the list.")
                 .contains(lastNamePart);
     }

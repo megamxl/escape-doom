@@ -1,6 +1,6 @@
 package com.escapedoom.gamesession.rest.controller;
 
-import com.escapedoom.gamesession.rest.services.PlayerStateManagementService;
+import com.escapedoom.gamesession.rest.service.PlayerStateManagementService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
