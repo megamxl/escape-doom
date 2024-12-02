@@ -6,7 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompilingProcessRepository extends JpaRepository<ProcessingRequest,String> {
-
-
-
 }

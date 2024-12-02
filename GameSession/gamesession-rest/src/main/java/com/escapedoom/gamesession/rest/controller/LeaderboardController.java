@@ -1,7 +1,7 @@
 package com.escapedoom.gamesession.rest.controller;
 
 import com.escapedoom.gamesession.rest.model.escaperoom.LeaderboardDao;
-import com.escapedoom.gamesession.rest.services.LeaderboardService;
+import com.escapedoom.gamesession.rest.service.LeaderboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

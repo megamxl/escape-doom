@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Data
+@Table(name = "processing_request")
 public class ProcessingRequest {
 
     @Id
