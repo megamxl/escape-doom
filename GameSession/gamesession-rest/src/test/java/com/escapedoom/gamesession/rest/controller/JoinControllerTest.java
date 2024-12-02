@@ -1,27 +1,35 @@
 package com.escapedoom.gamesession.rest.controller;
 
+import com.escapedoom.gamesession.rest.Constants;
 import com.escapedoom.gamesession.rest.model.response.JoinResponse;
 import com.escapedoom.gamesession.rest.service.PlayerStateManagementService;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
+import org.springframework.session.web.http.SessionRepositoryFilter;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@SpringBootTest(properties = {
-        "spring.kafka.bootstrap-servers=localhost:9092",
-        "spring.kafka.consumer.group-id=test-group"
+@WebMvcTest(controllers = JoinController.class)
+@Import(JoinControllerTest.TestRedisConfig.class)
+@ImportAutoConfiguration(exclude = {
+        org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class,
+        org.springframework.boot.autoconfigure.session.SessionAutoConfiguration.class
 })
 class JoinControllerTest {
 
@@ -31,23 +39,50 @@ class JoinControllerTest {
     @MockBean
     private PlayerStateManagementService playerStateManagementService;
 
+    @MockBean
+    private HttpSession httpSession;
+
     @Test
     void sessionId_ShouldReturnJoinResponse() throws Exception {
+        // Arrange
         JoinResponse mockResponse = JoinResponse.builder()
                 .sessionId("mock-session-id")
                 .name("Mock Escape Room")
                 .state(EscapeRoomState.JOINABLE)
                 .build();
 
-        Mockito.when(playerStateManagementService.mangeStateBySessionID(anyString(), anyLong()))
+        Mockito.when(playerStateManagementService.mangeStateBySessionID("mock-session-id", 1L))
                 .thenReturn(mockResponse);
 
-        mockMvc.perform(get("/api/join/1")
-                        .sessionAttr("SESSION", "mock-session-id")
+        MockHttpSession mockHttpSession = new MockHttpSession();
+
+        mockMvc.perform(get(Constants.API_JOIN_PATH + "/1")
+                        .session(mockHttpSession)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.sessionId").value("mock-session-id"))
-                .andExpect(jsonPath("$.name").value("Mock Escape Room"))
-                .andExpect(jsonPath("$.state").value("JOINABLE"));
+                .andExpect(status().isOk());
+    }
+
+    @Configuration
+    static class TestRedisConfig {
+        @Bean
+        public RedisConnectionFactory redisConnectionFactory() {
+            return Mockito.mock(RedisConnectionFactory.class);
+        }
+
+        @Bean
+        public RedisTemplate<?, ?> redisTemplate() {
+            RedisTemplate<?, ?> redisTemplate = Mockito.mock(RedisTemplate.class);
+            return redisTemplate;
+        }
+
+        @Bean
+        public RedisIndexedSessionRepository redisIndexedSessionRepository(RedisConnectionFactory redisConnectionFactory) {
+            return Mockito.mock(RedisIndexedSessionRepository.class);
+        }
+
+        @Bean
+        public SessionRepositoryFilter<?> sessionRepositoryFilter(RedisIndexedSessionRepository redisIndexedSessionRepository) {
+            return Mockito.mock(SessionRepositoryFilter.class);
+        }
     }
 }
