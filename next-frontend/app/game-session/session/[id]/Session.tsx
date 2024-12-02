@@ -6,7 +6,7 @@ import {StageState} from "@/app/types/game-session/StageState";
 import {CodeExecResponse} from "@/app/types/game-session/CodeExecResponse";
 import {SubmittedCodeBody} from "@/app/types/game-session/SubmittedCodeBody";
 import {CodeLanguage} from "@/app/enums/CodeLanguage";
-import Node from './_components/Nodes/Node';
+import Node from './_components/Node';
 import {parseStage} from "@/app/utils/parseJsonString";
 import {RoomState} from "@/app/enums/RoomState";
 import {Box, FormControl, MenuItem, Select, Stack, Typography} from "@mui/material";
@@ -14,12 +14,12 @@ import {StageNode} from "@/app/types/game-session/StageNode";
 import EditorContainer from "@/app/game-session/session/[id]/_components/EditorContainer";
 import {PlayArrow} from "@mui/icons-material";
 import Editor from '@monaco-editor/react';
-import { LoadingButton } from '@mui/lab';
+import {LoadingButton} from '@mui/lab';
 import {useSubmitCode} from "@/app/utils/api/game-session/useSubmitCode";
 import {useGetCodeResult} from "@/app/utils/api/game-session/useGetCodeResult";
 import {compileStatus} from "@/app/enums/compileStatus";
 
-const Session = ({sessionID}: {sessionID: string}) => {
+const Session = ({sessionID}: { sessionID: string }) => {
 
     const [stageState, setStageState] = useState<StageState>({
         language: CodeLanguage.JAVA,
@@ -39,26 +39,27 @@ const Session = ({sessionID}: {sessionID: string}) => {
         codeRiddleID: 0,
         dateTime: new Date(Date.now())
     })
-    const {refetch, data: submitCodeData, error } = useSubmitCode(submittedCodeBody);
+    const {refetch, data: submitCodeData, error, isFetching} = useSubmitCode(submittedCodeBody);
 
     const {data, isLoading} = useGetStageInformation(sessionID)
     // const submitCode = useSubmitCode()
 
     if (data?.state == RoomState.PLAYING && data?.stage && !stageState.stageScene) {
         const newStage = parseStage(data.stage);
-        console.log(newStage)
-        //TODO anas - ich versteh nicht warum aber - parseStage sollte als Rückgabewert StageScene haben
-        // bekomme aber ein StageScene[] deswegen hol ich mir gerade das [0] da unten
-        if(newStage) {
+        if (newStage) {
             //console.log(newStage[0])
             setStageState((prev) => ({
                 ...prev,
-                stageScene: newStage[0],
+                stageScene: newStage,
             }));
         }
     }
 
-    const {refetch: refetchCodeResult, data: codeResultData, isLoading: codeResultisLoading} = useGetCodeResult(sessionID);
+    const {
+        refetch: refetchCodeResult,
+        data: codeResultData,
+        isLoading: codeResultisLoading
+    } = useGetCodeResult(sessionID);
     const monacoEditorRef = useRef()
 
     const handleCodeSubmission = async () => {
@@ -69,8 +70,8 @@ const Session = ({sessionID}: {sessionID: string}) => {
         console.log(codeResultData)
     }
 
-    const getCodeResult = async() => {
-        while(codeResultData.status === compileStatus.WAITING) {
+    const getCodeResult = async () => {
+        while (codeResultData.status === compileStatus.WAITING) {
             await refetchCodeResult();
         }
         console.log(codeResultData)
@@ -85,7 +86,7 @@ const Session = ({sessionID}: {sessionID: string}) => {
             "playerSessionId": sessionID,
             "language": stageState.language,
             "code": value,
-            "codeRiddleID":  1,
+            "codeRiddleID": 1,
             "dateTime": new Date(Date.now())
         })
     }
@@ -108,9 +109,13 @@ const Session = ({sessionID}: {sessionID: string}) => {
                                 label="Language"
                                 onChange={handleLanguageChange}
                             >
-                                {/* <MenuItem value="javascript" > Javascript </MenuItem> */}
-                                <MenuItem value="JAVA"> Java </MenuItem>
-                                {/* <MenuItem value="python"> Python </MenuItem> */}
+                                {
+                                    Object.keys(CodeLanguage).map(language => {
+                                        return (
+                                            <MenuItem key={language} value={language}> {language[0]}{language.slice(1).toLowerCase()} </MenuItem>
+                                        )
+                                    })
+                                }
                             </Select>
                         </FormControl>
                     </Stack>
@@ -120,14 +125,13 @@ const Session = ({sessionID}: {sessionID: string}) => {
                         height="100%"
                         width="30vw"
                         language={stageState.language}
-                        //@ts-ignore
                         value={code}
                         onMount={handleEditorMount}
                         onChange={handleCodeChange}
                         theme={"vs-dark"}
                         options={{
                             wordWrap: 'on',
-                            minimap: { enabled: false },
+                            minimap: {enabled: false},
                             folding: false,
                             lineNumbersMinChars: 3,
                             scrollBeyondLastLine: false,
@@ -137,7 +141,7 @@ const Session = ({sessionID}: {sessionID: string}) => {
                 </EditorContainer>
                 <EditorContainer>
                     <Stack direction="column">
-                        <Typography position={{sx: 'relative', lg: 'absolute'}}> Actions  </Typography>
+                        <Typography position={{sx: 'relative', lg: 'absolute'}}> Actions </Typography>
                         <LoadingButton
                             sx={{
                                 height: 60,

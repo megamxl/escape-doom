@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {AutoStories, Search, Settings, Visibility} from "@mui/icons-material";
 import {Backdrop, Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography} from "@mui/material";
 import {amber, blue, deepPurple, purple} from "@mui/material/colors";
-import {NodeInstance, NodeInterface} from "../../NodeInterface";
+import {NodeInstance, NodeState} from "@/app/types/game-session/NodeState";
 import {NodeType} from "@/app/types/node-type";
 
 interface IconButtonInt {
@@ -186,7 +186,7 @@ export const ZoomNode = ({pos, nodeInfos}: NodeInstance) => {
     )
 }
 
-const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeInterface) => {
+const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeState) => {
     switch(type) {
         case NodeType.CONSOLE:
             return ConsoleNode({pos, nodeInfos}, codeSetter)
@@ -202,7 +202,7 @@ const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeInterface) => {
     }
 }
 
-const Node = ({type, pos, nodeInfos, codeSetter}: NodeInterface) => {
+const Node = ({type, pos, nodeInfos, codeSetter}: NodeState) => {
     return (
         renderNodeType({type, pos, nodeInfos, codeSetter})
     );

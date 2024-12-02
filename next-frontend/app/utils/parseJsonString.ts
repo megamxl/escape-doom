@@ -1,18 +1,16 @@
 import {StageScene} from "@/app/types/game-session/StageScene";
 
-export function parseStage(data: string[] | undefined): StageScene | undefined {
+export function parseStage(data: string[] | undefined): StageScene | null {
     try {
 
         if (data && data.length > 0) {
             if (data) {
-                const parsedStage: StageScene = JSON.parse(data[0]);
-                //console.log(parsedStage)
-                return parsedStage;
+                return JSON.parse(data[0])[0];
             }
         }
-        return undefined;
+        return null;
     } catch (error) {
         console.error('Error parsing stage data:', error);
-        return undefined;
+        return null;
     }
 }
