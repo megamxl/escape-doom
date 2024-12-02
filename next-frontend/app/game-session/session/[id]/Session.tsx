@@ -9,8 +9,7 @@ import {CodeLanguage} from "@/app/enums/CodeLanguage";
 import Node from './_components/Node';
 import {parseStage} from "@/app/utils/parseJsonString";
 import {RoomState} from "@/app/enums/RoomState";
-import {Box, FormControl, MenuItem, Select, Stack, Typography} from "@mui/material";
-import {StageNode} from "@/app/types/game-session/StageNode";
+import {FormControl, MenuItem, Select, Stack, Typography} from "@mui/material";
 import EditorContainer from "@/app/game-session/session/[id]/_components/EditorContainer";
 import {PlayArrow} from "@mui/icons-material";
 import Editor from '@monaco-editor/react';
@@ -20,6 +19,14 @@ import {useGetCodeResult} from "@/app/utils/api/game-session/useGetCodeResult";
 import {compileStatus} from "@/app/enums/compileStatus";
 
 const Session = ({sessionID}: { sessionID: string }) => {
+
+    // TODO: Thommy - Mit Backend Team absprechen das wir die neue Struktur bekommen, dann hauts auch hin
+    // const nodes: NodeV2Props[] = [
+    //     { type: NodeType.STORY, position: { top: "20%", left: "30%" }, nodeInfos: { desc: "Story Node", title: "Story" } },
+    //     { type: NodeType.CONSOLE, position: { top: "50%", left: "60%" }, nodeInfos: { desc: "Story Node", title: "Story" } },
+    //     { type: NodeType.DETAILS, position: { top: "70%", left: "40%" }, nodeInfos: { desc: "Story Node", title: "Story" } },
+    //     { type: NodeType.ZOOM, position: { top: "50%", left: "40%" }, nodeInfos: { desc: "Story Node", title: "Story" } },
+    // ];
 
     const [stageState, setStageState] = useState<StageState>({
         language: CodeLanguage.JAVA,
@@ -46,8 +53,8 @@ const Session = ({sessionID}: { sessionID: string }) => {
 
     if (data?.state == RoomState.PLAYING && data?.stage && !stageState.stageScene) {
         const newStage = parseStage(data.stage);
+        console.log("NewStage:", newStage)
         if (newStage) {
-            //console.log(newStage[0])
             setStageState((prev) => ({
                 ...prev,
                 stageScene: newStage,
@@ -65,7 +72,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
     const handleCodeSubmission = async () => {
         await refetch();
         //TODO anas - das refetch oben funktioniert und ich submitte ins backend
-        //abder das getCodeResult stimmt iwi noch nicht
+        //aber das getCodeResult stimmt iwi noch nicht
         await getCodeResult()
         console.log(codeResultData)
     }
@@ -108,11 +115,12 @@ const Session = ({sessionID}: { sessionID: string }) => {
                                 value={stageState.language}
                                 label="Language"
                                 onChange={handleLanguageChange}
-                            >
+                                variant={"standard"}>
                                 {
                                     Object.keys(CodeLanguage).map(language => {
                                         return (
-                                            <MenuItem key={language} value={language}> {language[0]}{language.slice(1).toLowerCase()} </MenuItem>
+                                            <MenuItem key={language}
+                                                      value={language}> {language[0]}{language.slice(1).toLowerCase()} </MenuItem>
                                         )
                                     })
                                 }
@@ -160,28 +168,33 @@ const Session = ({sessionID}: { sessionID: string }) => {
                     </Stack>
                 </EditorContainer>
             </Stack>
-            <Box
-                sx={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundImage: `url(${stageState.stageScene?.bgImg})`,
-                    backgroundSize: "contain",
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                }}
-            >
+
+            <div className="relative w-full mx-auto">
+                <img
+                    src={`${stageState.stageScene?.bgImg}`}
+                    alt="Background"
+                    className="w-full h-auto bg-no-repeat bg-contain"
+                />
                 {
-                    stageState.stageScene?.nodes ? (stageState.stageScene?.nodes.map((node: StageNode, index: number) => (
-                        <Node
-                            key={index}
-                            pos={{x: node.pos.x * 1000, y: node.pos.y * 1000}}
-                            nodeInfos={node.nodeInfos}
-                            type={node.type}
-                            codeSetter={setCode}
-                        />
-                    ))) : <></>
+                    // //TODO: Replace with new Nodes when structure is reworked
+                    // nodes.map(({type, position, nodeInfos}, idx) => {
+                    //     return (
+                    //         <NodeV2 key={idx} type={type} position={position} nodeInfos={nodeInfos} />
+                    //     )
+                    // })
+                    stageState.stageScene?.nodes.map((node, idx) => {
+                        return (
+                            <Node
+                                key={idx}
+                                pos={node.pos}
+                                nodeInfos={node.nodeInfos}
+                                type={node.type}
+                                codeSetter={setCode}
+                            />
+                        )
+                    })
                 }
-            </Box>
+            </div>
         </Stack>
     );
 };

@@ -1,4 +1,4 @@
-import {NodeType} from "@/app/types/node-type";
+import {NodeType} from "@/app/types/game-session/NodeType";
 
 export type NodeState = {
     type: NodeType

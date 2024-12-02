@@ -3,7 +3,7 @@ import {AutoStories, Search, Settings, Visibility} from "@mui/icons-material";
 import {Backdrop, Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography} from "@mui/material";
 import {amber, blue, deepPurple, purple} from "@mui/material/colors";
 import {NodeInstance, NodeState} from "@/app/types/game-session/NodeState";
-import {NodeType} from "@/app/types/node-type";
+import {NodeType} from "@/app/types/game-session/NodeType";
 
 interface IconButtonInt {
     pos: {x: number, y: number},
@@ -23,9 +23,9 @@ const IconButtonProp: React.FC<IconButtonInt> = ({pos, color, icon, openfunction
             onClick={() => openfunction(true)}
             sx={{
                 color: color,
-                position: "relative",
-                left: pos.x,
-                top: pos.y,
+                position: "absolute",
+                top: `${pos.y * 100}%`,
+                left: `${pos.x * 100}%`,
                 width: iconSize,
                 height: iconSize,
                 border: 2,
