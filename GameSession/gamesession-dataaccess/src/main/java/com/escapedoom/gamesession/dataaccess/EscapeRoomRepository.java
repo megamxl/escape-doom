@@ -1,6 +1,6 @@
 package com.escapedoom.gamesession.dataaccess;
 
-import com.escapedoom.gamesession.dataaccess.entity.EscapeRoomDao;
+import com.escapedoom.gamesession.dataaccess.entity.EscapeRoomStage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Repository
-public interface EscapeRoomRepo extends JpaRepository<EscapeRoomDao, Long> {
+public interface EscapeRoomRepository extends JpaRepository<EscapeRoomStage, Long> {
 
     @Query(
-            value = "SELECT es.stage FROM EscapeRoomDao es where es.roomId = ?1 and es.stageId = ?2"
+            value = "SELECT es.stage FROM EscapeRoomStage es where es.roomId = ?1 and es.stageId = ?2"
     )
     ArrayList<Object> getEscapeRoomStageByEscaperoomIDAndStageNumber(@Param("escapeRoomId") Long escapeRoomId, @Param("stageId") Long StageId);
 
-    Optional<EscapeRoomDao> findEscapeRoomDaoByStageIdAndRoomId(Long stageId, Long roomID);
-
+    @Query(value = "SELECT * FROM escape_room_stage WHERE escape_roomid = :roomId AND stage_id = :stageId", nativeQuery = true)
+    Optional<EscapeRoomStage> findEscapeRoomStageByStageIdAndRoomId(@Param("stageId") Long stageId, @Param("roomId") Long roomId);
     @Query(value = "SELECT es.max_stage FROM escaperoom es WHERE es.escaperoom_id = ?1", nativeQuery = true)
-    Long getMaxStage(Long escaperoomID);
+    Long getMaxStageByRoomId(Long escaperoomID);
 
 }

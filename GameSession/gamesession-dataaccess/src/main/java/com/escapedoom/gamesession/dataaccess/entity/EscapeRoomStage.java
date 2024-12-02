@@ -12,10 +12,11 @@ import org.hibernate.type.SqlTypes;
 @Entity
 @ToString
 @Table(name = "escape_room_stage")
-public class EscapeRoomDao {
+public class EscapeRoomStage {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "escape_room_stage_seq")
+    @SequenceGenerator(name = "escape_room_stage_seq", sequenceName = "escape_room_stage_seq", allocationSize = 50)
     private Long id;
 
     @Column(name = "escape_roomid")

@@ -40,7 +40,7 @@ public class PlayerStateManagementService {
 
     private final OpenLobbyRepository openLobbyRepository;
 
-    private final EscapeRoomRepo escapeRoomRepo;
+    private final EscapeRoomRepository escapeRoomRepository;
 
     private final KafkaTemplate<String,String> kafkaTemplate;
 
@@ -260,7 +260,7 @@ public class PlayerStateManagementService {
             if (lobbyId.isPresent()) {
                 if (lobbyId.get().getState() == EscapeRoomState.PLAYING) {
                     return StageResponse.builder()
-                            .stage(escapeRoomRepo.getEscapeRoomStageByEscaperoomIDAndStageNumber(curr.get().getEscampeRoom_room_id(), curr.get().getEscaperoomStageId()))
+                            .stage(escapeRoomRepository.getEscapeRoomStageByEscaperoomIDAndStageNumber(curr.get().getEscampeRoom_room_id(), curr.get().getEscaperoomStageId()))
                             .roomID(lobbyId.get().getLobbyId())
                             .state(lobbyId.get().getState()).build();
                 } else if (lobbyId.get().getState() == EscapeRoomState.JOINABLE) {
@@ -299,7 +299,7 @@ public class PlayerStateManagementService {
         //TODO RETURN ERRRORS TAHAT FRONTEND UNDERSTANDS
         Optional<Player> playerByHttpSessionID = sessionManagementRepository.findPlayerByHttpSessionID(codeCompilingRequestEvent.getPlayerSessionId());
         if (playerByHttpSessionID.isPresent()) {
-            Optional<EscapeRoomDao> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepo.findEscapeRoomDaoByStageIdAndRoomId(playerByHttpSessionID.get().getEscaperoomStageId(), playerByHttpSessionID.get().getEscampeRoom_room_id());
+            Optional<EscapeRoomStage> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepository.findEscapeRoomStageByStageIdAndRoomId(playerByHttpSessionID.get().getEscaperoomStageId(), playerByHttpSessionID.get().getEscampeRoom_room_id());
             if (escapeRoomDaoByStageIdAndRoomId.isPresent()) {
                 Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDaoByStageIdAndRoomId.get().getOutputID());
                 if (byId.isPresent()) {
@@ -349,12 +349,12 @@ public class PlayerStateManagementService {
                 compilingProcessRepository.delete(compilingProcessRepositoryById.get());
                 Optional<Player> playerByHttpSessionID = sessionManagementRepository.findPlayerByHttpSessionID(playerID);
                 if (playerByHttpSessionID.isPresent()) {
-                    Optional<EscapeRoomDao> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepo.findEscapeRoomDaoByStageIdAndRoomId(playerByHttpSessionID.get().getEscaperoomStageId(), playerByHttpSessionID.get().getEscampeRoom_room_id());
+                    Optional<EscapeRoomStage> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepository.findEscapeRoomStageByStageIdAndRoomId(playerByHttpSessionID.get().getEscaperoomStageId(), playerByHttpSessionID.get().getEscampeRoom_room_id());
                     if (escapeRoomDaoByStageIdAndRoomId.isPresent()) {
                         Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDaoByStageIdAndRoomId.get().getOutputID());
                         if (byId.isPresent()) {
                             if (compilingProcessRepositoryById.get().getOutput().replace("\n","").equals(byId.get().getExpectedOutput())) {
-                                Long maxStage = escapeRoomRepo.getMaxStage(playerByHttpSessionID.get().getEscampeRoom_room_id());
+                                Long maxStage = escapeRoomRepository.getMaxStageByRoomId(playerByHttpSessionID.get().getEscampeRoom_room_id());
                                 if (playerByHttpSessionID.get().getEscaperoomStageId() + 1 < maxStage) {
                                     Player player = playerByHttpSessionID.get();
                                     player.setEscaperoomStageId(playerByHttpSessionID.get().getEscaperoomStageId() + 1);
