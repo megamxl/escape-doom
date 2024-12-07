@@ -81,7 +81,12 @@ public class CompilationService {
         try {
             requestAsJsoString = myJsonSlave.writeValueAsString(codeCompilationRequest);
         } catch (JsonProcessingException e) {
-            return;
+            log.error("Error when serializing CodeCompilationRequest to JSON. PlayerSessionId: {}, EscapeRoomStageId: {}, RoomId: {}, ErrorMessage: {}",
+                    codeCompilationRequest.getPlayerSessionId(),
+                    playerByHttpSessionID.map(Player::getEscaperoomStageId),
+                    playerByHttpSessionID.map(Player::getEscampeRoom_room_id),
+                    e.getMessage());
+
         }
         kafkaTemplate.send(kafkaConfigProperties.getCodeCompilerTopic(), requestAsJsoString);
 

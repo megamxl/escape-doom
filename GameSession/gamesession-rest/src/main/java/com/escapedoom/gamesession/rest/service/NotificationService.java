@@ -70,7 +70,12 @@ public class NotificationService {
             }
             sseEmitter.send(SseEmitter.event().name(ALL_NAME_EVENT).data(jsonPlayers.toString()));
         } catch (Exception e) {
-            System.out.println("should not happen");
+            log.error("Error while establishing lobby emitters. PlayerSessionId: {}, EscapeRoomSession: {}, PlayerName: {}, ErrorMessage: {}",
+                    httpId,
+                    player.getEscaperoomSession(),
+                    player.getName(),
+                    e.getMessage(),
+                    e);
         }
         sseEmitter.onCompletion(() -> {
             synchronized (this.sseEmitters) {
@@ -144,9 +149,9 @@ public class NotificationService {
                     // Added this since a partial restart of the system caused no new players to join :(
                     if (!allByEscaperoomSession.get().isEmpty()) {
                         notifyAllPlayersInSession(allByEscaperoomSession.get().get(0), true);
-                        System.out.println("informing clients");
+                        log.info("informing clients");
                     } else {
-                        System.out.println("No player found!");
+                        log.info("No player found!");
                     }
                 }
 
