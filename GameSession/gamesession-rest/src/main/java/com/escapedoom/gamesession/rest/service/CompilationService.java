@@ -44,9 +44,11 @@ public class CompilationService {
 
     private final CodeRiddleRepository codeRiddleRepository;
 
-
     public void startCompiling(CodeCompilationRequest codeCompilationRequest) {
+        log.debug("Compilation request session ID: {}", codeCompilationRequest.getPlayerSessionId());
+
         if (compilationRepository.findById(codeCompilationRequest.getPlayerSessionId()).isPresent()) {
+            log.warn("Compilation request already exists for PlayerSessionId: {}", codeCompilationRequest.getPlayerSessionId());
             return;
         }
         var curr = sessionManagementRepository.findPlayerByHttpSessionID(codeCompilationRequest.getPlayerSessionId());
@@ -54,6 +56,7 @@ public class CompilationService {
             Optional<OpenLobbys> lobbyId = openLobbyRepository.findByLobbyId(curr.get().getEscaperoomSession());
             if (lobbyId.isPresent()) {
                 if (lobbyId.get().getState() != EscapeRoomState.PLAYING) {
+                    log.warn("Lobby state is not in PLAYING, for PlayerSessionId: {}", codeCompilationRequest.getPlayerSessionId());
                     return;
                 }
             }
@@ -69,12 +72,14 @@ public class CompilationService {
             if (escapeRoomDaoByStageIdAndRoomId.isPresent()) {
                 Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDaoByStageIdAndRoomId.get().getOutputID());
                 if (byId.isPresent()) {
+                    log.debug("Generating code snippet for PlayerSessionId: {}", codeCompilationRequest.getPlayerSessionId());
                     codeCompilationRequest.setDateTime(LocalDateTime.now());
                     codeCompilationRequest.setCode(CodeSniptes.javaClassGenerator(byId.get().getInput(), byId.get().getVariableName() , codeCompilationRequest.getCode()));
                 }
             }
         }
         if (codeCompilationRequest.getDateTime() == null) {
+            log.warn("DateTime is null for PlayerSessionId: {}", codeCompilationRequest.getPlayerSessionId());
             return;
         }
 
@@ -99,7 +104,8 @@ public class CompilationService {
     @KafkaListener(topics = "computedCode")
     @Transactional
     public void receivingKafkaMessages(final ConsumerRecord<String, String> message) {
-        System.out.print(message.key());
+        log.info("Received Kafka message for PlayerSessionId: {}", message.key());
+
         var process = compilationRepository.findById(message.key());
         if (process.isPresent()) {
             ProcessingRequest processingRequest = process.get();
@@ -107,45 +113,52 @@ public class CompilationService {
             processingRequest.setCompilingStatus(CompilingStatus.Done);
             compilationRepository.save(processingRequest);
         } else {
-            log.atError().log("Should have not received This message {}" , message);
+            log.error("Should have not received This message {}" , message);
         }
     }
 
     public CodeStatus getResult(String playerID) {
         // Check if there is a dataset in the database for that name
         Optional<ProcessingRequest> compilationRepositoryById = compilationRepository.findById(playerID);
-        if (!compilationRepositoryById.isPresent()) {
+        if (compilationRepositoryById.isEmpty()) {
+            log.warn("No request found for Player ID: {}", playerID);
             return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
         }
 
         ProcessingRequest processingRequest = compilationRepositoryById.get();
         if (processingRequest.getCompilingStatus() != CompilingStatus.Done) {
+            log.warn("Compilation is still in progress for PlayerID: {}", playerID);
             return CodeStatus.builder().status(CState.WAITING).output("").build();
         }
 
         compilationRepository.delete(processingRequest);
+        log.info("Deleted completed processing request for PlayerID: {}", playerID);
 
         Optional<Player> playerByHttpSessionID = sessionManagementRepository.findPlayerByHttpSessionID(playerID);
-        if (!playerByHttpSessionID.isPresent()) {
+        if (playerByHttpSessionID.isEmpty()) {
+            log.debug("No player found for PlayerID: {}", playerID);
             return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
         }
 
         Player player = playerByHttpSessionID.get();
         Optional<EscapeRoomStage> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepo.findEscapeRoomDaoByStageIdAndRoomId(
                 player.getEscaperoomStageId(), player.getEscampeRoom_room_id());
-        if (!escapeRoomDaoByStageIdAndRoomId.isPresent()) {
+        if (escapeRoomDaoByStageIdAndRoomId.isEmpty()) {
+            log.debug("No ConsoleNodeCode found for PlayerID: {}", playerID);
             return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
         }
 
         EscapeRoomStage escapeRoomDao = escapeRoomDaoByStageIdAndRoomId.get();
         Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDao.getOutputID());
-        if (!byId.isPresent()) {
+        if (byId.isEmpty()) {
+            log.debug("Compilation result mismatch for PlayerID: {}", playerID);
             return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
         }
 
         ConsoleNodeCode consoleNodeCode = byId.get();
         if (!processingRequest.getOutput().replace("\n", "").equals(consoleNodeCode.getExpectedOutput())) {
             CState status = processingRequest.getOutput().equals("COMPILE ERROR") ? CState.ERROR : CState.COMPILED;
+            log.debug("Compilation result mismatch for PlayerID: {}", playerID);
             return CodeStatus.builder().status(status).output(processingRequest.getOutput()).build();
         }
 
@@ -156,11 +169,10 @@ public class CompilationService {
             player.setScore(player.getScore() + 10L * player.getEscaperoomStageId());
 
             Optional<OpenLobbys> byLobbyId = openLobbyRepository.findByLobbyId(player.getEscaperoomSession());
-            if (byLobbyId.isPresent()) {
-                player.setLastStageSolved(byLobbyId.get().getStartTime().until(LocalDateTime.now(), ChronoUnit.SECONDS));
-            }
+            byLobbyId.ifPresent(openLobbys -> player.setLastStageSolved(openLobbys.getStartTime().until(LocalDateTime.now(), ChronoUnit.SECONDS)));
 
             sessionManagementRepository.save(player);
+            log.debug("Player {} progressed to the next stage.", playerID);
             return CodeStatus.builder().status(CState.SUCCESS).output(processingRequest.getOutput()).build();
         }
 
