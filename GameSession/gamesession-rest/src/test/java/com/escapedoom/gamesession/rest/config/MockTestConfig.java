@@ -9,8 +9,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.web.http.SessionRepositoryFilter;
+import org.springframework.test.context.TestPropertySource;
 
 @TestConfiguration
+@TestPropertySource(properties = "spring.session.timeout=30m")
 public class MockTestConfig {
 
     @MockBean

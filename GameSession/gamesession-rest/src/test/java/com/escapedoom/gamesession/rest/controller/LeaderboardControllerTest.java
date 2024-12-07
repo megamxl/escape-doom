@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.web.http.SessionRepositoryFilter;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(MockTestConfig.class)
+@TestPropertySource(properties = "spring.session.timeout=30m")
 @WebMvcTest(controllers = LeaderboardController.class)
 class LeaderboardControllerTest {
 
