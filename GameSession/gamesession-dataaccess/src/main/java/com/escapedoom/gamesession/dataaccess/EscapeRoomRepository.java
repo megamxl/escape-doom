@@ -18,6 +18,8 @@ public interface EscapeRoomRepository extends JpaRepository<EscapeRoomStage, Lon
     )
     ArrayList<Object> getEscapeRoomStageByEscaperoomIDAndStageNumber(@Param("escapeRoomId") Long escapeRoomId, @Param("stageId") Long StageId);
 
+    Optional<EscapeRoomStage> findEscapeRoomDaoByStageIdAndRoomId(Long stageId, Long roomID);
+
     @Query(value = "SELECT * FROM escape_room_stage WHERE escape_roomid = :roomId AND stage_id = :stageId", nativeQuery = true)
     Optional<EscapeRoomStage> findEscapeRoomStageByStageIdAndRoomId(@Param("stageId") Long stageId, @Param("roomId") Long roomId);
     @Query(value = "SELECT es.max_stage FROM escaperoom es WHERE es.escaperoom_id = ?1", nativeQuery = true)

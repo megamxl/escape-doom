@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JoinResponse {
 
-    private String name;
+    private EscapeRoomState state;
 
     private String sessionId;
 
-    private EscapeRoomState state;
+    private String name;
 
 }

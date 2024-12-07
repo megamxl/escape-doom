@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CompilingProcessRepository extends JpaRepository<ProcessingRequest,String> {
+public interface CompilationRepository extends JpaRepository<ProcessingRequest,String> {
 }

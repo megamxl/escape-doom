@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CompilingProcessRepositoryTest {
 
     @Autowired
-    private CompilingProcessRepository compilingProcessRepository;
+    private CompilationRepository compilingProcessRepository;
 
     private ProcessingRequest processingRequest;
 

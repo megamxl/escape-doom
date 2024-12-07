@@ -1,6 +1,6 @@
 package com.escapedoom.gamesession.rest.controller;
 
-import com.escapedoom.gamesession.rest.model.escaperoom.LeaderboardDao;
+import com.escapedoom.gamesession.rest.model.leaderboard.LeaderboardEntry;
 import com.escapedoom.gamesession.rest.service.LeaderboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class LeaderboardController {
     private final LeaderboardService leaderboardService;
 
     @GetMapping(LEADERBOARD_URL)
-    public List<LeaderboardDao> leaderboardAsJson(@PathVariable Long escaperoom_id) {
+    public List<LeaderboardEntry> leaderboardAsJson(@PathVariable Long escaperoom_id) {
         return leaderboardService.getScoreBoard(escaperoom_id);
     }
 }

@@ -2,7 +2,7 @@ package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
-import com.escapedoom.gamesession.rest.model.escaperoom.LeaderboardDao;
+import com.escapedoom.gamesession.rest.model.leaderboard.LeaderboardEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -39,7 +39,7 @@ class LeaderboardServiceTest {
         when(repository.findAllByEscaperoomSession(escaperoomID)).thenReturn(Optional.of(mockPlayers));
 
         // Act
-        List<LeaderboardDao> leaderboard = leaderboardService.getScoreBoard(escaperoomID);
+        List<LeaderboardEntry> leaderboard = leaderboardService.getScoreBoard(escaperoomID);
 
         // Assert
         assertThat(leaderboard)
@@ -58,7 +58,7 @@ class LeaderboardServiceTest {
         when(repository.findAllByEscaperoomSession(escaperoomID)).thenReturn(Optional.empty());
 
         // Act
-        List<LeaderboardDao> leaderboard = leaderboardService.getScoreBoard(escaperoomID);
+        List<LeaderboardEntry> leaderboard = leaderboardService.getScoreBoard(escaperoomID);
 
         // Assert
         assertThat(leaderboard).isEmpty();

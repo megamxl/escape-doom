@@ -1,19 +1,21 @@
 package com.escapedoom.gamesession.rest.controller;
 
+import com.escapedoom.gamesession.dataaccess.*;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
-import com.escapedoom.gamesession.rest.model.escaperoom.LeaderboardDao;
-import com.escapedoom.gamesession.rest.service.LeaderboardService;
+import com.escapedoom.gamesession.rest.config.MockTestConfig;
+import com.escapedoom.gamesession.rest.model.leaderboard.LeaderboardEntry;
+import com.escapedoom.gamesession.rest.service.*;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.web.http.SessionRepositoryFilter;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,11 +26,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(MockTestConfig.class)
 @WebMvcTest(controllers = LeaderboardController.class)
-@ImportAutoConfiguration(exclude = {
-        org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class,
-        org.springframework.boot.autoconfigure.session.SessionAutoConfiguration.class
-})
 class LeaderboardControllerTest {
 
     @Autowired
@@ -36,6 +35,9 @@ class LeaderboardControllerTest {
 
     @MockBean
     private LeaderboardService leaderboardService;
+
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
     void leaderboardAsJson_ShouldReturnLeaderboard() throws Exception {
@@ -49,9 +51,9 @@ class LeaderboardControllerTest {
         player2.setScore(90L);
         player2.setLastStageSolved(4000L);
 
-        List<LeaderboardDao> mockLeaderboard = List.of(
-                new LeaderboardDao(player1),
-                new LeaderboardDao(player2)
+        List<LeaderboardEntry> mockLeaderboard = List.of(
+                new LeaderboardEntry(player1),
+                new LeaderboardEntry(player2)
         );
 
         Mockito.when(leaderboardService.getScoreBoard(anyLong())).thenReturn(mockLeaderboard);
@@ -59,29 +61,5 @@ class LeaderboardControllerTest {
         mockMvc.perform(get("/api/leaderboard/1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-    }
-
-    @Configuration
-    static class TestRedisConfig {
-        @Bean
-        public RedisConnectionFactory redisConnectionFactory() {
-            return Mockito.mock(RedisConnectionFactory.class);
-        }
-
-        @Bean
-        public RedisTemplate<?, ?> redisTemplate() {
-            RedisTemplate<?, ?> redisTemplate = Mockito.mock(RedisTemplate.class);
-            return redisTemplate;
-        }
-
-        @Bean
-        public RedisIndexedSessionRepository redisIndexedSessionRepository(RedisConnectionFactory redisConnectionFactory) {
-            return Mockito.mock(RedisIndexedSessionRepository.class);
-        }
-
-        @Bean
-        public SessionRepositoryFilter<?> sessionRepositoryFilter(RedisIndexedSessionRepository redisIndexedSessionRepository) {
-            return Mockito.mock(SessionRepositoryFilter.class);
-        }
     }
 }
