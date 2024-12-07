@@ -2,6 +2,7 @@ package com.escapedoom.gamesession.rest.controller;
 
 import com.escapedoom.gamesession.dataaccess.*;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
+import com.escapedoom.gamesession.rest.config.MockTestConfig;
 import com.escapedoom.gamesession.rest.model.leaderboard.LeaderboardEntry;
 import com.escapedoom.gamesession.rest.service.*;
 import jakarta.persistence.EntityManager;
@@ -9,11 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
@@ -27,6 +25,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(MockTestConfig.class)
 @WebMvcTest(controllers = LeaderboardController.class)
 class LeaderboardControllerTest {
 

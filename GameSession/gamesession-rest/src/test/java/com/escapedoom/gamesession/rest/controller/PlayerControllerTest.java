@@ -1,25 +1,15 @@
 package com.escapedoom.gamesession.rest.controller;
 
-import com.escapedoom.gamesession.dataaccess.*;
 import com.escapedoom.gamesession.rest.Constants;
 import com.escapedoom.gamesession.rest.model.response.StageResponse;
 import com.escapedoom.gamesession.rest.model.response.StatusReturn;
-import com.escapedoom.gamesession.rest.service.CompilationService;
-import com.escapedoom.gamesession.rest.service.LobbyService;
-import com.escapedoom.gamesession.rest.service.NotificationService;
 import com.escapedoom.gamesession.rest.service.PlayerService;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.session.data.redis.RedisIndexedSessionRepository;
-import org.springframework.session.web.http.SessionRepositoryFilter;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,46 +23,6 @@ class PlayerControllerTest {
 
     @MockBean
     private PlayerService playerService;
-
-    @MockBean
-    private CompilationService compilationService;
-
-    @MockBean
-    private EntityManager entityManager;
-
-
-    @MockBean
-    private NotificationService notificationService;
-
-    @MockBean
-    private SessionManagementRepository sessionManagementRepository;
-
-    @MockBean
-    private LobbyService lobbyService;
-
-    @MockBean
-    private OpenLobbyRepository openLobbyRepository;
-
-    @MockBean
-    private EscapeRoomRepository escapeRoomRepository;
-
-    @MockBean
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @MockBean
-    private RedisTemplate<?, ?> redisTemplate;
-
-    @MockBean
-    private RedisIndexedSessionRepository redisIndexedSessionRepository;
-
-    @MockBean
-    private SessionRepositoryFilter<?> sessionRepositoryFilter;
-
-    @MockBean
-    private CompilationRepository compilationRepository;
-
-    @MockBean
-    private CodeRiddleRepository codeRiddleRepository;
 
     @Test
     void currentStage_ShouldReturnStageResponse() throws Exception {
