@@ -107,57 +107,61 @@ public class CompilationService {
     }
 
     public CodeStatus getResult(String playerID) {
-        // check if there is a dataset in the database for that name
-        Optional<ProcessingRequest> compilingProcessRepositoryById = compilationRepository.findById(playerID);
-        if (compilingProcessRepositoryById.isPresent()) {
-            if (compilingProcessRepositoryById.get().getCompilingStatus() == CompilingStatus.Done) {
-                //checker with the input he is  on
-                compilationRepository.delete(compilingProcessRepositoryById.get());
-                Optional<Player> playerByHttpSessionID = sessionManagementRepository.findPlayerByHttpSessionID(playerID);
-                if (playerByHttpSessionID.isPresent()) {
-                    Optional<EscapeRoomStage> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepo.findEscapeRoomDaoByStageIdAndRoomId(playerByHttpSessionID.get().getEscaperoomStageId(), playerByHttpSessionID.get().getEscampeRoom_room_id());
-                    if (escapeRoomDaoByStageIdAndRoomId.isPresent()) {
-                        Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDaoByStageIdAndRoomId.get().getOutputID());
-                        if (byId.isPresent()) {
-                            if (compilingProcessRepositoryById.get().getOutput().replace("\n","").equals(byId.get().getExpectedOutput())) {
-                                Long maxStage = escapeRoomRepo.getMaxStageByRoomId(playerByHttpSessionID.get().getEscampeRoom_room_id());
-                                if (playerByHttpSessionID.get().getEscaperoomStageId() + 1 < maxStage) {
-                                    Player player = playerByHttpSessionID.get();
-                                    player.setEscaperoomStageId(playerByHttpSessionID.get().getEscaperoomStageId() + 1);
-                                    player.setScore(player.getScore() + 10L * playerByHttpSessionID.get().getEscaperoomStageId());
-                                    Optional<OpenLobbys> byLobbyId = openLobbyRepository.findByLobbyId(player.getEscaperoomSession());
-                                    player.setLastStageSolved(byLobbyId.get().getStartTime().until(LocalDateTime.now(), ChronoUnit.SECONDS));
-                                    sessionManagementRepository.save(player);
-                                    //solved Stage
-                                    return CodeStatus.builder().status(CState.SUCCESS).output(compilingProcessRepositoryById.get().getOutput()).build();
-                                } else {
-                                    // won ROOM
-                                    Player player = playerByHttpSessionID.get();
-                                    player.setScore(player.getScore() + 10L * playerByHttpSessionID.get().getEscaperoomStageId());
-                                    sessionManagementRepository.save(player);
-                                    return CodeStatus.builder().status(CState.WON).output(playerByHttpSessionID.get().getEscaperoomSession().toString()).build();
-                                }
-
-                            } else {
-                                CState c = CState.COMPILED;
-                                if (compilingProcessRepositoryById.get().getOutput().equals("COMPILE ERROR")) {
-                                    c = CState.ERROR;
-                                }
-                                return CodeStatus.builder().status(c).output(compilingProcessRepositoryById.get().getOutput()).build();
-                            }
-                        }
-                    } else {
-                        return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
-                    }
-                } else {
-                    return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
-                }
-                return null;
-            } else {
-                return CodeStatus.builder().status(CState.WAITING).output("").build();
-            }
-        } else {
+        // Check if there is a dataset in the database for that name
+        Optional<ProcessingRequest> compilationRepositoryById = compilationRepository.findById(playerID);
+        if (!compilationRepositoryById.isPresent()) {
             return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
         }
+
+        ProcessingRequest processingRequest = compilationRepositoryById.get();
+        if (processingRequest.getCompilingStatus() != CompilingStatus.Done) {
+            return CodeStatus.builder().status(CState.WAITING).output("").build();
+        }
+
+        compilationRepository.delete(processingRequest);
+
+        Optional<Player> playerByHttpSessionID = sessionManagementRepository.findPlayerByHttpSessionID(playerID);
+        if (!playerByHttpSessionID.isPresent()) {
+            return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
+        }
+
+        Player player = playerByHttpSessionID.get();
+        Optional<EscapeRoomStage> escapeRoomDaoByStageIdAndRoomId = escapeRoomRepo.findEscapeRoomDaoByStageIdAndRoomId(
+                player.getEscaperoomStageId(), player.getEscampeRoom_room_id());
+        if (!escapeRoomDaoByStageIdAndRoomId.isPresent()) {
+            return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
+        }
+
+        EscapeRoomStage escapeRoomDao = escapeRoomDaoByStageIdAndRoomId.get();
+        Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDao.getOutputID());
+        if (!byId.isPresent()) {
+            return CodeStatus.builder().status(CState.BADREQUEST).output("").build();
+        }
+
+        ConsoleNodeCode consoleNodeCode = byId.get();
+        if (!processingRequest.getOutput().replace("\n", "").equals(consoleNodeCode.getExpectedOutput())) {
+            CState status = processingRequest.getOutput().equals("COMPILE ERROR") ? CState.ERROR : CState.COMPILED;
+            return CodeStatus.builder().status(status).output(processingRequest.getOutput()).build();
+        }
+
+        // Player has solved the stage
+        Long maxStage = escapeRoomRepo.getMaxStageByRoomId(player.getEscampeRoom_room_id());
+        if (player.getEscaperoomStageId() + 1 < maxStage) {
+            player.setEscaperoomStageId(player.getEscaperoomStageId() + 1);
+            player.setScore(player.getScore() + 10L * player.getEscaperoomStageId());
+
+            Optional<OpenLobbys> byLobbyId = openLobbyRepository.findByLobbyId(player.getEscaperoomSession());
+            if (byLobbyId.isPresent()) {
+                player.setLastStageSolved(byLobbyId.get().getStartTime().until(LocalDateTime.now(), ChronoUnit.SECONDS));
+            }
+
+            sessionManagementRepository.save(player);
+            return CodeStatus.builder().status(CState.SUCCESS).output(processingRequest.getOutput()).build();
+        }
+
+        // Player has won the room
+        player.setScore(player.getScore() + 10L * player.getEscaperoomStageId());
+        sessionManagementRepository.save(player);
+        return CodeStatus.builder().status(CState.WON).output(player.getEscaperoomSession().toString()).build();
     }
 }
