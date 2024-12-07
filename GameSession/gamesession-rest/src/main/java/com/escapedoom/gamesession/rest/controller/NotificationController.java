@@ -1,8 +1,8 @@
 package com.escapedoom.gamesession.rest.controller;
 
 import com.escapedoom.gamesession.rest.Constants;
-import com.escapedoom.gamesession.rest.services.NotificationService;
-import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
+import com.escapedoom.gamesession.rest.service.NotificationService;
+import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ public class NotificationController {
 
     @GetMapping(value = Constants.LOBBY_URL)
     public SseEmitterExtended connectToLobby(@PathVariable("id") String session) {
-        return notificationService.establishLobbyConnection(session);
+        return notificationService.establishLobbyEmitters(session);
     }
 
 }

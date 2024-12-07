@@ -1,4 +1,4 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.*;
 import com.escapedoom.gamesession.dataaccess.entity.*;
@@ -6,7 +6,7 @@ import com.escapedoom.gamesession.rest.config.redis.KafkaConfigProperties;
 import com.escapedoom.gamesession.rest.model.code.CState;
 import com.escapedoom.gamesession.rest.model.code.CodeCompilationRequest;
 import com.escapedoom.gamesession.rest.model.code.CodeStatus;
-import com.escapedoom.gamesession.rest.utils.CodeSniptes;
+import com.escapedoom.gamesession.rest.util.CodeSniptes;
 import com.escapedoom.gamesession.shared.CompilingStatus;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,7 +32,7 @@ public class CompilationService {
 
     private final OpenLobbyRepository openLobbyRepository;
 
-    private final EscapeRoomRepo escapeRoomRepo;
+    private final EscapeRoomRepository escapeRoomRepo;
 
     private final KafkaTemplate<String,String> kafkaTemplate;
 
@@ -120,7 +120,7 @@ public class CompilationService {
                         Optional<ConsoleNodeCode> byId = codeRiddleRepository.findById(escapeRoomDaoByStageIdAndRoomId.get().getOutputID());
                         if (byId.isPresent()) {
                             if (compilingProcessRepositoryById.get().getOutput().replace("\n","").equals(byId.get().getExpectedOutput())) {
-                                Long maxStage = escapeRoomRepo.getMaxStage(playerByHttpSessionID.get().getEscampeRoom_room_id());
+                                Long maxStage = escapeRoomRepo.getMaxStageByRoomId(playerByHttpSessionID.get().getEscampeRoom_room_id());
                                 if (playerByHttpSessionID.get().getEscaperoomStageId() + 1 < maxStage) {
                                     Player player = playerByHttpSessionID.get();
                                     player.setEscaperoomStageId(playerByHttpSessionID.get().getEscaperoomStageId() + 1);

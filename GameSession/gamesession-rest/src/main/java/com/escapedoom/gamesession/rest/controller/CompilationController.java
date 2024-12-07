@@ -3,7 +3,7 @@ package com.escapedoom.gamesession.rest.controller;
 import com.escapedoom.gamesession.rest.Constants;
 import com.escapedoom.gamesession.rest.model.code.CodeCompilationRequest;
 import com.escapedoom.gamesession.rest.model.code.CodeStatus;
-import com.escapedoom.gamesession.rest.services.CompilationService;
+import com.escapedoom.gamesession.rest.service.CompilationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

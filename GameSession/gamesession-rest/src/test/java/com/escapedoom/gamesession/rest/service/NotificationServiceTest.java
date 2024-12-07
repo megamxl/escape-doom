@@ -1,8 +1,8 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
-import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
+import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,13 +33,13 @@ public class NotificationServiceTest {
     }
 
     @Test
-    void testEstablishLobbyConnection_WhenPlayerExists() {
+    void testEstablishLobbyEmitters_WhenPlayerExists() {
         Player player = new Player();
         player.setEscaperoomSession(ESCAPE_ROOM_ID);
         player.setName("TestPlayer");
         when(sessionManagementRepository.findPlayerByHttpSessionID(HTTP_SESSION_ID)).thenReturn(Optional.of(player));
 
-        SseEmitterExtended sseEmitter = notificationService.establishLobbyConnection(HTTP_SESSION_ID);
+        SseEmitterExtended sseEmitter = notificationService.establishLobbyEmitters(HTTP_SESSION_ID);
 
         assertThat(sseEmitter).isNotNull();
         assertThat(sseEmitter.getName()).isEqualTo("TestPlayer");

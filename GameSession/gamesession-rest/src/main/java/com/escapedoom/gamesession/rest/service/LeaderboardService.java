@@ -1,8 +1,8 @@
 package com.escapedoom.gamesession.rest.service;
 
+import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
 import com.escapedoom.gamesession.rest.model.leaderboard.LeaderboardEntry;
-import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

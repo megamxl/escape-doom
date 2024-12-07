@@ -1,11 +1,11 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.OpenLobbys;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
 import com.escapedoom.gamesession.rest.model.response.JoinResponse;
-import com.escapedoom.gamesession.rest.utils.NameGeneratorUtil;
+import com.escapedoom.gamesession.rest.util.NameGeneratorUtil;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

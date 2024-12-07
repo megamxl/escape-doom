@@ -3,7 +3,7 @@ package com.escapedoom.gamesession.rest.controller;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
 import com.escapedoom.gamesession.rest.Constants;
 import com.escapedoom.gamesession.rest.model.response.JoinResponse;
-import com.escapedoom.gamesession.rest.services.LobbyService;
+import com.escapedoom.gamesession.rest.service.LobbyService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

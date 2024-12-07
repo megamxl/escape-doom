@@ -2,20 +2,19 @@ package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
-import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import com.escapedoom.gamesession.dataaccess.entity.OpenLobbys;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PlayerServiceTest {

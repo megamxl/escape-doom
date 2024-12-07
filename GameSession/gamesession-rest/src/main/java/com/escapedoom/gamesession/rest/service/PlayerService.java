@@ -1,6 +1,6 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
-import com.escapedoom.gamesession.dataaccess.EscapeRoomRepo;
+import com.escapedoom.gamesession.dataaccess.EscapeRoomRepository;
 import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.OpenLobbys;
@@ -21,7 +21,7 @@ public class PlayerService {
 
     private final SessionManagementRepository sessionManagementRepository;
     private final OpenLobbyRepository openLobbyRepository;
-    private final EscapeRoomRepo escapeRoomRepo;
+    private final EscapeRoomRepository escapeRoomRepo;
 
     public StageResponse getPlayerStage(String httpSession) {
 

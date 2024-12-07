@@ -1,9 +1,9 @@
-package com.escapedoom.gamesession.rest.services;
+package com.escapedoom.gamesession.rest.service;
 
 import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
-import com.escapedoom.gamesession.rest.utils.SseEmitterExtended;
+import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +32,10 @@ public class NotificationService {
 
     // move to constants
     private final String ALL_NAME_EVENT = "allNames";
-    private final String YOUR_NAME_EVENT = "yourName";
-    private final String START_PLAYING_EVENT = "started";
 
     boolean update = false;
 
-    public SseEmitterExtended establishLobbyConnection(String httpId) {
+    public SseEmitterExtended establishLobbyEmitters(String httpId) {
 
         SseEmitterExtended sseEmitter = new SseEmitterExtended();
         sseEmitter.onTimeout(() -> {
@@ -58,16 +56,21 @@ public class NotificationService {
         sseEmitters.add(sseEmitter);
 
         try {
+            String YOUR_NAME_EVENT = "yourName";
             sseEmitter.send(SseEmitter.event().name(YOUR_NAME_EVENT).data(sseEmitter.getName()));
             var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());
             var jsonPlayers = new JSONObject();
             if (players.isPresent()) {
-                players.get().stream().filter(player1 -> Objects.equals(player1.getEscaperoomSession(), player.getEscaperoomSession()));
+                players.get().stream()
+                        .filter(player1 -> Objects.equals(player1.getEscaperoomSession(), player.getEscaperoomSession()))
+                        .forEach(filteredPlayer -> {
+                            // Add your processing logic here
+                        });
                 jsonPlayers.put("players", players.get().stream().map(Player::getName).collect(Collectors.toList()));
             }
             sseEmitter.send(SseEmitter.event().name(ALL_NAME_EVENT).data(jsonPlayers.toString()));
         } catch (Exception e) {
-            System.out.println("should not happen");;
+            System.out.println("should not happen");
         }
         sseEmitter.onCompletion(() -> {
             synchronized (this.sseEmitters) {
@@ -91,7 +94,7 @@ public class NotificationService {
         for (SseEmitterExtended sseEmitterExtended : sseEmitters) {
             if (sseEmitterExtended != null) {
                 try {
-                    if (sseEmitterExtended.getLobby_id() == esceproomId) {
+                    if (Objects.equals(sseEmitterExtended.getLobby_id(), esceproomId)) {
                         sseEmitterExtended.send(SseEmitter.event().name(eventName).data(toSend));
                         sseEmitterExtended.complete();
                     }
@@ -108,6 +111,7 @@ public class NotificationService {
     public void notifyAllPlayersInSession(Player player, Boolean playing) {
         var jsonPlayers = new JSONObject();
         if (playing) {
+            String START_PLAYING_EVENT = "started";
             notifyClients(player.getEscaperoomSession(), START_PLAYING_EVENT, new JSONObject());
         } else {
             var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());
@@ -131,21 +135,22 @@ public class NotificationService {
 
 
     public void notifyEscapeRoomStart(Long id) {
-        if (openLobbyRepository.findByLobbyId(id).get().getState() == EscapeRoomState.PLAYING) {
+        openLobbyRepository.findByLobbyId(id).ifPresent(lobby -> {
+            if (lobby.getState() == EscapeRoomState.PLAYING) {
 
-            Optional<List<Player>> allByEscaperoomSession = sessionManagementRepository.findAllByEscaperoomSession(id);
-            if (allByEscaperoomSession.isPresent()) {
+                Optional<List<Player>> allByEscaperoomSession = sessionManagementRepository.findAllByEscaperoomSession(id);
+                if (allByEscaperoomSession.isPresent()) {
 
-                // Added this since a partial restart of the system caused no new players to join :(
-                if (allByEscaperoomSession.get().size() != 0) {
-                    notifyAllPlayersInSession(allByEscaperoomSession.get().get(0),true);
-                    System.out.println("informing clients");
-                } else {
-                    System.out.println("No player found!");
+                    // Added this since a partial restart of the system caused no new players to join :(
+                    if (!allByEscaperoomSession.get().isEmpty()) {
+                        notifyAllPlayersInSession(allByEscaperoomSession.get().get(0), true);
+                        System.out.println("informing clients");
+                    } else {
+                        System.out.println("No player found!");
+                    }
                 }
+
             }
-
-        }
-
+        });
     }
 }
