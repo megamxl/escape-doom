@@ -149,7 +149,7 @@ public class NotificationService {
                     // Added this since a partial restart of the system caused no new players to join :(
                     if (!allByEscaperoomSession.get().isEmpty()) {
                         notifyAllPlayersInSession(allByEscaperoomSession.get().get(0), true);
-                        System.out.println("informing clients");
+                        log.info("informing clients");
                     } else {
                         log.info("No player found!");
                     }
