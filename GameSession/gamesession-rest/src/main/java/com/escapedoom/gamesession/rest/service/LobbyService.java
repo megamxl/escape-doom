@@ -32,6 +32,7 @@ public class LobbyService {
         Optional<OpenLobbys> lobbyOpt = openLobbyRepository.findByLobbyId(escaperoomSession);
         OpenLobbys lobby = null;
         if (lobbyOpt.isEmpty()) {
+            log.info("User with session {} tried to join an invalid escaperoomSession {}", httpSessionID, escaperoomSession);
             JoinResponse.builder()
                     .state(EscapeRoomState.STOPPED)
                     .name("")
@@ -84,6 +85,7 @@ public class LobbyService {
                         .build();
                 sessionManagementRepository.save(player);
                 update = true;
+                log.trace("New Player created for httpSessionId: {} in escaperoomSession {}", httpSessionID, escaperoomSession);
                 return JoinResponse.builder()
                         .state(lobby.getState())
                         .sessionId(httpSessionID)
