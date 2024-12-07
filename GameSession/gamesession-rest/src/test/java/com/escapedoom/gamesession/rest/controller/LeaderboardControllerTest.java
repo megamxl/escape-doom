@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.web.http.SessionRepositoryFilter;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,46 +37,7 @@ class LeaderboardControllerTest {
     private LeaderboardService leaderboardService;
 
     @MockBean
-    private CompilationService compilationService;
-
-    @MockBean
-    private EntityManager entityManager;
-
-    @MockBean
-    private NotificationService notificationService;
-
-    @MockBean
-    private SessionManagementRepository sessionManagementRepository;
-
-    @MockBean
-    private LobbyService lobbyService;
-
-    @MockBean
-    private OpenLobbyRepository openLobbyRepository;
-
-    @MockBean
-    private PlayerService playerService;
-
-    @MockBean
-    private EscapeRoomRepository escapeRoomRepository;
-
-    @MockBean
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @MockBean
-    private RedisTemplate<?, ?> redisTemplate;
-
-    @MockBean
-    private RedisIndexedSessionRepository redisIndexedSessionRepository;
-
-    @MockBean
-    private SessionRepositoryFilter<?> sessionRepositoryFilter;
-
-    @MockBean
-    private CompilationRepository compilationRepository;
-
-    @MockBean
-    private CodeRiddleRepository codeRiddleRepository;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
     void leaderboardAsJson_ShouldReturnLeaderboard() throws Exception {
