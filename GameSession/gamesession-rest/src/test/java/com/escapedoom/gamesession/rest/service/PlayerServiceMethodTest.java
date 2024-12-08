@@ -1,6 +1,5 @@
 package com.escapedoom.gamesession.rest.service;
 
-
 import com.escapedoom.gamesession.dataaccess.EscapeRoomRepository;
 import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class PlayerServiceMethodTest {
@@ -61,9 +60,14 @@ public class PlayerServiceMethodTest {
         StageResponse response = playerService.getPlayerStage(httpSession);
 
         // Assert
-        assertEquals(1L, response.getRoomID());
-        assertEquals(EscapeRoomState.PLAYING, response.getState());
-        assertEquals("Stage Details", response.getStage().get(0));
+        assertThat(response)
+                .isNotNull()
+                .satisfies(res -> {
+                    assertThat(res.getRoomID()).isEqualTo(1L);
+                    assertThat(res.getState()).isEqualTo(EscapeRoomState.PLAYING);
+                    assertThat(res.getStage()).containsExactly("Stage Details");
+                });
+
         verify(sessionManagementRepository, times(1)).findPlayerByHttpSessionID(httpSession);
         verify(openLobbyRepository, times(1)).findByLobbyId(1L);
         verify(escapeRoomRepo, times(1)).getEscapeRoomStageByEscaperoomIDAndStageNumber(100L, 1L);
@@ -87,9 +91,14 @@ public class PlayerServiceMethodTest {
         StageResponse response = playerService.getPlayerStage(httpSession);
 
         // Assert
-        assertEquals(1L, response.getRoomID());
-        assertEquals(EscapeRoomState.JOINABLE, response.getState());
-        assertEquals(new ArrayList<>(), response.getStage());
+        assertThat(response)
+                .isNotNull()
+                .satisfies(res -> {
+                    assertThat(res.getRoomID()).isEqualTo(1L);
+                    assertThat(res.getState()).isEqualTo(EscapeRoomState.JOINABLE);
+                    assertThat(res.getStage()).isEmpty();
+                });
+
         verify(sessionManagementRepository, times(1)).findPlayerByHttpSessionID(httpSession);
         verify(openLobbyRepository, times(1)).findByLobbyId(1L);
         verifyNoInteractions(escapeRoomRepo);
@@ -109,9 +118,14 @@ public class PlayerServiceMethodTest {
         StageResponse response = playerService.getPlayerStage(httpSession);
 
         // Assert
-        assertEquals(EscapeRoomState.STOPPED, response.getState());
-        assertEquals(null, response.getRoomID());
-        assertEquals(new ArrayList<>(), response.getStage());
+        assertThat(response)
+                .isNotNull()
+                .satisfies(res -> {
+                    assertThat(res.getState()).isEqualTo(EscapeRoomState.STOPPED);
+                    assertThat(res.getRoomID()).isNull();
+                    assertThat(res.getStage()).isEmpty();
+                });
+
         verify(sessionManagementRepository, times(1)).findPlayerByHttpSessionID(httpSession);
         verify(openLobbyRepository, times(1)).findByLobbyId(1L);
         verifyNoInteractions(escapeRoomRepo);
@@ -128,9 +142,14 @@ public class PlayerServiceMethodTest {
         StageResponse response = playerService.getPlayerStage(httpSession);
 
         // Assert
-        assertEquals(EscapeRoomState.STOPPED, response.getState());
-        assertEquals(null, response.getRoomID());
-        assertEquals(new ArrayList<>(), response.getStage());
+        assertThat(response)
+                .isNotNull()
+                .satisfies(res -> {
+                    assertThat(res.getState()).isEqualTo(EscapeRoomState.STOPPED);
+                    assertThat(res.getRoomID()).isNull();
+                    assertThat(res.getStage()).isEmpty();
+                });
+
         verify(sessionManagementRepository, times(1)).findPlayerByHttpSessionID(httpSession);
         verifyNoInteractions(openLobbyRepository);
         verifyNoInteractions(escapeRoomRepo);

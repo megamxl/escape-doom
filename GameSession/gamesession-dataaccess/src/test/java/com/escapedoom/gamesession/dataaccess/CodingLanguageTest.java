@@ -1,12 +1,12 @@
 package com.escapedoom.gamesession.dataaccess;
 
-
 import com.escapedoom.gamesession.shared.CodingLanguage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CodingLanguageTest {
 
@@ -21,7 +21,8 @@ class CodingLanguageTest {
         CodingLanguage result = CodingLanguage.fromString(jsonValue);
 
         // Then
-        assertEquals(CodingLanguage.JAVA, result);
+        assertThat(result)
+                .isEqualTo(CodingLanguage.JAVA);
     }
 
     @Test
@@ -30,10 +31,9 @@ class CodingLanguageTest {
         String invalidValue = "invalid";
 
         // When & Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> CodingLanguage.fromString(invalidValue));
-
-        assertEquals("Invalid CodingLanguage value: invalid", exception.getMessage());
+        assertThatThrownBy(() -> CodingLanguage.fromString(invalidValue))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid CodingLanguage value: invalid");
     }
 
     @Test
@@ -45,7 +45,8 @@ class CodingLanguageTest {
         String jsonValue = objectMapper.writeValueAsString(codingLanguage);
 
         // Then
-        assertEquals("\"PYTHON\"", jsonValue);
+        assertThat(jsonValue)
+                .isEqualTo("\"PYTHON\"");
     }
 
     @Test
@@ -57,7 +58,8 @@ class CodingLanguageTest {
         CodingLanguage result = objectMapper.readValue(jsonValue, CodingLanguage.class);
 
         // Then
-        assertEquals(CodingLanguage.JAVASCRIPT, result);
+        assertThat(result)
+                .isEqualTo(CodingLanguage.JAVASCRIPT);
     }
 
     @Test
@@ -66,11 +68,10 @@ class CodingLanguageTest {
         String invalidJsonValue = "\"unknown\"";
 
         // When & Then
-        Exception exception = assertThrows(JsonProcessingException.class, () -> {
-            objectMapper.readValue(invalidJsonValue, CodingLanguage.class);
-        });
-
-        assertTrue(exception.getCause() instanceof IllegalArgumentException);
-        assertEquals("Invalid CodingLanguage value: unknown", exception.getCause().getMessage());
+        assertThatThrownBy(() -> objectMapper.readValue(invalidJsonValue, CodingLanguage.class))
+                .isInstanceOf(JsonProcessingException.class)
+                .hasRootCauseInstanceOf(IllegalArgumentException.class)
+                .rootCause()
+                .hasMessageContaining("Invalid CodingLanguage value: unknown");
     }
 }

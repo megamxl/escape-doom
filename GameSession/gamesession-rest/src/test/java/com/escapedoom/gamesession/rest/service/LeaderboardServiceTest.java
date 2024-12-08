@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class LeaderboardServiceTest {
@@ -69,8 +68,8 @@ class LeaderboardServiceTest {
     void testGetScoreBoard_WithPlayers() {
         // Arrange
         Long escaperoomID = 1L;
-        Player player1 = new Player(); // Set up fields for player1 as needed
-        Player player2 = new Player(); // Set up fields for player2 as needed
+        Player player1 = new Player(1, "Player1", "session1", escaperoomID, null, null, 80L, 1L);
+        Player player2 = new Player(2, "Player2", "session2", escaperoomID, null, null, 75L, 2L);
 
         when(repository.findAllByEscaperoomSession(escaperoomID))
                 .thenReturn(Optional.of(List.of(player1, player2)));
@@ -79,8 +78,15 @@ class LeaderboardServiceTest {
         List<LeaderboardEntry> result = leaderboardService.getScoreBoard(escaperoomID);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(2, result.size());
+        assertThat(result)
+                .isNotNull()
+                .hasSize(2)
+                .extracting("playerName", "score")
+                .containsExactlyInAnyOrder(
+                        org.assertj.core.groups.Tuple.tuple("Player1", 80L),
+                        org.assertj.core.groups.Tuple.tuple("Player2", 75L)
+                );
+
         verify(repository, times(1)).findAllByEscaperoomSession(escaperoomID);
     }
 
@@ -96,8 +102,11 @@ class LeaderboardServiceTest {
         List<LeaderboardEntry> result = leaderboardService.getScoreBoard(escaperoomID);
 
         // Assert
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
+        assertThat(result)
+                .isNotNull()
+                .isEmpty();
+
         verify(repository, times(1)).findAllByEscaperoomSession(escaperoomID);
+        verifyNoMoreInteractions(repository);
     }
 }

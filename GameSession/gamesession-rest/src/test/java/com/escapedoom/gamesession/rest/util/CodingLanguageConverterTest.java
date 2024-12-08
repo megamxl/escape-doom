@@ -4,7 +4,8 @@ import com.escapedoom.gamesession.dataaccess.converter.CodingLanguageConverter;
 import com.escapedoom.gamesession.shared.CodingLanguage;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class CodingLanguageConverterTest {
 
@@ -16,7 +17,7 @@ public class CodingLanguageConverterTest {
         String result = converter.convertToDatabaseColumn(null);
 
         // Then
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -28,7 +29,7 @@ public class CodingLanguageConverterTest {
         String result = converter.convertToDatabaseColumn(codingLanguage);
 
         // Then
-        assertEquals("JAVA", result);
+        assertThat(result).isEqualTo("JAVA");
     }
 
     @Test
@@ -37,7 +38,7 @@ public class CodingLanguageConverterTest {
         CodingLanguage result = converter.convertToEntityAttribute(null);
 
         // Then
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -49,7 +50,7 @@ public class CodingLanguageConverterTest {
         CodingLanguage result = converter.convertToEntityAttribute(dbData);
 
         // Then
-        assertEquals(CodingLanguage.PYTHON, result);
+        assertThat(result).isEqualTo(CodingLanguage.PYTHON);
     }
 
     @Test
@@ -61,7 +62,7 @@ public class CodingLanguageConverterTest {
         CodingLanguage result = converter.convertToEntityAttribute(dbData);
 
         // Then
-        assertEquals(CodingLanguage.JAVASCRIPT, result);
+        assertThat(result).isEqualTo(CodingLanguage.JAVASCRIPT);
     }
 
     @Test
@@ -70,10 +71,8 @@ public class CodingLanguageConverterTest {
         String dbData = "unknown";
 
         // When & Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> converter.convertToEntityAttribute(dbData));
-
-        assertEquals("Unknown enum value: unknown", exception.getMessage());
+        assertThatThrownBy(() -> converter.convertToEntityAttribute(dbData))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Unknown enum value: unknown");
     }
-
 }

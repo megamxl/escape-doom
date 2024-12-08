@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class LobbyServiceTest {
@@ -57,9 +57,16 @@ class LobbyServiceTest {
         JoinResponse response = lobbyService.manageLobbyJoin(httpSessionID, escaperoomSession);
 
         // Assert
-        assertEquals(EscapeRoomState.STOPPED, response.getState());
-    }
+        assertThat(response)
+                .isNotNull()
+                .satisfies(res -> {
+                    assertThat(res.getState()).isEqualTo(EscapeRoomState.STOPPED);
+                });
 
+        verify(openLobbyRepository, times(1)).findByLobbyId(escaperoomSession);
+        verify(sessionManagementRepository, times(1)).findPlayerByHttpSessionID(httpSessionID);
+        verifyNoMoreInteractions(sessionManagementRepository, openLobbyRepository, notificationService);
+    }
 
     @Test
     void testManageLobbyJoin_PlayerDoesNotExist() {
@@ -79,8 +86,16 @@ class LobbyServiceTest {
         JoinResponse response = lobbyService.manageLobbyJoin(httpSessionID, escaperoomSession);
 
         // Assert
-        assertEquals(EscapeRoomState.JOINABLE, response.getState());
-        assertEquals(httpSessionID, response.getSessionId());
+        assertThat(response)
+                .isNotNull()
+                .satisfies(res -> {
+                    assertThat(res.getState()).isEqualTo(EscapeRoomState.JOINABLE);
+                    assertThat(res.getSessionId()).isEqualTo(httpSessionID);
+                });
+
         verify(sessionManagementRepository, times(1)).save(any(Player.class));
+        verify(openLobbyRepository, times(1)).findByLobbyId(escaperoomSession);
+        verify(sessionManagementRepository, times(1)).findPlayerByHttpSessionID(httpSessionID);
+        verifyNoMoreInteractions(sessionManagementRepository, openLobbyRepository, notificationService);
     }
 }
