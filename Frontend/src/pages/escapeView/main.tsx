@@ -1,19 +1,17 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Editor from '@monaco-editor/react';
-import {Box, Button, FormControl, MenuItem, Select, SelectChangeEvent, Stack, Typography, createTheme} from "@mui/material";
+import {Box, Button, FormControl, MenuItem, Select, SelectChangeEvent, Stack, Typography} from "@mui/material";
 import Node from './Nodes/Node';
 import {getSessionId, removeSessionId} from '../../utils/GameSessionHandler';
-import { useGet } from '../../hooks/useGet';
-import { PlayArrow } from '@mui/icons-material';
+import {PlayArrow} from '@mui/icons-material';
 import EditorContainer from './EditorContainer';
-import { submitCode } from '../../hooks/submitCode';
-import { getCode } from '../../hooks/getCode';
+import {submitCode} from '../../hooks/submitCode';
+import {getCode} from '../../hooks/getCode';
 import LoadingButton from '@mui/lab/LoadingButton';
-import type {} from '@mui/lab/themeAugmentation';
-import { Link, useNavigate } from 'react-router-dom';
-import { green } from '@mui/material/colors';
-import { NodeInterface, NodeType } from './Nodes/NodeInterface';
-import { getStage } from '../../hooks/getStage';
+import {useNavigate} from 'react-router-dom';
+import {green} from '@mui/material/colors';
+import {NodeInterface, NodeType} from './Nodes/NodeInterface';
+import {getStage} from '../../hooks/getStage';
 import axios from "axios";
 
 enum compileStatus {
@@ -30,10 +28,10 @@ const EscapeView = () => {
     const navigate = useNavigate()
     const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-//    const backgroundRef = useRef(null)
-//    const [backgroundWidth, setBackgroundWidth] = useState(0);
-//    const [backgroundHeight, setBackgroundHeight] = useState(0);
-//    const [imgHeight, setImgHeight] = useState(0);
+   const backgroundRef = useRef(null)
+   const [backgroundWidth, setBackgroundWidth] = useState(0);
+   const [backgroundHeight, setBackgroundHeight] = useState(0);
+   const [imgHeight, setImgHeight] = useState(0);
 
     const [code, setCode] = useState(`// To figure out what to do click on 
 // - Purple Icons for the story / context for the riddle

@@ -71,7 +71,19 @@ const Session = ({sessionID}: { sessionID: string }) => {
 
     const handleCodeSubmission = async () => {
         await reSubmitCode();
-        await getCodeResult();
+
+        while (true) {
+            console.log("Waiting for code compilation completed")
+            await sleep(250);
+            const response = await getCodeResult();
+            console.log(response);
+            if (response?.status !== CompileStatus.WAITING && response !== undefined) {
+                setCodeExecutionResponse(response)
+                break
+            }
+        }
+
+        console.log("Compilation done", codeResultData)
 
         if (codeResultData?.status === CompileStatus.WON) {
             removeGameSession()
@@ -82,15 +94,10 @@ const Session = ({sessionID}: { sessionID: string }) => {
         //TODO anas - das refetch oben funktioniert und ich submitte ins backend
     }
 
-    const getCodeResult = async (): Promise<void> => {
-        if (codeResultData === undefined) return;
+    const getCodeResult = async (): Promise<CodeExecResponse | undefined> => {
 
-        while (codeResultData.status === CompileStatus.WAITING) {
-            console.log("Waiting for code compilation completed", codeResultData)
-            await sleep(250);
-            await refetchCodeResult();
-        }
-        console.log("Compilation done", codeResultData.status)
+        const response = await refetchCodeResult();
+        return response.data;
     }
 
     const handleLanguageChange = () => {

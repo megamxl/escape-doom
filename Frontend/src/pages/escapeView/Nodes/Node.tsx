@@ -1,8 +1,8 @@
-import { Settings, Search, Visibility, AutoStories } from "@mui/icons-material";
-import { Backdrop, Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography } from "@mui/material";
-import { amber, blue, deepPurple, purple } from "@mui/material/colors";
-import { useState } from "react";
-import { NodeInstance, NodeInterface } from "./NodeInterface";
+import {AutoStories, Search, Settings, Visibility} from "@mui/icons-material";
+import {Backdrop, Box, Button, Card, CardContent, Divider, IconButton, Stack, Typography} from "@mui/material";
+import {amber, blue, deepPurple, purple} from "@mui/material/colors";
+import {useState} from "react";
+import {NodeInstance, NodeInterface} from "./NodeInterface";
 
 enum NodeType {
     CONSOLE,
@@ -194,13 +194,13 @@ export const ZoomNode = ({pos, nodeInfos}: NodeInstance) => {
 
 const renderNodeType = ({type, pos, nodeInfos, codeSetter}: NodeInterface) => {
     switch(type) {
-        case "CONSOLE":
+        case "Console":
             return ConsoleNode({pos, nodeInfos}, codeSetter)
-        case "DETAILS":
+        case "Details":
             return StoryNode({pos, nodeInfos})
-        case "STORY":
+        case "Story":
             return DetailsNode({pos, nodeInfos})
-        case "ZOOM":
+        case "Zoom":
             return ZoomNode({pos, nodeInfos})
         default:
             console.error(`Invalid Node Type: ${type}`)
