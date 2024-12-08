@@ -7,24 +7,19 @@ import com.escapedoom.lector.portal.dataaccess.entity.Escaperoom;
 import com.escapedoom.lector.portal.dataaccess.entity.OpenLobbys;
 import com.escapedoom.lector.portal.dataaccess.entity.User;
 import com.escapedoom.lector.portal.shared.model.EscapeRoomState;
-import com.squareup.okhttp.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -45,10 +40,29 @@ public class EscapeRoomStateTest {
     @InjectMocks
     private EscaperoomService escaperoomService;
 
+    private MockedStatic<SecurityContextHolder> securityContextHolderMock;
+
     @BeforeEach
     void setUp() {
+        // Mock SecurityContextHolder
+        securityContextHolderMock = mockStatic(SecurityContextHolder.class);
+
+        // Mock SecurityContext
+        SecurityContext mockSecurityContext = mock(SecurityContext.class);
+        Authentication mockAuthentication = mock(Authentication.class);
+        User mockUser = User.builder()
+                .userId(1L)
+                .email("test@example.com")
+                .build();
+
+        // Configure SecurityContextHolder to return mocked SecurityContext
+        when(SecurityContextHolder.getContext()).thenReturn(mockSecurityContext);
+        when(mockSecurityContext.getAuthentication()).thenReturn(mockAuthentication);
+        when(mockAuthentication.getPrincipal()).thenReturn(mockUser);
+
         MockitoAnnotations.openMocks(this);
     }
+
 
     @Test
     void testChangeEscapeRoomStateWithoutPlayingState() {
@@ -67,16 +81,11 @@ public class EscapeRoomStateTest {
         mockLobby.setEscaperoom(Escaperoom.builder().escapeRoomId(escapeRoomId).build());
         mockLobby.setState(EscapeRoomState.JOINABLE);
 
+
         when(escaperoomRepository.findById(escapeRoomId)).thenReturn(Optional.of(mockEscapeRoom));
         when(lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(eq(escapeRoomId), any(User.class)))
                 .thenReturn(Optional.of(mockLobby));
         when(escaperoomRepository.getReferenceById(escapeRoomId)).thenReturn(mockEscapeRoom);
-
-        // Mock authenticated user
-        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
-        Authentication mockAuthentication = mock(Authentication.class);
-        when(mockAuthentication.getPrincipal()).thenReturn(mockUser);
-        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
         // When
         String result = escaperoomService.changeEscapeRoomState(escapeRoomId, newState, null);
