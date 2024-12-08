@@ -67,20 +67,20 @@ public class EscaperoomServiceTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-/*    @Test
+    @Test
     void getAllRoomsByAnUser_ReturnsRoomsSuccessfully() {
         Escaperoom escaperoom = new Escaperoom();
         escaperoom.setEscapeRoomId(1L);
         escaperoom.setName("Test Room");
-        escaperoom.setUser(user);
-        when(escaperoomRepository.findEscaperoomByUser(user)).thenReturn(Optional.of(List.of(escaperoom)));
+        escaperoom.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        when(escaperoomRepository.findEscaperoomByUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).thenReturn(Optional.of(List.of(escaperoom)));
 
         List<EscaperoomResponse> rooms = escaperoomService.getAllRoomsByAnUser();
 
         assertThat(rooms).isNotNull();
         assertThat(1).isEqualTo(rooms.size());
         assertThat("Test Room").isEqualTo(rooms.get(0).getName());
-    }*/
+    }
 
     @Test
     void openEscapeRoom_RoomOpenedSuccessfully() {
