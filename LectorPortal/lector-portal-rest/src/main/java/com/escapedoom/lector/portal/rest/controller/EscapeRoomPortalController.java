@@ -1,7 +1,7 @@
 package com.escapedoom.lector.portal.rest.controller;
 
 
-import com.escapedoom.lector.portal.rest.service.EscaperoomDTO;
+import com.escapedoom.lector.portal.rest.model.EscaperoomResponse;
 import com.escapedoom.lector.portal.rest.service.EscaperoomService;
 import com.escapedoom.lector.portal.dataaccess.model.EscapeRoomDto;
 import com.escapedoom.lector.portal.shared.model.EscapeRoomState;
@@ -22,7 +22,7 @@ public class EscapeRoomPortalController {
     
     @GetMapping("/getAll")
     
-    ResponseEntity<List<EscaperoomDTO>> getAllEscapeRoom() {
+    ResponseEntity<List<EscaperoomResponse>> getAllEscapeRoom() {
         return ResponseEntity.ok(service.getAllRoomsByAnUser());
     }
 

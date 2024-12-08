@@ -1,6 +1,7 @@
 package com.escapedoom.lector.portal.rest.service;
 
 import com.escapedoom.lector.portal.dataaccess.entity.*;
+import com.escapedoom.lector.portal.rest.model.EscaperoomResponse;
 import com.escapedoom.lector.portal.shared.model.*;
 import com.escapedoom.lector.portal.shared.model.Scenes;
 import com.squareup.okhttp.OkHttpClient;
@@ -257,7 +258,7 @@ public class EscaperoomService {
         return escapeRoomDto;
     }
 
-    public List<EscaperoomDTO> getAllRoomsByAnUser() {
+    public List<EscaperoomResponse> getAllRoomsByAnUser() {
         log.debug("Fetching all escape rooms for the authenticated user.");
 
         var rooms = escaperoomRepository.findEscaperoomByUser(getUser())
@@ -268,7 +269,7 @@ public class EscaperoomService {
 
         log.info("Found {} escape rooms for the authenticated user.", rooms.size());
 
-        List<EscaperoomDTO> returnList = new ArrayList<>();
+        List<EscaperoomResponse> returnList = new ArrayList<>();
         for (Escaperoom escaperoom : rooms) {
             log.debug("Processing escape room with ID: {}", escaperoom.getEscapeRoomId());
 
@@ -282,7 +283,7 @@ public class EscaperoomService {
                 log.debug("Escape room ID: {} has no active lobby, defaulting to state: STOPPED.", escaperoom.getEscapeRoomId());
             }
 
-            returnList.add(new EscaperoomDTO(escaperoom, escapeRoomState));
+            returnList.add(new EscaperoomResponse(escaperoom, escapeRoomState));
         }
 
         log.info("Processed {} escape rooms for the user.", returnList.size());
@@ -340,6 +341,13 @@ public class EscaperoomService {
         lobbyRepository.save(openLobbys);
         log.info("Updated state of lobby ID: {} to {}", openLobbys.getLobby_Id(), escapeRoomState);
 
+        handelRoomStatePlaying(escapeRoomState, time, openLobbys);
+
+        log.info("Changed state of escape room ID: {} to {}", escapeRoomId, escapeRoomState);
+        return "State of Escape Room with ID: " + escapeRoomId + " changed to " + escapeRoomState;
+    }
+
+    protected void handelRoomStatePlaying(EscapeRoomState escapeRoomState, Long time, OpenLobbys openLobbys) {
         if (escapeRoomState == EscapeRoomState.PLAYING) {
             openLobbys.setEndTime(LocalDateTime.now().plusMinutes(time));
             openLobbys.setStartTime(LocalDateTime.now());
@@ -349,9 +357,6 @@ public class EscaperoomService {
             informSession(openLobbys.getLobby_Id());
             log.info("Session informed for lobby ID: {}.", openLobbys.getLobby_Id());
         }
-
-        log.info("Changed state of escape room ID: {} to {}", escapeRoomId, escapeRoomState);
-        return "State of Escape Room with ID: " + escapeRoomId + " changed to " + escapeRoomState;
     }
 
     private void informSession(Long id) {
