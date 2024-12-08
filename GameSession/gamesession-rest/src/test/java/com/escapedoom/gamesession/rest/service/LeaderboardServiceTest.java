@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class LeaderboardServiceTest {
 
@@ -62,5 +63,41 @@ class LeaderboardServiceTest {
 
         // Assert
         assertThat(leaderboard).isEmpty();
+    }
+
+    @Test
+    void testGetScoreBoard_WithPlayers() {
+        // Arrange
+        Long escaperoomID = 1L;
+        Player player1 = new Player(); // Set up fields for player1 as needed
+        Player player2 = new Player(); // Set up fields for player2 as needed
+
+        when(repository.findAllByEscaperoomSession(escaperoomID))
+                .thenReturn(Optional.of(List.of(player1, player2)));
+
+        // Act
+        List<LeaderboardEntry> result = leaderboardService.getScoreBoard(escaperoomID);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(repository, times(1)).findAllByEscaperoomSession(escaperoomID);
+    }
+
+    @Test
+    void testGetScoreBoard_NoPlayers() {
+        // Arrange
+        Long escaperoomID = 1L;
+
+        when(repository.findAllByEscaperoomSession(escaperoomID))
+                .thenReturn(Optional.empty());
+
+        // Act
+        List<LeaderboardEntry> result = leaderboardService.getScoreBoard(escaperoomID);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(repository, times(1)).findAllByEscaperoomSession(escaperoomID);
     }
 }
