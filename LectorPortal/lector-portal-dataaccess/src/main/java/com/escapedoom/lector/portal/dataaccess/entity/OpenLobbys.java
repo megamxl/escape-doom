@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @ToString
+@Table(name = "open_lobbys")
 public class OpenLobbys {
 
     @Id

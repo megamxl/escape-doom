@@ -8,4 +8,5 @@ public enum CState {
     WAITING,
     WON,
     BADREQUEST
+
 }

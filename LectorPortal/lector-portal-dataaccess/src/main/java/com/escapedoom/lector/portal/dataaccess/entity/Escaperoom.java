@@ -3,6 +3,7 @@ package com.escapedoom.lector.portal.dataaccess.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,7 @@ public class Escaperoom {
     @GeneratedValue
     @Column(name = "escaperoom_id")
     private Long escapeRoomId;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -29,6 +31,7 @@ public class Escaperoom {
     @OneToMany(mappedBy = "escaperoom", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<EscapeRoomStage> escapeRoomStages;
 
+    @Column(name = "max_stage")
     private Long maxStage;
 
     public Escaperoom(Long escapeRoomId, User user, String name, String topic, Integer time, List<EscapeRoomStage> escapeRoomStages, Long maxStage) {
@@ -37,8 +40,8 @@ public class Escaperoom {
         this.name = name;
         this.topic = topic;
         this.time = time;
-        this.escapeRoomStages = escapeRoomStages;
-        this.maxStage = (long) escapeRoomStages.size();
+        this.escapeRoomStages = escapeRoomStages != null ? escapeRoomStages : new ArrayList<>();
+        this.maxStage = (long) this.escapeRoomStages.size();
     }
 
     public void setEscapeRoomId(Long escaperoom_id) {

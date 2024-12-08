@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class KafkaConfigProperties {
 
     private String codeCompilerTopic;

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 @Builder
 public class StageResponse {
 
-    private ArrayList<Object> stage;
-
     private EscapeRoomState state;
+
+    private ArrayList<Object> stage;
 
     private Long roomID;
 

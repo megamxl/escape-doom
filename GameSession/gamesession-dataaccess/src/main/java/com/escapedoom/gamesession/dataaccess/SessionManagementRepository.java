@@ -15,5 +15,4 @@ public interface SessionManagementRepository extends JpaRepository<Player, Long>
     void deleteAllByEscaperoomSession(Long escaperoomSession);
 
     Optional<List<Player>> findAllByEscaperoomSession(Long escaperoomSession);
-
 }

@@ -10,17 +10,18 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/megamxl/escape-doom/CodeExecutor/internal/constants"
-	"github.com/megamxl/escape-doom/CodeExecutor/internal/messaging"
 )
+
+type DockerEngine struct {
+}
 
 type output struct {
 	out []byte
 	err error
 }
 
-func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) string {
+func (d DockerEngine) ExecuteCode(input *constants.Request) string {
 
 	shouldExecute := true
 
@@ -29,7 +30,7 @@ func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) stri
 		err := os.Mkdir(input.PlayerSessionId, os.ModePerm)
 		if err != nil {
 			shouldExecute = false
-			fmt.Println("failed Making the directory")
+			log.Println("failed Making the directory")
 			log.Println(err)
 		}
 	}
@@ -59,13 +60,13 @@ func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) stri
 	if os.IsNotExist(err) {
 		file, err := os.Create(filename)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			shouldExecute = false
 		}
 		os.WriteFile(file.Name(), []byte(input.Code), 0644)
 		defer file.Close()
 	} else {
-		fmt.Println("File already exists!", filename)
+		log.Println("File already exists!", filename)
 		shouldExecute = false
 	}
 
@@ -78,18 +79,14 @@ func SetupForExecution(input *constants.Request, configMap kafka.ConfigMap) stri
 
 	err23 := os.RemoveAll(input.PlayerSessionId + "/")
 	if err23 != nil {
-		fmt.Println("lel not deleted")
+		log.Printf("Cant delte folder for %s", input.PlayerSessionId)
 	}
-
-	messaging.SendMessage("computedCode", configMap, input, curr)
 
 	return curr
 }
 
-// TODO MAKE ALL RETURNS USEFUL
 func executeDocker(dockerFileName string, name string) string {
 
-	fmt.Println("Welcome")
 	dockerBuild := exec.Command("docker", "build", "-t", name, "-f", dockerFileName, ".")
 	dockerBuild.Dir = name + "/"
 	var errb bytes.Buffer
@@ -99,12 +96,10 @@ func executeDocker(dockerFileName string, name string) string {
 	_, err := dockerBuild.Output()
 	if err != nil {
 		// if there was any error, print it here
-		fmt.Println("could not run command: ")
+		log.Println("could not run command: ")
 
 		return "COMPILE ERROR"
 	}
-	// otherwise, print the output from running the command
-
 	ch := make(chan output)
 
 	go func() {
@@ -115,17 +110,15 @@ func executeDocker(dockerFileName string, name string) string {
 
 	select {
 	case <-time.After(2 * time.Minute):
-		fmt.Println("Should never be here Log and kill all dockres")
+		log.Println("Should never be here Log and kill all dockres")
 	case x := <-ch:
-		fmt.Println("here")
 
 		if len(string(x.out)) > 1000 {
 			x.out = []byte("wouldOverflow")
 		}
 
-		fmt.Printf("program done; out: %q\n", string(x.out))
 		if x.err != nil {
-			fmt.Printf("program errored: %s\n", x.err)
+			log.Printf("program errored: %s\n", x.err)
 		}
 
 		dockerDeleteImage := exec.Command("docker", "rmi", name)
@@ -134,7 +127,7 @@ func executeDocker(dockerFileName string, name string) string {
 		_, err234 := dockerDeleteImage.Output()
 		if err234 != nil {
 			// if there was any error, print it here
-			fmt.Println("could not run command: ", err)
+			log.Println("could not run command: ", err)
 		}
 		return string(x.out)
 	}
