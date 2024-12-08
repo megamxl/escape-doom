@@ -1,4 +1,4 @@
-package com.escapedoom.lector.portal.rest.service;
+package com.escapedoom.lector.portal.rest.model;
 
 import com.escapedoom.lector.portal.shared.model.EscapeRoomState;
 import com.escapedoom.lector.portal.dataaccess.entity.Escaperoom;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class EscaperoomDTO {
+public class EscaperoomResponse {
 
     private Long UserId;
 
@@ -21,7 +21,7 @@ public class EscaperoomDTO {
 
     private EscapeRoomState escapeRoomState;
 
-    public EscaperoomDTO(Escaperoom escaperoom, EscapeRoomState escapeRoomState) {
+    public EscaperoomResponse(Escaperoom escaperoom, EscapeRoomState escapeRoomState) {
         this.escaproom_id = escaperoom.getEscapeRoomId();
         this.UserId = escaperoom.getUser().getUserId();
         this.time = escaperoom.getTime();
