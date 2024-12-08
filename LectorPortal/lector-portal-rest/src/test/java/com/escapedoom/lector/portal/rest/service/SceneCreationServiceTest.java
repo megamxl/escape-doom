@@ -3,28 +3,23 @@ package com.escapedoom.lector.portal.rest.service;
 import com.escapedoom.lector.portal.dataaccess.EscaperoomRepository;
 import com.escapedoom.lector.portal.dataaccess.LobbyRepository;
 import com.escapedoom.lector.portal.dataaccess.UserRepository;
-import com.escapedoom.lector.portal.dataaccess.entity.*;
+import com.escapedoom.lector.portal.dataaccess.entity.ConsoleNodeCode;
+import com.escapedoom.lector.portal.dataaccess.entity.EscapeRoomStage;
+import com.escapedoom.lector.portal.dataaccess.entity.Escaperoom;
+import com.escapedoom.lector.portal.dataaccess.entity.User;
 import com.escapedoom.lector.portal.dataaccess.model.EscapeRoomDto;
-import com.escapedoom.lector.portal.shared.model.EscapeRoomState;
 import com.escapedoom.lector.portal.shared.model.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class SceneCreationServiceTest {
@@ -48,19 +43,6 @@ class SceneCreationServiceTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-
-        // Mock SecurityContextHolder
-        securityContextHolderMock = mockStatic(SecurityContextHolder.class);
-
-        // Mock SecurityContext
-        SecurityContext mockSecurityContext = mock(SecurityContext.class);
-        User mockUser = User.builder()
-                .userId(1L)
-                .email("test@example.com")
-                .build();
-
-        // Configure SecurityContextHolder to return mocked SecurityContext
-        when(SecurityContextHolder.getContext()).thenReturn(mockSecurityContext);
     }
 
     @Test
