@@ -9,8 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class CodeRiddleServiceTest {
@@ -57,12 +56,12 @@ public class CodeRiddleServiceTest {
         ConsoleNodeCode result = codeRiddleService.createCodeRiddle(functionSignature, input, expectedOutput, variableName);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals(functionSignature, result.getFunctionSignature());
-        assertEquals(input, result.getInput());
-        assertEquals(expectedOutput, result.getExpectedOutput());
-        assertEquals(variableName, result.getVariableName());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getFunctionSignature()).isEqualTo(functionSignature);
+        assertThat(result.getInput()).isEqualTo(input);
+        assertThat(result.getExpectedOutput()).isEqualTo(expectedOutput);
+        assertThat(result.getVariableName()).isEqualTo(variableName);
 
         verify(codeRiddleRepository, times(1)).save(any(ConsoleNodeCode.class));
     }
