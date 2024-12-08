@@ -16,7 +16,11 @@ import Editor from '@monaco-editor/react';
 import {LoadingButton} from '@mui/lab';
 import {useSubmitCode} from "@/app/utils/api/game-session/useSubmitCode";
 import {useGetCodeResult} from "@/app/utils/api/game-session/useGetCodeResult";
-import {compileStatus} from "@/app/enums/compileStatus";
+import {CompileStatus} from "@/app/enums/CompileStatus";
+import {removeGameSession} from "@/app/utils/game-session-handler";
+import {redirect} from "next/navigation";
+import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
+import CodeExectuionDisplay from "@/app/game-session/session/[id]/_components/CodeExectuionDisplay";
 
 const Session = ({sessionID}: { sessionID: string }) => {
 
@@ -35,7 +39,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
 
     const [code, setCode] = useState<string>("Initial code");
     const [codeExecutionResponse, setCodeExecutionResponse] = useState<CodeExecResponse>({
-        status: compileStatus.WAITING,
+        status: CompileStatus.WAITING,
         output: ''
     })
     const [submittedCodeBody, setSubmittedCodeBody] = useState<SubmittedCodeBody>({
@@ -47,8 +51,8 @@ const Session = ({sessionID}: { sessionID: string }) => {
     })
 
     /* TanStack Query Calls */
-    const {data: stageInformation, isLoading} = useGetStageInformation(sessionID)
-    const {refetch: refetchCodeResult, data: codeResultData} = useGetCodeResult(sessionID);
+    const {data: stageInformation, isFetching: isFetchingStageInformation} = useGetStageInformation(sessionID)
+    const {refetch: refetchCodeResult, data: codeResultData, isFetching: isFetchingCodeResult} = useGetCodeResult(sessionID);
     const {refetch: reSubmitCode} = useSubmitCode(submittedCodeBody);
 
     const monacoEditorRef = useRef()
@@ -67,23 +71,26 @@ const Session = ({sessionID}: { sessionID: string }) => {
 
     const handleCodeSubmission = async () => {
         await reSubmitCode();
-        let response = await getCodeResult();
+        await getCodeResult();
+
+        if (codeResultData?.status === CompileStatus.WON) {
+            removeGameSession()
+            redirect(GAME_SESSION_APP_PATHS.LEADERBOARD)
+        }
+
+        if (codeResultData !== undefined) setCodeExecutionResponse(codeResultData)
         //TODO anas - das refetch oben funktioniert und ich submitte ins backend
-        //aber das getCodeResult stimmt iwi noch nicht
-        // await getCodeResult()
-        // console.log(codeResultData)
     }
 
-    const getCodeResult = async (): Promise<CodeExecResponse | undefined> => {
+    const getCodeResult = async (): Promise<void> => {
         if (codeResultData === undefined) return;
 
-        while (codeResultData.status === compileStatus.WAITING) {
+        while (codeResultData.status === CompileStatus.WAITING) {
             console.log("Waiting for code compilation completed", codeResultData)
             await sleep(250);
             await refetchCodeResult();
         }
         console.log("Compilation done", codeResultData.status)
-        return codeResultData;
     }
 
     const handleLanguageChange = () => {
@@ -105,7 +112,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
     }
 
     return (
-        isLoading ? <LoadingDisplay /> :
+        isFetchingStageInformation ? <LoadingDisplay /> :
 
         <Stack direction="row" alignItems="center" height="100vh">
             <Stack direction="column" height="100vh" maxWidth={"31.5vw"}>
@@ -162,7 +169,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
                             }}
                             startIcon={<PlayArrow/>}
                             variant='contained'
-                            loading={isLoading}
+                            loading={isFetchingCodeResult}
                             loadingPosition="start"
                             onClick={handleCodeSubmission}
                         >
@@ -170,13 +177,14 @@ const Session = ({sessionID}: { sessionID: string }) => {
                         </LoadingButton>
                     </Stack>
                 </EditorContainer>
+                <CodeExectuionDisplay codeExecResponse={codeExecutionResponse} />
             </Stack>
 
             <div className="relative w-full mx-auto">
                 <img
                     src={`${stageState.stageScene?.bgImg}`}
                     alt="Background"
-                    className="w-full h-auto bg-no-repeat bg-contain"
+                    className="w-full bg-no-repeat bg-contain"
                 />
                 {
                     // //TODO: Replace with new Nodes when structure is reworked

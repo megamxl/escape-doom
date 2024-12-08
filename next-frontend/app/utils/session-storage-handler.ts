@@ -18,3 +18,11 @@ export const setSessionStorageItem = (key: string, value: string, fun: (action: 
         console.error("Error setting sessionStorage key:", error);
     }
 }
+
+export const removeSessionStorageItem = (key: string) => {
+    try {
+        sessionStorage.removeItem(key)
+    } catch (error) {
+        console.error("Error removing sessionStorage key:", error);
+    }
+}

@@ -1,4 +1,4 @@
-export enum compileStatus {
+export enum CompileStatus {
     ERROR = "ERROR",
     COMPILED = "COMPILED",
     SUCCESS = "SUCCESS",

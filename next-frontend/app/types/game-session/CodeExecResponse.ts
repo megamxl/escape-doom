@@ -1,4 +1,6 @@
+import {CompileStatus} from "@/app/enums/CompileStatus";
+
 export type CodeExecResponse = {
-    status: string,
+    status: CompileStatus,
     output: string
 }
