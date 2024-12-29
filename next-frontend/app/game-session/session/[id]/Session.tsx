@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useRef, useState} from 'react';
-import {useGetStageInformation} from "@/app/utils/api/game-session/useGetStageInformation";
+import {useGetStageInformation} from "@/app/hooks/game-session/useGetStageInformation";
 import {StageState} from "@/app/types/game-session/StageState";
 import {CodeExecResponse} from "@/app/types/game-session/CodeExecResponse";
 import {SubmittedCodeBody} from "@/app/types/game-session/SubmittedCodeBody";
@@ -14,8 +14,8 @@ import EditorContainer from "@/app/game-session/session/[id]/_components/EditorC
 import {PlayArrow} from "@mui/icons-material";
 import Editor from '@monaco-editor/react';
 import {LoadingButton} from '@mui/lab';
-import {useSubmitCode} from "@/app/utils/api/game-session/useSubmitCode";
-import {useGetCodeResult} from "@/app/utils/api/game-session/useGetCodeResult";
+import {useSubmitCode} from "@/app/hooks/game-session/useSubmitCode";
+import {useGetCodeResult} from "@/app/hooks/game-session/useGetCodeResult";
 import {CompileStatus} from "@/app/enums/CompileStatus";
 import {removeGameSession} from "@/app/utils/game-session-handler";
 import {redirect} from "next/navigation";

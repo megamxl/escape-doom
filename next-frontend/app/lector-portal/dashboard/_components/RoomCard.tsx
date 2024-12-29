@@ -17,7 +17,7 @@ import {
     Typography
 } from "@mui/material";
 import {AccessTime, Circle, Close, OpenInBrowser, PlayArrow} from "@mui/icons-material";
-import {useChangeRoomState} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
+import {useChangeRoomState} from "@/app/hooks/lector-portal/useGetEscapeRooms";
 import {RoomState} from "@/app/enums/RoomState";
 import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 

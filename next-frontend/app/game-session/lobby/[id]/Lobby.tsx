@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Backdrop, CircularProgress, Divider, Grid2, Grow, Paper, Stack, Typography} from "@mui/material";
-import { common } from "@mui/material/colors";
-import { redirect } from 'next/navigation'
+import {common} from "@mui/material/colors";
+import {redirect} from 'next/navigation'
 import UserCard from "./_components/UserCard";
 import {useSession} from "@/app/utils/game-session-handler";
-import {useLobbyStatus} from "@/app/utils/api/student-join/useLobbyStatus";
+import {useLobbyStatus} from "@/app/hooks/student-join/useLobbyStatus";
 import {LobbyState} from "@/app/types/lobby/LobbyState";
 import {LECTOR_PORTAL_API} from "@/app/constants/paths";
 

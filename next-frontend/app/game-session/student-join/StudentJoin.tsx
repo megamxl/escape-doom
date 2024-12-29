@@ -4,7 +4,7 @@ import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Alert, Button, Card, CardContent, Grid2, Snackbar, Stack, TextField, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
 import {common} from '@mui/material/colors';
-import {useLobbyJoin} from "@/app/utils/api/student-join/useLobbyJoin";
+import {useLobbyJoin} from "@/app/hooks/student-join/useLobbyJoin";
 import {redirect} from "next/navigation";
 import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 import {RoomState} from "@/app/enums/RoomState";

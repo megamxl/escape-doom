@@ -5,7 +5,7 @@ import {Alert, Avatar, Box, Button, Container, Snackbar, TextField, Typography} 
 import {LockOutlined} from "@mui/icons-material";
 import {useLectorToken} from "@/app/utils/lector-token-handler";
 import {AuthCreds} from "@/app/api/lectorPortal/login";
-import {useAuthentication} from "@/app/utils/api/login/useAuthentication";
+import {useAuthentication} from "@/app/hooks/login/useAuthentication";
 import {redirect, RedirectType} from "next/navigation";
 import {LECTOR_PORTAL_APP_PATHS} from "@/app/constants/paths";
 
