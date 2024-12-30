@@ -12,6 +12,7 @@ test.beforeEach(async ({page}) => {
 
 test.describe('Login', () => {
 
+    test.use({ storageState: undefined })
     test('should redirect to correct URL after login', async ({page}) => {
         const email_in = page.getByLabel('Email Address')
         const pw_in = page.getByLabel('Password')
@@ -28,7 +29,10 @@ test.describe('Login', () => {
         expect(page.url()).toBe(LECTOR_PORTAL_APP_PATHS.DASHBOARD);
     });
 
+    test.use({ storageState: undefined })
     test('should not redirect as login fails', async ({page}) => {
+        await page.goto(LECTOR_PORTAL_APP_PATHS.LOGIN)
+
         const email_in = page.getByLabel('Email Address')
         const pw_in = page.getByLabel('Password')
 
