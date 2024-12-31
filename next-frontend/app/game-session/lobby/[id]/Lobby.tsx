@@ -47,6 +47,106 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     }, [countDown, isStarted]);
+
+
+
+    const [yourNameSocket, setYourNameSocket] = useState<WebSocket | null>(null);
+    const [yourNamemessages, setYourNameMessages] = useState<string[]>([]);
+
+
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:8090/ws/your-name");
+
+        ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+
+        ws.onmessage = (event) => {
+            setYourNameMessages((prevMessages) => [...prevMessages,  event.data]);
+            setName(event.data);
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
+
+        setYourNameSocket(ws);
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const [allNamesSocket, setAllNamesSocket] = useState<WebSocket | null>(null);
+    const [allNamesMessages, setAllNamesMessages] = useState<string[]>([]);
+
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:8090/ws/all-names");
+
+        ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                setUsers(data.players || []);
+              } catch (error) {
+                console.error("Error parsing WebSocket message:", error);
+              }
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
+
+        setAllNamesSocket(ws);
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    const [startedSocket, setStartedSocket] = useState<WebSocket | null>(null);
+    const [startedMessages, setStartedMessages] = useState<string[]>([]);
+
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:8090/ws/started");
+
+        ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+
+        ws.onmessage = (event) => {
+            setStartedMessages((prevMessages) => [...prevMessages,  event.data]);
+            //setName(event.data);
+            setIsStarted(true)
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
+
+        setStartedSocket(ws);
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+
     useEffect(() => {
         const sessionId = getSessionId()
 
@@ -60,6 +160,7 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
                         console.log("errors")
                         //navigate("/")
                     };
+                    /*
                     source.addEventListener("yourName", (e) => {
                         const parsedData = e.data
                         setName(parsedData)
@@ -73,11 +174,12 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
                     source.addEventListener("started", (e) => {
                         setIsStarted(true)
                         source.close()
-                    })
-
+                    })*/
+                    
                     return () => {
                         source.close()
                     }
+                        
                 } else {
                     redirect(`/session/${sessionId}`);
                 }
@@ -94,6 +196,7 @@ const Lobby = ({lobbyID}: {lobbyID: number}) => {
                 <Typography align="center" color={common.white} variant="h2"> { lobbyID } </Typography>
             </Paper>
             <Divider  />
+            <p> Current user : {name}</p>
             <Stack direction="row" justifyContent="space-between">
                 <Stack marginLeft={10} direction="column">
                     <Typography fontSize={"2.5rem"} fontWeight="bold" align="center"> {users.length} </Typography>
