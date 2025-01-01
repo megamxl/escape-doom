@@ -24,69 +24,80 @@ public class PlayerService {
     private final EscapeRoomRepository escapeRoomRepo;
 
     public StageResponse getPlayerStage(String httpSession) {
-        log.debug("Fetching player stage for HttpSession: {}", httpSession);
+        try {
+            log.debug("Fetching player stage for HttpSession: {}", httpSession);
 
-        var curr = sessionManagementRepository.findPlayerByHttpSessionID(httpSession);
-        if (curr.isPresent()) {
-            log.debug("Player found for HttpSession: {}", httpSession);
-            Optional<OpenLobbys> lobbyId = openLobbyRepository.findByLobbyId(curr.get().getEscaperoomSession());
-            if (lobbyId.isPresent()) {
-                log.debug("Lobby found for player session: {} with state: {}", httpSession, lobbyId.get().getState());
+            var curr = sessionManagementRepository.findPlayerByHttpSessionID(httpSession);
+            if (curr.isPresent()) {
+                log.debug("Player found for HttpSession: {}", httpSession);
+                Optional<OpenLobbys> lobbyId = openLobbyRepository.findByLobbyId(curr.get().getEscaperoomSession());
+                if (lobbyId.isPresent()) {
+                    log.debug("Lobby found for player session: {} with state: {}", httpSession, lobbyId.get().getState());
 
-                if (lobbyId.get().getState() == EscapeRoomState.PLAYING) {
-                    log.debug("Lobby is in PLAYING state for HttpSession: {}", httpSession);
-                    return StageResponse.builder()
-                            .stage(escapeRoomRepo.getEscapeRoomStageByEscaperoomIDAndStageNumber(
-                                    curr.get().getEscampeRoom_room_id(), curr.get().getEscaperoomStageId()))
-                            .roomID(lobbyId.get().getLobbyId())
-                            .state(lobbyId.get().getState()).build();
-                } else if (lobbyId.get().getState() == EscapeRoomState.JOINABLE) {
-                    log.warn("Lobby is in JOINABLE state for HttpSession: {}. Player might not have started the game.", httpSession);
-                    return StageResponse.builder()
-                            .stage(new ArrayList<>())
+                    if (lobbyId.get().getState() == EscapeRoomState.PLAYING) {
+                        log.debug("Lobby is in PLAYING state for HttpSession: {}", httpSession);
+                        return StageResponse.builder()
+                                .stage(escapeRoomRepo.getEscapeRoomStageByEscaperoomIDAndStageNumber(
+                                        curr.get().getEscampeRoom_room_id(), curr.get().getEscaperoomStageId()))
+                                .roomID(lobbyId.get().getLobbyId())
+                                .state(lobbyId.get().getState())
+                                .build();
+                    } else if (lobbyId.get().getState() == EscapeRoomState.JOINABLE) {
+                        log.warn("Lobby is in JOINABLE state for HttpSession: {}. Player might not have started the game.", httpSession);
+                        return StageResponse.builder()
+                                .stage(new ArrayList<>())
+                                .state(lobbyId.get().getState())
+                                .roomID(lobbyId.get().getLobbyId())
+                                .build();
+                    } else {
+                        log.warn("Unexpected state ({}) for Lobby in HttpSession: {}", lobbyId.get().getState(), httpSession);
+                    }
+                } else {
+                    log.warn("No lobby found for player session: {}", httpSession);
+                }
+            } else {
+                log.warn("No player found for HttpSession: {}", httpSession);
+            }
+
+            return StageResponse.builder()
+                    .stage(new ArrayList<>())
+                    .state(EscapeRoomState.STOPPED)
+                    .roomID(null)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Error occurred while fetching player stage for HttpSession: {}", httpSession, ex);
+            throw new RuntimeException("Failed to fetch player stage for HttpSession: " + httpSession, ex);
+        }
+    }
+
+    public StatusReturn getPlayerStatus(String playerID) {
+        try {
+            log.debug("Fetching player status for PlayerID: {}", playerID);
+
+            var curr = sessionManagementRepository.findPlayerByHttpSessionID(playerID);
+            if (curr.isPresent()) {
+                log.debug("Player found for PlayerID: {}", playerID);
+                Optional<OpenLobbys> lobbyId = openLobbyRepository.findByLobbyId(curr.get().getEscaperoomSession());
+                if (lobbyId.isPresent()) {
+                    log.debug("Lobby found for PlayerID: {} with state: {}", playerID, lobbyId.get().getState());
+                    return StatusReturn.builder()
                             .state(lobbyId.get().getState())
                             .roomID(lobbyId.get().getLobbyId())
                             .build();
                 } else {
-                    log.warn("Unexpected state ({}) for Lobby in HttpSession: {}", lobbyId.get().getState(), httpSession);
+                    log.warn("No lobby found for PlayerID: {}", playerID);
                 }
             } else {
-                log.warn("No lobby found for player session: {}", httpSession);
+                log.warn("No player found for PlayerID: {}", playerID);
             }
-        } else {
-            log.warn("No player found for HttpSession: {}", httpSession);
+
+            return StatusReturn.builder()
+                    .state(EscapeRoomState.STOPPED)
+                    .roomID(null)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Error occurred while fetching player status for PlayerID: {}", playerID, ex);
+            throw new RuntimeException("Failed to fetch player status for PlayerID: " + playerID, ex);
         }
-
-        return StageResponse.builder()
-                .stage(new ArrayList<>())
-                .state(EscapeRoomState.STOPPED)
-                .roomID(null)
-                .build();
-    }
-
-    public StatusReturn getPlayerStatus(String playerID) {
-        log.debug("Fetching player status for PlayerID: {}", playerID);
-
-        var curr = sessionManagementRepository.findPlayerByHttpSessionID(playerID);
-        if (curr.isPresent()) {
-            log.debug("Player found for PlayerID: {}", playerID);
-            Optional<OpenLobbys> lobbyId = openLobbyRepository.findByLobbyId(curr.get().getEscaperoomSession());
-            if (lobbyId.isPresent()) {
-                log.debug("Lobby found for PlayerID: {} with state: {}", playerID, lobbyId.get().getState());
-                return StatusReturn.builder()
-                        .state(lobbyId.get().getState())
-                        .roomID(lobbyId.get().getLobbyId())
-                        .build();
-            } else {
-                log.warn("No lobby found for PlayerID: {}", playerID);
-            }
-        } else {
-            log.warn("No player found for PlayerID: {}", playerID);
-        }
-
-        return StatusReturn.builder()
-                .state(EscapeRoomState.STOPPED)
-                .roomID(null)
-                .build();
     }
 }
