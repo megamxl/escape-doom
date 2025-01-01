@@ -8,6 +8,7 @@ const SRV_PATH = process.env.NEXT_PUBLIC_WEB_URL
 
 export class LECTOR_PORTAL_API {
     public static BASE_API = process.env.NEXT_PUBLIC_LECTOR_PORTAL_BASE_URL
+    public static AUTH = `${this.BASE_API}/auth/authenticate`
 }
 
 export class LECTOR_PORTAL_APP_PATHS {

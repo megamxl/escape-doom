@@ -95,7 +95,7 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
 
             </CardContent>
             <CardActions sx={{justifyContent: "space-between"}}>
-                <Circle sx={{color: statusLedColor}}> </Circle>
+                <Circle id={'status_led'} sx={{color: statusLedColor}}> </Circle>
                 <Button onClick={() => handleStateChange(RoomState.JOINABLE)}
                         disabled={roomInfo.Status == RoomState.JOINABLE} startIcon={<OpenInBrowser/>}> Open </Button>
                 <Button onClick={() => handleStateChange(RoomState.PLAYING)}
