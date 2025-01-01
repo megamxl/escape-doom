@@ -1,5 +1,7 @@
 package com.escapedoom.lector.portal.rest.auth;
 
+import com.escapedoom.lector.portal.rest.service.AuthenticationService;
+import com.escapedoom.lector.portal.rest.service.JwtService;
 import com.escapedoom.lector.portal.shared.model.Role;
 import com.escapedoom.lector.portal.dataaccess.UserRepository;
 import com.escapedoom.lector.portal.dataaccess.entity.User;
@@ -12,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -93,7 +96,7 @@ class AuthenticationServiceTest {
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(userRepository.findByEmail(any())).thenReturn(java.util.Optional.empty());
 
-        assertThrows(java.util.NoSuchElementException.class, () -> {
+        assertThrows(UsernameNotFoundException.class, () -> {
             authenticationService.authenticate(authenticationRequest);
         });
 

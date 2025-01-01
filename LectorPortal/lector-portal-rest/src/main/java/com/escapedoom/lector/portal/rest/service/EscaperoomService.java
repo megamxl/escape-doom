@@ -52,40 +52,55 @@ public class EscaperoomService {
 
     @Transactional
     public EscapeRoomDto createADummyRoom() {
-        log.debug("Creating dummy escape room for user 'leon@doom.at'");
-        User user = userRepository.findByEmail("leon@doom.at")
-                .orElseThrow(() -> new IllegalArgumentException("User 'leon@doom.at' not found."));
-        log.info("Created dummy escape room for user 'leon@doom.at'");
-        return createADummyRoomForStart(user);
+        try {
+            log.debug("Creating dummy escape room for user 'leon@doom.at'");
+            User user = userRepository.findByEmail("leon@doom.at")
+                    .orElseThrow(() -> new IllegalArgumentException("User 'leon@doom.at' not found."));
+            log.info("Created dummy escape room for user 'leon@doom.at'");
+            return createADummyRoomForStart(user);
+        } catch (IllegalArgumentException ex) {
+            log.error("Error while creating dummy escape room: {}", ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Unexpected error while creating dummy escape room", ex);
+            throw new RuntimeException("An unexpected error occurred while creating a dummy escape room");
+        }
     }
-
 
     @Transactional
     public EscapeRoomDto createADummyRoomForStart(User user) {
-        log.debug("Creating dummy escape room for user with ID: {}", user.getUserId());
-        ConsoleNodeCode riddle1 = createCodeRiddle1();
-        ConsoleNodeCode riddle2 = createCodeRiddle2();
+        try {
+            log.debug("Creating dummy escape room for user with ID: {}", user.getUserId());
+            ConsoleNodeCode riddle1 = createCodeRiddle1();
+            ConsoleNodeCode riddle2 = createCodeRiddle2();
 
-        List<Scenes> scenesStage1 = createScenesForStage1(riddle1);
-        List<Scenes> scenesStage2 = createScenesForStage2(riddle2);
+            List<Scenes> scenesStage1 = createScenesForStage1(riddle1);
+            List<Scenes> scenesStage2 = createScenesForStage2(riddle2);
 
-        Escaperoom dummyRoom = Escaperoom.builder()
-                .user(user)
-                .name("Catch me")
-                .topic("Yee")
-                .escapeRoomStages(Collections.emptyList())
-                .time(90)
-                .build();
+            Escaperoom dummyRoom = Escaperoom.builder()
+                    .user(user)
+                    .name("Catch me")
+                    .topic("Yee")
+                    .escapeRoomStages(Collections.emptyList())
+                    .time(90)
+                    .build();
 
-        List<EscapeRoomStage> stages = List.of(
-                createStage(1L, riddle1, dummyRoom, scenesStage1),
-                createStage(2L, riddle2, dummyRoom, scenesStage2)
-        );
+            List<EscapeRoomStage> stages = List.of(
+                    createStage(1L, riddle1, dummyRoom, scenesStage1),
+                    createStage(2L, riddle2, dummyRoom, scenesStage2)
+            );
 
-        dummyRoom.setEscapeRoomStages(stages);
-        escaperoomRepository.save(dummyRoom);
-        log.info("Created dummy escape room with ID: {}", dummyRoom.getEscapeRoomId());
-        return mapToDto(dummyRoom);
+            dummyRoom.setEscapeRoomStages(stages);
+            escaperoomRepository.save(dummyRoom);
+            log.info("Created dummy escape room with ID: {}", dummyRoom.getEscapeRoomId());
+            return mapToDto(dummyRoom);
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid argument while creating dummy escape room: {}", ex.getMessage(), ex);
+            throw new IllegalArgumentException("Failed to create dummy escape room due to invalid input: " + ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Unexpected error while creating dummy escape room", ex);
+            throw new RuntimeException("An unexpected error occurred while creating the dummy escape room");
+        }
     }
 
     private ConsoleNodeCode createCodeRiddle1() {
@@ -261,91 +276,123 @@ public class EscaperoomService {
     public List<EscaperoomResponse> getAllRoomsByAnUser() {
         log.debug("Fetching all escape rooms for the authenticated user.");
 
-        var rooms = escaperoomRepository.findEscaperoomByUser(getUser())
-                .orElseThrow(() -> {
-                    log.error("No escape rooms found for the authenticated user.");
-                    return new NoSuchElementException("No escape rooms found for the user.");
-                });
+        try {
+            var rooms = escaperoomRepository.findEscaperoomByUser(getUser())
+                    .orElseThrow(() -> {
+                        log.error("No escape rooms found for the authenticated user.");
+                        return new NoSuchElementException("No escape rooms found for the user.");
+                    });
 
-        log.info("Found {} escape rooms for the authenticated user.", rooms.size());
+            log.info("Found {} escape rooms for the authenticated user.", rooms.size());
 
-        List<EscaperoomResponse> returnList = new ArrayList<>();
-        for (Escaperoom escaperoom : rooms) {
-            log.debug("Processing escape room with ID: {}", escaperoom.getEscapeRoomId());
+            List<EscaperoomResponse> returnList = new ArrayList<>();
+            for (Escaperoom escaperoom : rooms) {
+                log.debug("Processing escape room with ID: {}", escaperoom.getEscapeRoomId());
 
-            var byEscaperoomAndUserAndStateStoppedNot = lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(escaperoom.getEscapeRoomId(), getUser());
-            EscapeRoomState escapeRoomState = EscapeRoomState.STOPPED;
+                var byEscaperoomAndUserAndStateStoppedNot = lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(escaperoom.getEscapeRoomId(), getUser());
+                EscapeRoomState escapeRoomState = EscapeRoomState.STOPPED;
 
-            if (byEscaperoomAndUserAndStateStoppedNot.isPresent()) {
-                escapeRoomState = byEscaperoomAndUserAndStateStoppedNot.get().getState();
-                log.debug("Escape room ID: {} is in state: {}", escaperoom.getEscapeRoomId(), escapeRoomState);
-            } else {
-                log.debug("Escape room ID: {} has no active lobby, defaulting to state: STOPPED.", escaperoom.getEscapeRoomId());
+                if (byEscaperoomAndUserAndStateStoppedNot.isPresent()) {
+                    escapeRoomState = byEscaperoomAndUserAndStateStoppedNot.get().getState();
+                    log.debug("Escape room ID: {} is in state: {}", escaperoom.getEscapeRoomId(), escapeRoomState);
+                } else {
+                    log.debug("Escape room ID: {} has no active lobby, defaulting to state: STOPPED.", escaperoom.getEscapeRoomId());
+                }
+
+                returnList.add(new EscaperoomResponse(escaperoom, escapeRoomState));
             }
 
-            returnList.add(new EscaperoomResponse(escaperoom, escapeRoomState));
+            log.info("Processed {} escape rooms for the user.", returnList.size());
+            return returnList;
+        } catch (NoSuchElementException ex) {
+            log.error("Error fetching escape rooms: {}", ex.getMessage(), ex);
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Unexpected error while fetching escape rooms for the user", ex);
+            throw new RuntimeException("An unexpected error occurred while fetching escape rooms.", ex);
         }
-
-        log.info("Processed {} escape rooms for the user.", returnList.size());
-        return returnList;
     }
 
     public String openEscapeRoom(Long escapeRoomId) {
-        log.debug("Opening escape room with ID: {}", escapeRoomId);
-        notNull(escapeRoomId);
+        try {
+            log.debug("Opening escape room with ID: {}", escapeRoomId);
+            notNull(escapeRoomId);
 
-        Escaperoom escaperoom = Objects.requireNonNull(getEscapeRoomAndCheckForUser(escapeRoomId), "Escape room cannot be null");
-        log.debug("Fetched escape room with ID: {} for the authenticated user.", escapeRoomId);
+            Escaperoom escaperoom = Objects.requireNonNull(getEscapeRoomAndCheckForUser(escapeRoomId), "Escape room cannot be null");
+            log.debug("Fetched escape room with ID: {} for the authenticated user.", escapeRoomId);
 
-        var curr = lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(escaperoom.getEscapeRoomId(), getUser());
-        if (curr.isPresent() && curr.get().getState() != EscapeRoomState.STOPPED) {
-            log.info("An active lobby exists for escape room ID: {} with state: {}. Returning existing lobby ID: {}",
-                    escapeRoomId, curr.get().getState(), curr.get().getLobby_Id());
-            return curr.get().getLobby_Id().toString();
+            var curr = lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(escaperoom.getEscapeRoomId(), getUser());
+            if (curr.isPresent() && curr.get().getState() != EscapeRoomState.STOPPED) {
+                log.info("An active lobby exists for escape room ID: {} with state: {}. Returning existing lobby ID: {}",
+                        escapeRoomId, curr.get().getState(), curr.get().getLobby_Id());
+                return curr.get().getLobby_Id().toString();
+            }
+
+            log.debug("No active lobby found for escape room ID: {}. Creating a new lobby.", escapeRoomId);
+            var newRoom = lobbyRepository.save(
+                    OpenLobbys.builder()
+                            .escaperoom(escaperoom)
+                            .user(getUser())
+                            .state(EscapeRoomState.JOINABLE)
+                            .build()
+            );
+            log.info("New lobby created for escape room ID: {} with lobby ID: {}", escapeRoomId, newRoom.getLobby_Id());
+            return newRoom.getLobby_Id().toString();
+
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid argument while opening escape room with ID: {}", escapeRoomId, ex);
+            throw new IllegalArgumentException("Invalid escape room ID provided: " + ex.getMessage());
+        } catch (NoSuchElementException ex) {
+            log.error("Required element not found for escape room with ID: {}", escapeRoomId, ex);
+            throw new NoSuchElementException("No matching escape room or lobby found: " + ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Unexpected error while opening escape room with ID: {}", escapeRoomId, ex);
+            throw new RuntimeException("An unexpected error occurred while opening the escape room.");
         }
-
-        log.debug("No active lobby found for escape room ID: {}. Creating a new lobby.", escapeRoomId);
-        var newRoom = lobbyRepository.save(
-                OpenLobbys.builder()
-                        .escaperoom(escaperoom)
-                        .user(getUser())
-                        .state(EscapeRoomState.JOINABLE)
-                        .build()
-        );
-        log.info("New lobby created for escape room ID: {} with lobby ID: {}", escapeRoomId, newRoom.getLobby_Id());
-        return newRoom.getLobby_Id().toString();
     }
 
     public String changeEscapeRoomState(Long escapeRoomId, EscapeRoomState escapeRoomState, Long time) {
-        log.debug("Changing state of escape room with ID: {} to state: {}", escapeRoomId, escapeRoomState);
-        notNull(escapeRoomId);
-        notNull(escapeRoomState);
+        try {
+            log.debug("Changing state of escape room with ID: {} to state: {}", escapeRoomId, escapeRoomState);
+            Objects.requireNonNull(escapeRoomId, "Escape Room ID must not be null.");
+            Objects.requireNonNull(escapeRoomState, "Escape Room State must not be null.");
 
-        if (escapeRoomState == EscapeRoomState.PLAYING) {
-            notNull(time);
-            log.debug("Escape room is entering PLAYING state. Time provided: {} minutes.", time);
+            if (escapeRoomState == EscapeRoomState.PLAYING) {
+                Objects.requireNonNull(time, "Time must not be null for PLAYING state.");
+                log.debug("Escape room is entering PLAYING state. Time provided: {} minutes.", time);
+            }
+
+            Escaperoom escapeRoom = Objects.requireNonNull(getEscapeRoomAndCheckForUser(escapeRoomId), "Escape room cannot be null");
+            log.debug("Escape room with ID: {} successfully retrieved for the authenticated user.", escapeRoomId);
+
+            OpenLobbys openLobbys = lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(escapeRoom.getEscapeRoomId(), getUser())
+                    .orElseThrow(() -> {
+                        log.error("No active lobby found for escape room ID: {}", escapeRoomId);
+                        return new NoSuchElementException("No active lobby found for escape room ID: " + escapeRoomId);
+                    });
+
+            log.debug("Found lobby with ID: {} for escape room ID: {}. Current state: {}", openLobbys.getLobby_Id(), escapeRoomId, openLobbys.getState());
+            openLobbys.setState(escapeRoomState);
+            lobbyRepository.flush();
+            lobbyRepository.save(openLobbys);
+            log.info("Updated state of lobby ID: {} to {}", openLobbys.getLobby_Id(), escapeRoomState);
+
+            handelRoomStatePlaying(escapeRoomState, time, openLobbys);
+
+            log.info("Changed state of escape room ID: {} to {}", escapeRoomId, escapeRoomState);
+            return "State of Escape Room with ID: " + escapeRoomId + " changed to " + escapeRoomState;
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid argument while changing state of escape room: {}", ex.getMessage());
+            throw ex;
+        } catch (NoSuchElementException ex) {
+            log.error("Entity not found: {}", ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Unexpected error while changing state of escape room", ex);
+            throw new RuntimeException("An unexpected error occurred while changing the state of the escape room.");
         }
-
-        Escaperoom escapeRoom = Objects.requireNonNull(getEscapeRoomAndCheckForUser(escapeRoomId), "Escape room cannot be null");
-        log.debug("Escape room with ID: {} successfully retrieved for the authenticated user.", escapeRoomId);
-
-        OpenLobbys openLobbys = lobbyRepository.findByEscaperoomAndUserAndStateStoppedNot(escapeRoom.getEscapeRoomId(), getUser())
-                .orElseThrow(() -> {
-                    log.error("No active lobby found for escape room ID: {}", escapeRoomId);
-                    return new NoSuchElementException("No active lobby found for escape room ID: " + escapeRoomId);
-                });
-
-        log.debug("Found lobby with ID: {} for escape room ID: {}. Current state: {}", openLobbys.getLobby_Id(), escapeRoomId, openLobbys.getState());
-        openLobbys.setState(escapeRoomState);
-        lobbyRepository.flush();
-        lobbyRepository.save(openLobbys);
-        log.info("Updated state of lobby ID: {} to {}", openLobbys.getLobby_Id(), escapeRoomState);
-
-        handelRoomStatePlaying(escapeRoomState, time, openLobbys);
-
-        log.info("Changed state of escape room ID: {} to {}", escapeRoomId, escapeRoomState);
-        return "State of Escape Room with ID: " + escapeRoomId + " changed to " + escapeRoomState;
     }
+
 
     protected void handelRoomStatePlaying(EscapeRoomState escapeRoomState, Long time, OpenLobbys openLobbys) {
         if (escapeRoomState == EscapeRoomState.PLAYING) {
