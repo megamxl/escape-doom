@@ -1,6 +1,7 @@
 package com.escapedoom.gamesession.rest.controller;
 
 import com.escapedoom.gamesession.rest.service.NotificationService;
+import com.escapedoom.gamesession.rest.service.NotificationWsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,12 @@ import static com.escapedoom.gamesession.rest.Constants.START_GAME_URL;
 @RequestMapping(IPC_INFO_URL)
 public class IPCController {
 
-    private final NotificationService notificationService;
+    //private final NotificationService notificationService;
+    private final NotificationWsService notificationWsService;
 
     @GetMapping(START_GAME_URL)
     public void startEscapeRoom(@PathVariable Long escaperoom_id, HttpServletRequest httpSession){
-        notificationService.notifyEscapeRoomStart(escaperoom_id);
+        //notificationService.notifyEscapeRoomStart(escaperoom_id);
+        notificationWsService.notifyEscapeRoomStart(escaperoom_id);
     }
 }

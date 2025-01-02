@@ -4,7 +4,6 @@ import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
 import com.escapedoom.gamesession.rest.config.websocket.WebSocketConfig;
-import com.escapedoom.gamesession.rest.config.websocket.WebSocketStartedHandler;
 import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
 import lombok.Getter;
@@ -24,54 +23,42 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationService {
-
+public class NotificationWsService {
     private final SessionManagementRepository sessionManagementRepository;
     private final OpenLobbyRepository openLobbyRepository;
-    //private final WebSocketConfig webSocketConfig;
+    private final WebSocketConfig webSocketConfig;
 
     @Getter
     private final List<SseEmitterExtended> sseEmitters = new CopyOnWriteArrayList<>();
 
-    // move to constants
-    private final String ALL_NAME_EVENT = "allNames";
-
     boolean update = false;
     //Bei einwählen in eine Lobby
-    public SseEmitterExtended establishLobbyEmitters(String httpId) {
-
-        SseEmitterExtended sseEmitter = new SseEmitterExtended();
-        sseEmitter.onTimeout(() -> {
-            sseEmitter.complete();
-            sseEmitters.remove(sseEmitter);
-        });
-        Player player ;
+    public void establishLobbyEmitters(String httpId) {
+        System.out.println("Establish Lobby emitters for " + httpId );
+        Player player = null;
         var optplayer = sessionManagementRepository.findPlayerByHttpSessionID(httpId);
         if (optplayer.isPresent()) {
             player = optplayer.get();
-        } else {
-            return null;
         }
-
-        sseEmitter.setHttpID(httpId);
-        sseEmitter.setLobby_id(player.getEscaperoomSession());
-        sseEmitter.setName(player.getName());
-        sseEmitters.add(sseEmitter);
-
+        if(player != null)
         try {
-            String YOUR_NAME_EVENT = "yourName";
-            sseEmitter.send(SseEmitter.event().name(YOUR_NAME_EVENT).data(sseEmitter.getName()));
+            //zuerst den senden als myName player.getName()
+            //webSocketConfig.getWebSocketYourNameHandler().broadcast(player.getName());
+            webSocketConfig.getWebSocketYourNameHandler().unicast(httpId, player.getName());
             var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());
             var jsonPlayers = new JSONObject();
             if (players.isPresent()) {
+                Player finalPlayer = player;
                 players.get().stream()
-                        .filter(player1 -> Objects.equals(player1.getEscaperoomSession(), player.getEscaperoomSession()))
+                        .filter(player1 -> Objects.equals(player1.getEscaperoomSession(), finalPlayer.getEscaperoomSession()))
                         .forEach(filteredPlayer -> {
                             // Add your processing logic here
                         });
                 jsonPlayers.put("players", players.get().stream().map(Player::getName).collect(Collectors.toList()));
             }
-            sseEmitter.send(SseEmitter.event().name(ALL_NAME_EVENT).data(jsonPlayers.toString()));
+            //dann das senden als AllName jsonPlayers.toString()
+            webSocketConfig.getWebSocketAllNamesHandler().broadcast(jsonPlayers.toString());
+            //sseEmitter.send(SseEmitter.event().name(ALL_NAME_EVENT).data(jsonPlayers.toString()));
         } catch (Exception e) {
             log.error("Error while establishing lobby emitters. PlayerSessionId: {}, EscapeRoomSession: {}, PlayerName: {}, ErrorMessage: {}",
                     httpId,
@@ -80,16 +67,10 @@ public class NotificationService {
                     e.getMessage(),
                     e);
         }
-        sseEmitter.onCompletion(() -> {
-            synchronized (this.sseEmitters) {
-                this.sseEmitters.remove(sseEmitter);
-            }
-        });
         if (update) {
             notifyAllPlayersInSession(player, false);
             update = false;
         }
-        return sseEmitter;
     }
 
     public void notifyClients(Long esceproomId, String eventName, Object toSend) {
@@ -121,9 +102,9 @@ public class NotificationService {
         if (playing) {
             String START_PLAYING_EVENT = "started";
 
-            //webSocketConfig.getWebSocketStartedHandler().broadcast("helloouu");
+            webSocketConfig.getWebSocketStartedHandler().broadcast(String.valueOf(new JSONObject()));
 
-            notifyClients(player.getEscaperoomSession(), START_PLAYING_EVENT, new JSONObject());
+            //notifyClients(player.getEscaperoomSession(), START_PLAYING_EVENT, new JSONObject());
         } else {
             var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());
             if (players.isPresent()) {
@@ -140,7 +121,7 @@ public class NotificationService {
                     log.error("Error adding players to JSON object", e);
                 }
             }
-            notifyClients(player.getEscaperoomSession(), ALL_NAME_EVENT, jsonPlayers.toString());
+            //notifyClients(player.getEscaperoomSession(), ALL_NAME_EVENT, jsonPlayers.toString());
         }
     }
 

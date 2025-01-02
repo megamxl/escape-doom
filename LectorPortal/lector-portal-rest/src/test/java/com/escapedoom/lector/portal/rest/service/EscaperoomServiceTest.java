@@ -7,6 +7,7 @@ import com.escapedoom.lector.portal.dataaccess.UserRepository;
 import com.escapedoom.lector.portal.dataaccess.entity.Escaperoom;
 import com.escapedoom.lector.portal.dataaccess.entity.OpenLobbys;
 import com.escapedoom.lector.portal.dataaccess.entity.User;
+import com.escapedoom.lector.portal.rest.model.EscaperoomResponse;
 import com.escapedoom.lector.portal.shared.model.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,10 +72,10 @@ public class EscaperoomServiceTest {
         Escaperoom escaperoom = new Escaperoom();
         escaperoom.setEscapeRoomId(1L);
         escaperoom.setName("Test Room");
-        escaperoom.setUser(user);
-        when(escaperoomRepository.findEscaperoomByUser(user)).thenReturn(Optional.of(List.of(escaperoom)));
+        escaperoom.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        when(escaperoomRepository.findEscaperoomByUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).thenReturn(Optional.of(List.of(escaperoom)));
 
-        List<EscaperoomDTO> rooms = escaperoomService.getAllRoomsByAnUser();
+        List<EscaperoomResponse> rooms = escaperoomService.getAllRoomsByAnUser();
 
         assertThat(rooms).isNotNull();
         assertThat(1).isEqualTo(rooms.size());
