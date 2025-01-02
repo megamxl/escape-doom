@@ -10,6 +10,7 @@ import {useLobbyStatus} from "@/app/hooks/student-join/useLobbyStatus";
 import {LobbyState} from "@/app/types/lobby/LobbyState";
 import {GAME_SESSION_APP_PATHS, LECTOR_PORTAL_API} from "@/app/constants/paths";
 import {useJoinLobby} from "@/app/hooks/game-session/useJoinLobby";
+import {createWebSocket} from "@/app/utils/websockets";
 
 const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
@@ -27,89 +28,30 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
     const {data, isError, error} = useLobbyStatus(sessionID)
 
-    useEffect(() => {
-
-        console.log(joinData)
-
-    }, [joinData]);
-
-    useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8090/ws/your-name");
-
-        ws.onopen = () => {
-            console.log("WebSocket connection established");
-        };
-
-        ws.onmessage = (event) => {
-            setLobbyState({...lobbyState, name: event.data});
-        };
-
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
-
-        return () => {
-            ws.close();
-        };
-    }, []);
-
-    useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8090/ws/all-names");
-
-        ws.onopen = () => {
-            console.log("WebSocket connection established");
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                setLobbyState({...lobbyState, users: data.players || []});
-            } catch (error) {
-                console.error("Error parsing WebSocket message:", error);
+    const createWebSockets = () => {
+        createWebSocket({
+            url: "ws://localhost:8090/ws/your-name", onMessage: (event) => {
+                setLobbyState({...lobbyState, name: event?.data});
             }
-        };
+        })
 
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
+        createWebSocket({
+            url: "ws://localhost:8090/ws/all-names", onMessage: (event) => {
+                try {
+                    const data = JSON.parse(event?.data);
+                    setLobbyState({...lobbyState, users: data.players || []});
+                } catch (error) {
+                    console.error("Error parsing WebSocket message:", error);
+                }
+            }
+        })
 
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
-
-        return () => {
-            ws.close();
-        };
-    }, []);
-
-    useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8090/ws/started");
-
-        ws.onopen = () => {
-            console.log("WebSocket connection established");
-        };
-
-        ws.onmessage = (event) => {
-            setLobbyState({...lobbyState, isStarted: true})
-        };
-
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
-
-        return () => {
-            ws.close();
-        };
-    }, []);
-
+        createWebSocket({
+            url: "ws://localhost:8090/ws/started", onMessage: () => {
+                setLobbyState({...lobbyState, isStarted: true})
+            }
+        })
+    }
 
     useEffect(() => {
 
@@ -119,35 +61,12 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
             if (data.state === "JOINABLE") {
                 const url = `${LECTOR_PORTAL_API.BASE_API}/join/lobby/${sessionID}`
-                // source.onerror = (event) => {
-                //     console.log("errors")
-                //     //navigate("/")
-                // };
-                // source.addEventListener("yourName", (e) => {
-                //     const parsedData = e.data
-                //     setLobbyState(prev => ({...prev, name: parsedData}))
-                // })
-                //
-                // source.addEventListener("allNames", (e) => {
-                //     const parsedData = JSON.parse(e.data)
-                //     setLobbyState(prev => ({...prev, users: parsedData.players}))
-                // })
-                //
-                // source.addEventListener("started", (e) => {
-                //     setLobbyState(prev => ({...prev, isStarted: true}))
-                //     source.close()
-                // })
-                // return () => {
-                //     source.close()
-                // }
             } else {
                 redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${sessionID}`);
             }
         }
 
-        return () => {
-
-        }
+        createWebSockets()
     }, [])
 
     useEffect(() => {
