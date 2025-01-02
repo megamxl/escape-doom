@@ -1,9 +1,16 @@
 import React from 'react';
 import Session from "@/app/game-session/session/[id]/Session";
 
-const SessionPage = () => {
+type SessionProps = {
+    params: Promise<{id: string}>
+}
+
+const SessionPage = async ({params}: SessionProps) => {
+
+    const sessionID = (await params).id
+
     return (
-        <Session />
+        <Session sessionID={sessionID} />
     );
 };
 

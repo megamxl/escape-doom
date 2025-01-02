@@ -25,6 +25,30 @@ func (d DockerEngine) ExecuteCode(input *constants.Request) string {
 
 	shouldExecute := true
 
+	shouldExecute = makeDirectory(input, shouldExecute)
+
+	dockerfile, samplefile := GetDockerLanguageParameters(input)
+
+	copy(dockerfile, input.PlayerSessionId+"/"+".Dockerfile")
+
+	shouldExecute = createFileForExecution(input, samplefile, shouldExecute)
+
+	curr := ""
+
+	//call Docker
+	if shouldExecute {
+		curr = executeDocker(".Dockerfile", input.PlayerSessionId)
+	}
+
+	err23 := os.RemoveAll(input.PlayerSessionId + "/")
+	if err23 != nil {
+		log.Printf("Cant delte folder for %s", input.PlayerSessionId)
+	}
+
+	return curr
+}
+
+func makeDirectory(input *constants.Request, shouldExecute bool) bool {
 	//make directory
 	if _, err := os.Stat(input.PlayerSessionId); errors.Is(err, os.ErrNotExist) {
 		err := os.Mkdir(input.PlayerSessionId, os.ModePerm)
@@ -34,25 +58,10 @@ func (d DockerEngine) ExecuteCode(input *constants.Request) string {
 			log.Println(err)
 		}
 	}
+	return shouldExecute
+}
 
-	//make Language Docker File
-	//TODO make it customizable for all case
-	dockerfile := "java.Dockerfile"
-	samplefile := "app.java"
-	switch {
-	case input.Language == "JAVA":
-		dockerfile = "internal/engine/docker-based/java.Dockerfile"
-		samplefile = "app.java"
-	case input.Language == "JAVASCRIPT":
-		dockerfile = "internal/engine/docker-based/javascript.Dockerfile"
-		samplefile = "app.js"
-	case input.Language == "PYTHON":
-		dockerfile = "internal/engine/docker-based/python.Dockerfile"
-		samplefile = "app.py"
-	}
-
-	copy(dockerfile, input.PlayerSessionId+"/"+".Dockerfile")
-
+func createFileForExecution(input *constants.Request, samplefile string, shouldExecute bool) bool {
 	filename := input.PlayerSessionId + "/" + samplefile
 
 	var _, err = os.Stat(filename)
@@ -69,20 +78,26 @@ func (d DockerEngine) ExecuteCode(input *constants.Request) string {
 		log.Println("File already exists!", filename)
 		shouldExecute = false
 	}
+	return shouldExecute
+}
 
-	curr := ""
-
-	//call Docker
-	if shouldExecute {
-		curr = executeDocker(".Dockerfile", input.PlayerSessionId)
+func GetDockerLanguageParameters(input *constants.Request) (string, string) {
+	//make Language Docker File
+	//TODO make it customizable for all case
+	dockerfile := "java.Dockerfile"
+	samplefile := "app.java"
+	switch {
+	case input.Language == "JAVA":
+		dockerfile = "internal/engine/docker-based/java.Dockerfile"
+		samplefile = "app.java"
+	case input.Language == "JAVASCRIPT":
+		dockerfile = "internal/engine/docker-based/javascript.Dockerfile"
+		samplefile = "app.js"
+	case input.Language == "PYTHON":
+		dockerfile = "internal/engine/docker-based/python.Dockerfile"
+		samplefile = "app.py"
 	}
-
-	err23 := os.RemoveAll(input.PlayerSessionId + "/")
-	if err23 != nil {
-		log.Printf("Cant delte folder for %s", input.PlayerSessionId)
-	}
-
-	return curr
+	return dockerfile, samplefile
 }
 
 func executeDocker(dockerFileName string, name string) string {
@@ -113,13 +128,9 @@ func executeDocker(dockerFileName string, name string) string {
 		log.Println("Should never be here Log and kill all dockres")
 	case x := <-ch:
 
-		if len(string(x.out)) > 1000 {
-			x.out = []byte("wouldOverflow")
-		}
+		checkOutputOverflow(&x)
 
-		if x.err != nil {
-			log.Printf("program errored: %s\n", x.err)
-		}
+		checkIfCommandFailed(x)
 
 		dockerDeleteImage := exec.Command("docker", "rmi", name)
 		dockerDeleteImage.Stderr = os.Stderr
@@ -132,6 +143,18 @@ func executeDocker(dockerFileName string, name string) string {
 		return string(x.out)
 	}
 	return ""
+}
+
+func checkIfCommandFailed(x output) {
+	if x.err != nil {
+		log.Printf("program errored: %s\n", x.err)
+	}
+}
+
+func checkOutputOverflow(x *output) {
+	if len(string(x.out)) > 1000 {
+		x.out = []byte("wouldOverflow")
+	}
 }
 
 func copy(src, dst string) (int64, error) {

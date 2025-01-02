@@ -1,5 +1,6 @@
 package com.escapedoom.lector.portal.rest.auth;
 
+import com.escapedoom.lector.portal.rest.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

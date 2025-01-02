@@ -1,4 +1,4 @@
-package com.escapedoom.lector.portal.rest.auth;
+package com.escapedoom.lector.portal.rest.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

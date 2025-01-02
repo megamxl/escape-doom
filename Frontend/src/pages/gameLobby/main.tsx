@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Backdrop, Box, CircularProgress, Divider, Grid, Grow, Paper, Stack, Typography } from "@mui/material";
+import { Backdrop, CircularProgress, Divider, Grid, Grow, Paper, Stack, Typography } from "@mui/material";
 import { common } from "@mui/material/colors";
 import { useNavigate, useParams } from "react-router-dom";
 import UserCard from "./UserCard";
 import { getSessionId } from "../../utils/GameSessionHandler";
-import {useGet} from "../../hooks/useGet";
 
 const GameLobby = () => {
     

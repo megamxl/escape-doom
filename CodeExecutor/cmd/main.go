@@ -17,44 +17,29 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		log.Fatalf("Usage: %s <config-file-path>\n",
-			os.Args[0])
+		panic(fmt.Sprintf("Usage: <config-file-path>\n"))
 	}
 
 	configFile := os.Args[1]
+	c := createKafkaSubscriber(configFile)
+
 	conf := messaging.ReadKafkaConfig(configFile)
-	conf["group.id"] = "kafka-go-getting-started"
-	conf["auto.offset.reset"] = "earliest"
-
-	c, err := kafka.NewConsumer(&conf)
-
-	conf = messaging.ReadKafkaConfig(configFile)
-
-	if err != nil {
-		log.Printf("Failed to create consumer: %s", err)
-		os.Exit(1)
-	}
 
 	confComplete := messaging.ReadConfig(configFile)
 
-	topicIncoming, exists := confComplete["topic.incoming"]
-	if !exists || topicIncoming == "" {
-		log.Println("Error: 'topic.incoming' is not defined in the configuration")
-		os.Exit(1)
-	}
+	topicIncoming := checkIncomingTopicExisting(confComplete)
 
-	outgoing, exists := confComplete["topic.outgoing"]
-	if !exists || topicIncoming == "" {
-		log.Println("Error: 'topic.outgoing' is not defined in the configuration")
-		os.Exit(1)
-	}
+	outgoing := checkOutgoingTopicExisting(confComplete)
 
 	// Convert to string if necessary (depending on type in your conf map)
 	topic := fmt.Sprintf("%v", topicIncoming)
 	log.Printf("Subscribed to topic: %s\n", topic)
 
 	// Subscribe to the topic
-	err = c.SubscribeTopics([]string{topic}, nil)
+	err1 := c.SubscribeTopics([]string{topic}, nil)
+	if err1 != nil {
+		panic(err1)
+	}
 
 	// Set up a channel for handling Ctrl-C, etc
 	sigchan := make(chan os.Signal, 1)
@@ -78,7 +63,6 @@ func main() {
 				// Errors are informational and automatically handled by the consumer
 				continue
 			}
-
 			var request constants.Request
 
 			err2 := json.Unmarshal(ev.Value, &request)
@@ -90,6 +74,34 @@ func main() {
 		}
 	}
 	_ = c.Close()
+}
+
+func createKafkaSubscriber(configFile string) *kafka.Consumer {
+	conf := messaging.ReadKafkaConfig(configFile)
+	conf["group.id"] = "kafka-go-getting-started"
+	conf["auto.offset.reset"] = "earliest"
+
+	c, err := kafka.NewConsumer(&conf)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to create consumer: %s", err))
+	}
+	return c
+}
+
+func checkOutgoingTopicExisting(confComplete map[string]string) string {
+	outgoing, exists := confComplete["topic.outgoing"]
+	if !exists || outgoing == "" {
+		panic(fmt.Sprintf("Error: 'topic.outgoing' is not defined in the configuration"))
+	}
+	return outgoing
+}
+
+func checkIncomingTopicExisting(confComplete map[string]string) string {
+	topicIncoming, exists := confComplete["topic.incoming"]
+	if !exists || topicIncoming == "" {
+		panic(fmt.Sprintf("Error: 'topic.incoming' is not defined in the configuration"))
+	}
+	return topicIncoming
 }
 
 func runCodeAndSendResponse(request constants.Request, conf kafka.ConfigMap, outgoing string, engine constants.Engine) {

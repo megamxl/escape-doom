@@ -1,10 +1,7 @@
-import React from 'react';
-import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosRequestConfig } from "axios";
+import {useQuery} from "@tanstack/react-query";
+import axios from "axios";
 
 export const submitCode = (url: string, body: object) => {
-
-
 
     return useQuery({
         queryKey: ['submitCode'],
