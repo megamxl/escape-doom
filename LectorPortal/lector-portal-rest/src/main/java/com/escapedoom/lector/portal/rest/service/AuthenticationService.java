@@ -1,5 +1,4 @@
-package com.escapedoom.lector.portal.rest.auth;
-
+package com.escapedoom.lector.portal.rest.service;
 
 import com.escapedoom.lector.portal.shared.model.Role;
 import com.escapedoom.lector.portal.dataaccess.UserRepository;
