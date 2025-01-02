@@ -20,19 +20,14 @@ public class LeaderboardService {
 
     public List<LeaderboardEntry> getScoreBoard(Long escaperoomID) {
         List<LeaderboardEntry> playerScores = new ArrayList<>();
-        try {
-            Optional<List<Player>> allPlayerOfEscaperoom = repository.findAllByEscaperoomSession(escaperoomID);
-            if (allPlayerOfEscaperoom.isPresent()) {
-                log.debug("Found {} players in Leaderboard for ER-ID {}", allPlayerOfEscaperoom.get().size(), escaperoomID);
-                for (Player p : allPlayerOfEscaperoom.get()) {
-                    playerScores.add(new LeaderboardEntry(p));
-                }
-            } else {
-                log.info("The EscapeRoom with the ID {} was not found.", escaperoomID);
+        Optional<List<Player>> allPlayerOfEscaperoom = repository.findAllByEscaperoomSession(escaperoomID);
+        if (allPlayerOfEscaperoom.isPresent()) {
+            log.debug("Found {} players in Leaderboard for ER-ID {}", allPlayerOfEscaperoom.get().size(), escaperoomID);
+            for (Player p : allPlayerOfEscaperoom.get()) {
+                playerScores.add(new LeaderboardEntry(p));
             }
-        } catch (Exception ex) {
-            log.error("Error while retrieving the leaderboard for EscapeRoom ID: {}", escaperoomID, ex);
-            throw new RuntimeException("Failed to retrieve the leaderboard for EscapeRoom ID: " + escaperoomID, ex);
+        } else {
+            log.info("The EscapeRoom with the ID {} was not found.", escaperoomID);
         }
         return playerScores;
     }

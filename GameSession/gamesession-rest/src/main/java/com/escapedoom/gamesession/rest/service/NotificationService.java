@@ -138,27 +138,24 @@ public class NotificationService {
         }
     }
 
-    public void notifyEscapeRoomStart(Long id) {
-        try {
-            openLobbyRepository.findByLobbyId(id).ifPresent(lobby -> {
-                if (lobby.getState() == EscapeRoomState.PLAYING) {
-                    Optional<List<Player>> allByEscaperoomSession = sessionManagementRepository.findAllByEscaperoomSession(id);
 
-                    if (allByEscaperoomSession.isPresent()) {
-                        // Added this since a partial restart of the system caused no new players to join :(
-                        if (!allByEscaperoomSession.get().isEmpty()) {
-                            notifyAllPlayersInSession(allByEscaperoomSession.get().get(0), true);
-                            log.info("Informing clients about escape room start for lobby ID: {}", id);
-                        } else {
-                            log.info("No players found for escape room session with lobby ID: {}", id);
-                        }
+    public void notifyEscapeRoomStart(Long id) {
+        openLobbyRepository.findByLobbyId(id).ifPresent(lobby -> {
+            if (lobby.getState() == EscapeRoomState.PLAYING) {
+
+                Optional<List<Player>> allByEscaperoomSession = sessionManagementRepository.findAllByEscaperoomSession(id);
+                if (allByEscaperoomSession.isPresent()) {
+
+                    // Added this since a partial restart of the system caused no new players to join :(
+                    if (!allByEscaperoomSession.get().isEmpty()) {
+                        notifyAllPlayersInSession(allByEscaperoomSession.get().get(0), true);
+                        log.info("informing clients");
+                    } else {
+                        log.info("No player found!");
                     }
                 }
-            });
-        } catch (Exception ex) {
-            log.error("Error while notifying escape room start for lobby ID: {}", id, ex);
-            throw new RuntimeException("Failed to notify escape room start for lobby ID: " + id, ex);
-        }
-    }
 
+            }
+        });
+    }
 }
