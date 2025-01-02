@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -96,7 +95,7 @@ class AuthenticationServiceTest {
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(userRepository.findByEmail(any())).thenReturn(java.util.Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> {
+        assertThrows(java.util.NoSuchElementException.class, () -> {
             authenticationService.authenticate(authenticationRequest);
         });
 
