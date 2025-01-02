@@ -8,8 +8,8 @@ import {
 const sessionString = 'sessionId'
 
 export const useSession = () => {
-    const [session, setSession] = useState<string>(() => {
-        return getSessionStorageItem(sessionString)
+    const [session, setSession] = useState<string>((): string => {
+        return getSessionStorageItem(sessionString) || ""
     })
 
     const setGameSession = (newSession: string) => {

@@ -17,6 +17,11 @@ export const getLobbyStatus = async (roomPin: string): Promise<LobbyStatusRespon
     return data;
 }
 
+export const joinLobby = async (sessionID: string): Promise<void> => {
+    const { data } = await gameSessionClient.get(`${ENDPOINT}/lobby/${sessionID}`)
+    return data;
+}
+
 export const getStageInformation = async (sessionID: string): Promise<StageInfoResponse> => {
     const { data } = await gameSessionClient.get(`${ENDPOINT}/getStage/${sessionID}`)
     return data;

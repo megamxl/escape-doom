@@ -21,6 +21,7 @@ export class LECTOR_PORTAL_APP_PATHS {
 export class GAME_SESSION_API {
     public static BASE_API = process.env.NEXT_PUBLIC_GAME_SESSION_BASE_URL
     public static SESSION = `${this.BASE_API}/session`
+    public static JOIN = `${this.BASE_API}/join`
 }
 
 export class GAME_SESSION_APP_PATHS {
