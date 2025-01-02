@@ -1,6 +1,6 @@
 package com.escapedoom.lector.portal.rest;
 
-import com.escapedoom.lector.portal.rest.auth.JwtService;
+import com.escapedoom.lector.portal.rest.service.JwtService;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

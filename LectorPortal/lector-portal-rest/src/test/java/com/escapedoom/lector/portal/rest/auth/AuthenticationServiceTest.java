@@ -1,5 +1,7 @@
 package com.escapedoom.lector.portal.rest.auth;
 
+import com.escapedoom.lector.portal.rest.service.AuthenticationService;
+import com.escapedoom.lector.portal.rest.service.JwtService;
 import com.escapedoom.lector.portal.shared.model.Role;
 import com.escapedoom.lector.portal.dataaccess.UserRepository;
 import com.escapedoom.lector.portal.dataaccess.entity.User;
