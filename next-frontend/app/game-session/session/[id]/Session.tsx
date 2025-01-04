@@ -37,9 +37,10 @@ const Session = ({sessionID}: { sessionID: string }) => {
         stageScene: undefined
     })
 
+    const [loading, setLoading] = useState(false)
     const [code, setCode] = useState<string>("Initial code");
     const [codeExecutionResponse, setCodeExecutionResponse] = useState<CodeExecResponse>({
-        status: CompileStatus.WAITING,
+        status: CompileStatus.COMPILED,
         output: ''
     })
     const [submittedCodeBody, setSubmittedCodeBody] = useState<SubmittedCodeBody>({
@@ -70,6 +71,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
     }
 
     const handleCodeSubmission = async () => {
+        setLoading(true)
         await reSubmitCode();
 
         while (true) {
@@ -91,7 +93,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
         }
 
         if (codeResultData !== undefined) setCodeExecutionResponse(codeResultData)
-        //TODO anas - das refetch oben funktioniert und ich submitte ins backend
+        setLoading(false)
     }
 
     const getCodeResult = async (): Promise<CodeExecResponse | undefined> => {
@@ -176,7 +178,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
                             }}
                             startIcon={<PlayArrow/>}
                             variant='contained'
-                            loading={isFetchingCodeResult}
+                            loading={loading}
                             loadingPosition="start"
                             onClick={handleCodeSubmission}
                         >

@@ -3,7 +3,7 @@ import {getCodeResult} from "@/app/api/gameSession/join";
 
 export const useGetCodeResult = (sessionID: string) => {
     return useQuery({
-        queryKey: ['stage-info', sessionID],
+        queryKey: ['code-result', sessionID],
         queryFn: () => getCodeResult(sessionID),
         enabled: false
     })
