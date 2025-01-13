@@ -21,7 +21,6 @@ const Login = () => {
         e.preventDefault()
         const refetchResponse = await refetch();
         if (!refetchResponse.isError) {
-            console.log(refetchResponse.data?.token)
             // @ts-ignore
             setToken(refetchResponse.data?.token)
             redirect(LECTOR_PORTAL_APP_PATHS.DASHBOARD, RedirectType.push)

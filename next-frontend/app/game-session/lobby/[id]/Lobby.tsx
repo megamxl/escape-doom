@@ -8,14 +8,11 @@ import UserCard from "./_components/UserCard";
 import {useSession} from "@/app/utils/game-session-handler";
 import {useLobbyStatus} from "@/app/hooks/student-join/useLobbyStatus";
 import {LobbyState} from "@/app/types/lobby/LobbyState";
-import {GAME_SESSION_APP_PATHS, LECTOR_PORTAL_API} from "@/app/constants/paths";
-import {useJoinLobby} from "@/app/hooks/game-session/useJoinLobby";
+import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 import {createWebSocket} from "@/app/utils/websockets";
+import {RoomState} from "@/app/enums/RoomState";
 
 const Lobby = ({lobbyID}: { lobbyID: number }) => {
-
-    const [sessionId, setSessionId] = useSession()
-    const {data: joinData, error: joinError, isError: isJoinError} = useJoinLobby(sessionId);
 
     const [lobbyState, setLobbyState] = useState<LobbyState>({
         name: '',
@@ -59,9 +56,7 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
         } else if (data) {
 
-            if (data.state === "JOINABLE") {
-                const url = `${LECTOR_PORTAL_API.BASE_API}/join/lobby/${sessionID}`
-            } else {
+            if (data.state !== RoomState.JOINABLE) {
                 redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${sessionID}`);
             }
         }

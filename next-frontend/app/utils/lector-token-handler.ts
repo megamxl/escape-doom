@@ -5,7 +5,7 @@ export const LECTOR_SESSION_STORAGE_STRING = 'token';
 
 export const useLectorToken = () => {
     const [token, setToken] = useState<string>(() => {
-        return getSessionStorageItem(LECTOR_SESSION_STORAGE_STRING)
+        return getSessionStorageItem(LECTOR_SESSION_STORAGE_STRING) ?? ""
     })
 
     const setLectorToken = (newToken: string) => {

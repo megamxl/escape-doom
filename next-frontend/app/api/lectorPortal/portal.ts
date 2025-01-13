@@ -7,11 +7,15 @@ import {getSessionStorageItem} from "@/app/utils/session-storage-handler";
 
 const ENDPOINT = "/portal-escape-room"
 
-const headers: AxiosRequestConfig = {
-    headers: { Authorization: `Bearer ${getSessionStorageItem(LECTOR_SESSION_STORAGE_STRING)}`}
+const setAuthCurrentSessionToken = () => {
+    const headers: AxiosRequestConfig = {
+        headers: {Authorization: `Bearer ${getSessionStorageItem(LECTOR_SESSION_STORAGE_STRING)}`}
+    }
+    return headers;
 }
 
 const getAllRooms = async (): Promise<EscapeRoom[]> => {
+    const headers = setAuthCurrentSessionToken();
     const {data} = await lectorClient.get(`${ENDPOINT}/getAll`, headers);
     return data;
 }
@@ -26,17 +30,20 @@ const changeRoomState = async (state: RoomState, id: number, time?: number) => {
 }
 
 const openRoom = async (id: number) => {
+    const headers = setAuthCurrentSessionToken();
     console.log("Headers:", headers)
     const {data} = await lectorClient.post(`${ENDPOINT}/openEscapeRoom/${id}`, null, headers)
     return data;
 }
 
 const startRoom = async (id: number, escapeRoomTime: number) => {
+    const headers = setAuthCurrentSessionToken();
     const {data} = await lectorClient.post(`${ENDPOINT}/startEscapeRoom/${id}/${escapeRoomTime}`, null, headers)
     return data;
 }
 
 const stopRoom = async (id: number) => {
+    const headers = setAuthCurrentSessionToken();
     const {data} = await lectorClient.post(`${ENDPOINT}/stopEscapeRoom/${id}`, null, headers)
     return data;
 }

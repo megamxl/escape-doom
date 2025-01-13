@@ -13,7 +13,7 @@ import {useSession} from "@/app/utils/game-session-handler";
 const StudentJoin = () => {
 
     const [roomPin, setRoomPin] = useState('');
-    const [snackbar, setSnackbar] = useState(false);
+    const [openSnackbar, setOpenOpenSnackbar] = useState(false);
 
     const [session, setSession] = useSession();
     const {refetch} = useLobbyJoin(roomPin);
@@ -25,12 +25,13 @@ const StudentJoin = () => {
     const sendID = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Trying to get lobby of id: " + roomPin + "Current session: ", session)
-        const {data, isError} = await refetch();
+        const {data, isError, error} = await refetch();
 
-        if (session) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${session}`)
+        if (session && data?.state == RoomState.PLAYING) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${session}`)
 
         if (isError) {
-            //TODO: HandleError
+            setOpenOpenSnackbar(true)
+            console.error(error)
         } else if (data) {
             const responseSessionID = data.sessionId
 
@@ -47,7 +48,7 @@ const StudentJoin = () => {
                     break;
                 case RoomState.STOPPED:
                     setSession("")
-                    setSnackbar(true)
+                    setOpenOpenSnackbar(true)
                     break;
                 default:
                     console.log("Lobby is in an unknown state");
@@ -89,8 +90,8 @@ const StudentJoin = () => {
                 </Card>
             </Grid2>
 
-            <Snackbar open={snackbar} autoHideDuration={6000} onClose={() => setSnackbar(false)}>
-                <Alert onClose={() => setSnackbar(false)} severity="error" sx={{width: '100%'}}>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenOpenSnackbar(false)}>
+                <Alert onClose={() => setOpenOpenSnackbar(false)} severity="error" sx={{width: '100%'}}>
                     The given lobby is either closed or doesn't exist
                 </Alert>
             </Snackbar>
