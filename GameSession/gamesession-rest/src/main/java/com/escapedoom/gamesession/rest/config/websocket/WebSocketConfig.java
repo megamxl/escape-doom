@@ -14,10 +14,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private final WebSocketYourNameHandler webSocketYourNameHandler;
     private final WebSocketAllNamesHandler webSocketAllNamesHandler;
 
-    public WebSocketConfig(WebSocketYourNameHandler webSocketYourNameHandler, WebSocketAllNamesHandler webSocketAllNamesHandler) {
+    public WebSocketConfig(WebSocketYourNameHandler webSocketYourNameHandler, WebSocketAllNamesHandler webSocketAllNamesHandler, WebSocketStartedHandler webSocketStartedHandler) {
         this.webSocketYourNameHandler = webSocketYourNameHandler;
         this.webSocketAllNamesHandler = webSocketAllNamesHandler;
-        this.webSocketStartedHandler = new WebSocketStartedHandler();
+        this.webSocketStartedHandler = webSocketStartedHandler;
     }
 
     @Override

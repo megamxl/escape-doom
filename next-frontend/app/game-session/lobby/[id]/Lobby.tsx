@@ -27,28 +27,43 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
     const createWebSockets = () => {
         createWebSocket({
-            url: "ws://localhost:8090/ws/your-name?sessionID="+sessionID, onMessage: (event) => {
-                setLobbyState({...lobbyState, name: event?.data});
+            url: "ws://localhost:8090/ws/your-name?sessionID=" + sessionID,
+            onMessage: (event) => {
+                console.log(event?.data);
+                setLobbyState((prevState) => ({
+                    ...prevState,
+                    name: event?.data
+                }));
+                //setUserName(event?.data);
             }
-        })
-
+        });
+    
         createWebSocket({
-            url: "ws://localhost:8090/ws/all-names?sessionID="+sessionID, onMessage: (event) => {
+            url: "ws://localhost:8090/ws/all-names?sessionID=" + sessionID,
+            onMessage: (event) => {
                 try {
                     const data = JSON.parse(event?.data);
-                    setLobbyState({...lobbyState, users: data.players || []});
+                    setLobbyState((prevState) => ({
+                        ...prevState,
+                        users: data.players || []
+                    }));
                 } catch (error) {
                     console.error("Error parsing WebSocket message:", error);
                 }
             }
-        })
-
+        });
+    
         createWebSocket({
-            url: "ws://localhost:8090/ws/started", onMessage: () => {
-                setLobbyState({...lobbyState, isStarted: true})
+            url: "ws://localhost:8090/ws/started",
+            onMessage: () => {
+                console.log('bin daaaa')
+                setLobbyState((prevState) => ({
+                    ...prevState,
+                    isStarted: true
+                }));
             }
-        })
-    }
+        });
+    };
 
     useEffect(() => {
 

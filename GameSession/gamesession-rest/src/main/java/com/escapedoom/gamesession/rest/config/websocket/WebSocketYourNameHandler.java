@@ -41,7 +41,7 @@ public class WebSocketYourNameHandler extends AbstractWebSocketHandler {
             log.info("Your name is: " + myName.getName());
             String allNames = notificationWsService.getAllNames(myName);
             System.out.println(allNames);
-            broadcast(allNames);
+            //broadcast(allNames);
         } else {
             log.info("Your name is null");
         }
