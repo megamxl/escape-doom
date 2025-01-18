@@ -14,9 +14,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private final WebSocketYourNameHandler webSocketYourNameHandler;
     private final WebSocketAllNamesHandler webSocketAllNamesHandler;
 
-    public WebSocketConfig() {
-        this.webSocketYourNameHandler = new WebSocketYourNameHandler();
-        this.webSocketAllNamesHandler = new WebSocketAllNamesHandler();
+    public WebSocketConfig(WebSocketYourNameHandler webSocketYourNameHandler, WebSocketAllNamesHandler webSocketAllNamesHandler) {
+        this.webSocketYourNameHandler = webSocketYourNameHandler;
+        this.webSocketAllNamesHandler = webSocketAllNamesHandler;
         this.webSocketStartedHandler = new WebSocketStartedHandler();
     }
 

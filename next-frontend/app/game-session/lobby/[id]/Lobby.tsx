@@ -27,13 +27,13 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
     const createWebSockets = () => {
         createWebSocket({
-            url: "ws://localhost:8090/ws/your-name", onMessage: (event) => {
+            url: "ws://localhost:8090/ws/your-name?sessionID="+sessionID, onMessage: (event) => {
                 setLobbyState({...lobbyState, name: event?.data});
             }
         })
 
         createWebSocket({
-            url: "ws://localhost:8090/ws/all-names", onMessage: (event) => {
+            url: "ws://localhost:8090/ws/all-names?sessionID="+sessionID, onMessage: (event) => {
                 try {
                     const data = JSON.parse(event?.data);
                     setLobbyState({...lobbyState, users: data.players || []});

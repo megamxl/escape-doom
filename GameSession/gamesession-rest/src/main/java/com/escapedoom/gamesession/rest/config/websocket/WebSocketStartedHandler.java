@@ -1,6 +1,8 @@
 package com.escapedoom.gamesession.rest.config.websocket;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
@@ -10,6 +12,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
+@RequiredArgsConstructor
 @Slf4j
 public class WebSocketStartedHandler extends AbstractWebSocketHandler {
     private final Set<WebSocketSession> sessions =
