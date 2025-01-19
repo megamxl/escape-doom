@@ -21,6 +21,7 @@ import {removeGameSession} from "@/app/utils/game-session-handler";
 import {redirect} from "next/navigation";
 import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 import CodeExectuionDisplay from "@/app/game-session/session/[id]/_components/CodeExectuionDisplay";
+import {useSessionIdToRoomPin} from "@/app/hooks/game-session/useSessionIdToRoomPin";
 
 const Session = ({sessionID}: { sessionID: string }) => {
 
@@ -55,6 +56,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
     const {data: stageInformation, isFetching: isFetchingStageInformation} = useGetStageInformation(sessionID)
     const {refetch: refetchCodeResult, data: codeResultData, isFetching: isFetchingCodeResult} = useGetCodeResult(sessionID);
     const {refetch: reSubmitCode} = useSubmitCode(submittedCodeBody);
+    const {data: roomPinOfSession} = useSessionIdToRoomPin(sessionID);
 
     const monacoEditorRef = useRef()
 
@@ -78,7 +80,6 @@ const Session = ({sessionID}: { sessionID: string }) => {
             console.log("Waiting for code compilation completed")
             await sleep(250);
             const response = await getCodeResult();
-            console.log(response);
             if (response?.status !== CompileStatus.WAITING && response !== undefined) {
                 setCodeExecutionResponse(response)
                 break
@@ -89,7 +90,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
 
         if (codeResultData?.status === CompileStatus.WON) {
             removeGameSession()
-            redirect(GAME_SESSION_APP_PATHS.LEADERBOARD)
+            redirect(`${GAME_SESSION_APP_PATHS.LEADERBOARD}/${roomPinOfSession}`)
         }
 
         if (codeResultData !== undefined) setCodeExecutionResponse(codeResultData)
@@ -107,6 +108,7 @@ const Session = ({sessionID}: { sessionID: string }) => {
     }
 
     const handleCodeChange = (value: any) => {
+        setCode(value)
         setSubmittedCodeBody({
             "playerSessionId": sessionID,
             "language": stageState.language,

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -88,5 +89,9 @@ public class PlayerService {
                 .state(EscapeRoomState.STOPPED)
                 .roomID(null)
                 .build();
+    }
+
+    public String sessionToRoomPin(String httpSession) {
+        return sessionManagementRepository.findEscapeRoomSessionByHttpSessionID(httpSession).orElseThrow(() -> new NoSuchElementException("No session found for HttpSession: " + httpSession));
     }
 }

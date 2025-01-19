@@ -24,5 +24,10 @@ public class PlayerController {
     public StatusReturn playerStatus(@PathVariable String playerID) {
         return playerService.getPlayerStatus(playerID);
     }
+
+    @GetMapping(value = Constants.SESSION_TO_ROOM_PIN)
+    public String sessionToRoomPin(@PathVariable String httpSession) {
+        return playerService.sessionToRoomPin(httpSession);
+    }
 }
 

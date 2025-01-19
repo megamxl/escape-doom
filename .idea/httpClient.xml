@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="HttpClientEndpointsTabState">
+    <option name="requestToText" value="&lt;CachedHttpClientTabRequests&gt;&#10;  &lt;entry key=&quot;cbd0d1df040d0cf4d3c015fd638cae4b9d6b7394&quot; value=&quot;###&amp;#10;GET http://localhost:8090/api/join/sessionToRoomPin/{{httpSession}}&quot; /&gt;&#10;&lt;/CachedHttpClientTabRequests&gt;" />
+  </component>
+</project>

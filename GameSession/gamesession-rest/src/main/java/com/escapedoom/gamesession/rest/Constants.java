@@ -33,6 +33,7 @@ public class Constants {
     // Player
     public static final String GET_STAGE_URL = SEPARATOR + "getStage" + SEPARATOR + HTTP_SESSION_PATH_VARIABLE;
     public static final String STATUS_URL = SEPARATOR + "status" + SEPARATOR + PLAYER_ID_PATH_VARIABLE;
+    public static final String SESSION_TO_ROOM_PIN = SEPARATOR + "sessionToRoomPin" + SEPARATOR + HTTP_SESSION_PATH_VARIABLE;
 
     // Code Compilation
     public static final String SUBMIT_CODE_URL = SEPARATOR + "submitCode";

@@ -37,3 +37,8 @@ export const getCodeResult = async (sessionID: string): Promise<CodeExecResponse
     const { data } = await gameSessionClient.get(`${ENDPOINT}/getCode/${sessionID}`)
     return data;
 }
+
+export const sessionIdToRoomPin = async (sessionID: string): Promise<string> => {
+    const { data } = await gameSessionClient.get(`${ENDPOINT}/sessionToRoomPin/${sessionID}`)
+    return data;
+}
