@@ -3,6 +3,8 @@ package com.escapedoom.gamesession.rest.service;
 import com.escapedoom.gamesession.dataaccess.OpenLobbyRepository;
 import com.escapedoom.gamesession.dataaccess.SessionManagementRepository;
 import com.escapedoom.gamesession.dataaccess.entity.Player;
+import com.escapedoom.gamesession.rest.config.websocket.WebSocketConfig;
+import com.escapedoom.gamesession.rest.config.websocket.WebSocketStartedHandler;
 import com.escapedoom.gamesession.rest.util.SseEmitterExtended;
 import com.escapedoom.gamesession.shared.EscapeRoomState;
 import lombok.Getter;
@@ -26,6 +28,7 @@ public class NotificationService {
 
     private final SessionManagementRepository sessionManagementRepository;
     private final OpenLobbyRepository openLobbyRepository;
+    //private final WebSocketConfig webSocketConfig;
 
     @Getter
     private final List<SseEmitterExtended> sseEmitters = new CopyOnWriteArrayList<>();
@@ -34,7 +37,7 @@ public class NotificationService {
     private final String ALL_NAME_EVENT = "allNames";
 
     boolean update = false;
-
+    //Bei einwählen in eine Lobby
     public SseEmitterExtended establishLobbyEmitters(String httpId) {
 
         SseEmitterExtended sseEmitter = new SseEmitterExtended();
@@ -117,6 +120,9 @@ public class NotificationService {
         var jsonPlayers = new JSONObject();
         if (playing) {
             String START_PLAYING_EVENT = "started";
+
+            //webSocketConfig.getWebSocketStartedHandler().broadcast("helloouu");
+
             notifyClients(player.getEscaperoomSession(), START_PLAYING_EVENT, new JSONObject());
         } else {
             var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());

@@ -23,7 +23,7 @@ services:
       POSTGRES_PASSWORD: mypassword   #required
       POSTGRES_DB: LectorPortal         #optional für default database
     ports:
-      - 5433:5432
+      - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data
   #    networks:
@@ -55,10 +55,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   executor:
-    image: ghcr.io/megamxl/code-executor:latest
+    image: executor
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
+    depends_on:
+      - broker
 volumes:
   redis_data:
     driver: local #the actual storage path is created by docker itself -> to create it on a local file system

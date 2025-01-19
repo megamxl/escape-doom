@@ -1,22 +1,21 @@
 'use client'
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Box, Divider, Grid2, Stack, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
 import RoomCard from "@/app/lector-portal/dashboard/_components/RoomCard";
-import {useGetEscapeRooms} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
+import {useGetEscapeRooms} from "@/app/hooks/lector-portal/useGetEscapeRooms";
 import RoomCardSkeleton from "@/app/lector-portal/dashboard/_components/RoomCardSkeleton";
 import {redirect} from "next/navigation";
-import {useToken} from "@/app/utils/token-handler";
 
 const LectorPortalDashboard = () => {
 
-    const [token, _] = useToken()
     const {data, isPending, isError, error} = useGetEscapeRooms()
 
     useEffect(() => {
         // @ts-ignore
         if (error?.status === 403 && !isPending) {
+            console.error("Error", error)
             redirect("/lector-portal/login")
         }
     }, [isError]);

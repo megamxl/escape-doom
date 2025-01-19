@@ -4,17 +4,19 @@ import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Alert, Button, Card, CardContent, Grid2, Snackbar, Stack, TextField, Typography} from "@mui/material";
 import BackgroundImage from '@/public/images/StudentJoin.jpg'
 import {common} from '@mui/material/colors';
-import {useLobbyJoin} from "@/app/utils/api/student-join/useLobbyJoin";
+import {useLobbyJoin} from "@/app/hooks/student-join/useLobbyJoin";
 import {redirect} from "next/navigation";
 import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 import {RoomState} from "@/app/enums/RoomState";
-import {getSessionId, removeSessionId, setSessionId} from "@/app/utils/game-session-handler";
+import {useSession} from "@/app/utils/game-session-handler";
 
 const StudentJoin = () => {
 
     const [roomPin, setRoomPin] = useState('');
-    const [snackbar, setSnackbar] = useState(false);
-    const { refetch } = useLobbyJoin(roomPin);
+    const [openSnackbar, setOpenOpenSnackbar] = useState(false);
+
+    const [session, setSession] = useSession();
+    const {refetch} = useLobbyJoin(roomPin);
 
     const handleUserInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setRoomPin(e.target.value);
@@ -22,31 +24,34 @@ const StudentJoin = () => {
 
     const sendID = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Trying to get lobby of id: " + roomPin + "Current session: ", session)
         const {data, isError, error} = await refetch();
 
-        const curSessionID = getSessionId()
-
-        if (curSessionID) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${curSessionID}`)
+        if (session && data?.state == RoomState.PLAYING) redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${session}`)
 
         if (isError) {
-            //TODO: HandleError
+            setOpenOpenSnackbar(true)
+            console.error(error)
         } else if (data) {
             const responseSessionID = data.sessionId
 
+            console.log(data)
+
             switch (data.state) {
                 case RoomState.PLAYING:
-                    setSessionId(responseSessionID)
+                    setSession(responseSessionID)
                     redirect(`${GAME_SESSION_APP_PATHS.SESSION}/${responseSessionID}`)
                     break;
                 case RoomState.JOINABLE:
-                    setSessionId(responseSessionID)
+                    setSession(responseSessionID)
                     redirect(`${GAME_SESSION_APP_PATHS.LOBBY}/${roomPin}`)
                     break;
                 case RoomState.STOPPED:
-                    removeSessionId()
-                    setSnackbar(true)
+                    setSession("")
+                    setOpenOpenSnackbar(true)
                     break;
-                default: console.log("Lobby is in an unknown state");
+                default:
+                    console.log("Lobby is in an unknown state");
             }
         }
     }
@@ -85,8 +90,8 @@ const StudentJoin = () => {
                 </Card>
             </Grid2>
 
-            <Snackbar open={snackbar} autoHideDuration={6000} onClose={() => setSnackbar(false)}>
-                <Alert onClose={() => setSnackbar(false)} severity="error" sx={{width: '100%'}}>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenOpenSnackbar(false)}>
+                <Alert onClose={() => setOpenOpenSnackbar(false)} severity="error" sx={{width: '100%'}}>
                     The given lobby is either closed or doesn't exist
                 </Alert>
             </Snackbar>

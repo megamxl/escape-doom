@@ -17,7 +17,7 @@ import {
     Typography
 } from "@mui/material";
 import {AccessTime, Circle, Close, OpenInBrowser, PlayArrow} from "@mui/icons-material";
-import {useChangeRoomState} from "@/app/utils/api/lector-portal/useGetEscapeRooms";
+import {useChangeRoomState} from "@/app/hooks/lector-portal/useGetEscapeRooms";
 import {RoomState} from "@/app/enums/RoomState";
 import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
 
@@ -30,7 +30,7 @@ type RoomCardCreationProps = {
     escapeRoomState: RoomState,
 }
 
-type RoomCardState = {
+export type RoomCardState = {
     Status: RoomState,
     ID: number,
     Time: number
@@ -40,33 +40,29 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
 
     const [roomInfo, setRoomInfo] = useState<RoomCardState>({
         Status: escapeRoomState,
-        ID: id,
+        ID: 0,
         Time: time
     })
 
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const handleClose = () => setSnackbarOpen(false)
-    const changeRoomState = useChangeRoomState(roomInfo.Status, roomInfo.ID, roomInfo.Time)
+    const updateRoomState = useChangeRoomState(id, setRoomInfo, roomInfo.Time)
 
     const statusLedColor = (() => {
         switch (roomInfo.Status) {
-            case RoomState.STOPPED: return '#f00';
-            case RoomState.PLAYING: return '#0f0';
-            case RoomState.JOINABLE: return '#ff0'
-            default: console.log("Something went wrong - Can't read RoomState:", roomInfo.Status)
+            case RoomState.STOPPED:
+                return '#f00';
+            case RoomState.PLAYING:
+                return '#0f0';
+            case RoomState.JOINABLE:
+                return '#ff0'
+            default:
+                console.log("Something went wrong - Can't read RoomState:", roomInfo.Status)
         }
     })();
 
-    const handleStateChange = async (newState: RoomState) => {
-        const stateBeforeUpdate = roomInfo
-
-        setRoomInfo({...roomInfo, Status: newState});
-        changeRoomState.mutate()
-
-        if (changeRoomState.isError) {
-            setRoomInfo(stateBeforeUpdate);
-            setSnackbarOpen(true)
-        }
+    const handleStateChange = async (newStatus: RoomState) => {
+        updateRoomState.mutate(newStatus)
     }
 
     return (
@@ -85,25 +81,27 @@ const RoomCard = ({name, topic, imgUrl, time, id, escapeRoomState}: RoomCardCrea
                 </Typography>
                 <div className={"flex flex-row gap-2"}>
                     {roomInfo.ID !== 0 ?
-                        <Typography alignSelf={"baseline"} sx={{fontSize: 14}} component="div">
-                            LobbyID: {roomInfo.ID}
-                        </Typography>
-                        : ''
-                    }
-                    |
-                    {roomInfo.ID !== 0 ?
-                        <Link target="_blank" rel="noopener" sx={{fontSize: 14}}
-                              href={`${GAME_SESSION_APP_PATHS.LEADERBOARD}/${roomInfo.ID}`}>Leaderboard</Link>
+                        <>
+                            <Typography alignSelf={"baseline"} sx={{fontSize: 14}} component="div">
+                                LobbyID: {roomInfo.ID}
+                            </Typography>
+                            |
+                            <Link target="_blank" rel="noopener" sx={{fontSize: 14}}
+                                  href={`${GAME_SESSION_APP_PATHS.LEADERBOARD}/${roomInfo.ID}`}>Leaderboard</Link>
+                        </>
                         : ''
                     }
                 </div>
 
             </CardContent>
             <CardActions sx={{justifyContent: "space-between"}}>
-                <Circle sx={{color: statusLedColor}}> </Circle>
-                <Button onClick={() => handleStateChange(RoomState.JOINABLE)} startIcon={<OpenInBrowser/>}> Open </Button>
-                <Button onClick={() => handleStateChange(RoomState.PLAYING)} startIcon={<PlayArrow/>}> Start </Button>
-                <Button onClick={() => handleStateChange(RoomState.STOPPED)} startIcon={<Close/>}> Close </Button>
+                <Circle id={'status_led'} sx={{color: statusLedColor}}> </Circle>
+                <Button onClick={() => handleStateChange(RoomState.JOINABLE)}
+                        disabled={roomInfo.Status == RoomState.JOINABLE} startIcon={<OpenInBrowser/>}> Open </Button>
+                <Button onClick={() => handleStateChange(RoomState.PLAYING)}
+                        disabled={roomInfo.Status == RoomState.PLAYING} startIcon={<PlayArrow/>}> Start </Button>
+                <Button onClick={() => handleStateChange(RoomState.STOPPED)}
+                        disabled={roomInfo.Status == RoomState.STOPPED} startIcon={<Close/>}> Close </Button>
                 <Stack direction="row" alignItems={"center"} gap={.5}>
                     <AccessTime/>
                     <FormControl>
