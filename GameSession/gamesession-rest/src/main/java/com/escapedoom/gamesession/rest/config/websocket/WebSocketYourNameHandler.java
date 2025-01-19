@@ -22,14 +22,12 @@ public class WebSocketYourNameHandler extends AbstractWebSocketHandler {
 
     private HashMap<String,WebSocketSession> sessionsMap = new HashMap<>();
 
-
     private final NotificationWsService notificationWsService;
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
-        log.info("Client connected: " + session.getId());
+        log.debug("Client connected: " + session.getId());
         String query = Objects.requireNonNull(session.getUri()).getQuery();
         if (query != null && !query.isEmpty()) {
             query = query.replace("sessionID=","");
@@ -38,14 +36,10 @@ public class WebSocketYourNameHandler extends AbstractWebSocketHandler {
         Player myName = notificationWsService.getYourName(query);
         if(myName != null) {
             unicast(sessionsMap.get(query).getId(), myName.getName());
-            log.info("Your name is: " + myName.getName());
-            String allNames = notificationWsService.getAllNames(myName);
-            System.out.println(allNames);
-            //broadcast(allNames);
+            log.debug("Your name is: " + myName.getName());
         } else {
-            log.info("Your name is null");
+            log.debug("Your name is null");
         }
-        //broadcast("welcome - " + session.getId());
     }
 
     @Override
@@ -56,36 +50,19 @@ public class WebSocketYourNameHandler extends AbstractWebSocketHandler {
         for (Map.Entry<String, WebSocketSession> entry : sessionsMap.entrySet()) {
             if (entry.getValue().equals(session)) {
                 sessionsMap.remove(entry.getKey());
-                log.info("Removed session with key: " + entry.getKey());
+                log.debug("Removed session with key: " + entry.getKey());
                 break;
             }
         }
-        log.info("Client disconnected: " + session.getId());
-    }
-
-    public void broadcast(String message) {
-        for (WebSocketSession session : sessions) {
-            try {
-                session.sendMessage(new TextMessage(message));
-            } catch (IOException e) {
-                log.error("Error sending message to client: " + session.getId());
-            }
-        }
+        log.debug("Client disconnected: " + session.getId());
     }
 
     public void unicast(String sessionId, String message) {
       Optional<WebSocketSession> sessionToSend  =  sessions.stream().filter(session -> session.getId().equals(sessionId)).findFirst();
-        System.out.println("message: " + message);
-        System.out.println("sessionID: " + sessionId);
-        System.out.println("sessionToSend: " + sessionToSend);
-        System.out.println("alle::");
-        sessions.forEach(session -> {
-            System.out.println(session.getId());
-        });
       if (sessionToSend.isPresent()) {
           try {
-              System.out.println("ill send");
               sessionToSend.get().sendMessage(new TextMessage(message));
+              log.debug("Sent message "+ message + " to client: " + sessionId);
           } catch (IOException e) {
               log.error("Error sending message to client: " + sessionId);
           }

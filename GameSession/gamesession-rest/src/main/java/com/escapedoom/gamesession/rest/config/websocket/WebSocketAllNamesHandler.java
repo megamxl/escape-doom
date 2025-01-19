@@ -31,7 +31,7 @@ public class WebSocketAllNamesHandler extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
-        log.info("Client connected: " + session.getId());
+        log.debug("Client connected: " + session.getId());
         String query = Objects.requireNonNull(session.getUri()).getQuery();
         if (query != null && !query.isEmpty()) {
             query = query.replace("sessionID=","");
@@ -39,27 +39,26 @@ public class WebSocketAllNamesHandler extends AbstractWebSocketHandler {
         }
         Player myName = notificationWsService.getYourName(query);
         if(myName != null) {
-            log.info("Your name is: " + myName.getName());
+            log.debug("Your name is: " + myName.getName());
             String allNames = notificationWsService.getAllNames(myName);
-            System.out.println(allNames);
             broadcast(allNames);
         } else {
             log.info("Your name is null");
         }
-        //broadcast("welcome - " + session.getId());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session,
                                       org.springframework.web.socket.CloseStatus status) throws Exception {
         sessions.remove(session);
-        log.info("Client disconnected: " + session.getId());
+        log.debug("Client disconnected: " + session.getId());
     }
 
     public void broadcast(String message) {
         for (WebSocketSession session : sessions) {
             try {
                 session.sendMessage(new TextMessage(message));
+                log.debug("sent message: " + message + " to session: " + session.getId());
             } catch (IOException e) {
                 log.error("Error sending message to client: " + session.getId());
             }
