@@ -8,7 +8,7 @@ import UserCard from "./_components/UserCard";
 import {useSession} from "@/app/utils/game-session-handler";
 import {useLobbyStatus} from "@/app/hooks/student-join/useLobbyStatus";
 import {LobbyState} from "@/app/types/lobby/LobbyState";
-import {GAME_SESSION_APP_PATHS} from "@/app/constants/paths";
+import {GAME_SESSION_APP_PATHS, GAME_SESSION_WEB_SOCKETS} from "@/app/constants/paths";
 import {createWebSocket} from "@/app/utils/websockets";
 import {RoomState} from "@/app/enums/RoomState";
 
@@ -27,19 +27,18 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
 
     const createWebSockets = () => {
         createWebSocket({
-            url: "ws://localhost:8090/ws/your-name?sessionID=" + sessionID,
+            url: GAME_SESSION_WEB_SOCKETS.YOUR_NAME + "?sessionID=" + sessionID,
             onMessage: (event) => {
                 console.log(event?.data);
                 setLobbyState((prevState) => ({
                     ...prevState,
                     name: event?.data
                 }));
-                //setUserName(event?.data);
             }
         });
     
         createWebSocket({
-            url: "ws://localhost:8090/ws/all-names?sessionID=" + sessionID,
+            url: GAME_SESSION_WEB_SOCKETS.ALL_NAMES + "?sessionID=" + sessionID,
             onMessage: (event) => {
                 try {
                     const data = JSON.parse(event?.data);
@@ -54,9 +53,8 @@ const Lobby = ({lobbyID}: { lobbyID: number }) => {
         });
     
         createWebSocket({
-            url: "ws://localhost:8090/ws/started",
+            url: GAME_SESSION_WEB_SOCKETS.STARTED + "?sessionID=" + sessionID,
             onMessage: () => {
-                console.log('bin daaaa')
                 setLobbyState((prevState) => ({
                     ...prevState,
                     isStarted: true
