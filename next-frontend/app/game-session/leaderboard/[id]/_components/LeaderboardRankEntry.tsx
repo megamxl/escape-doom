@@ -1,5 +1,5 @@
-import React, {HTMLAttributes} from 'react';
 import {PlayerProgression} from "@/app/types/leaderboard/player-progression";
+import {formatTime} from "@/app/utils/formatTime";
 
 type RankEntryProps = {
     rankingInfo: PlayerProgression,
@@ -18,7 +18,7 @@ const LeaderboardRankEntry = ({rankingInfo, index}: RankEntryProps) => {
             <div className={"flex flex-row gap-3"}>
                 <p className={"text-2xl align-middle"}> {score} Pkt. </p>
                 <p className={"text-2xl"}> | </p>
-                <p className={`text-2xl ${!time ? 'text-gray-500' : 'text-white'}`}> {time || "00:00:00"} </p>
+                <p className={`text-2xl ${!time ? 'text-gray-500' : 'text-white'}`}> {formatTime(time) || "00:00:00"} </p>
             </div>
         </div>
     )
