@@ -75,11 +75,11 @@ const Session = ({sessionID}: { sessionID: string }) => {
     const handleCodeSubmission = async () => {
         setLoading(true)
         await reSubmitCode();
-
+        let response = undefined
         while (true) {
             console.log("Waiting for code compilation completed")
             await sleep(250);
-            const response = await getCodeResult();
+            response = await getCodeResult();
             if (response?.status !== CompileStatus.WAITING && response !== undefined) {
                 setCodeExecutionResponse(response)
                 break
@@ -88,12 +88,11 @@ const Session = ({sessionID}: { sessionID: string }) => {
 
         console.log("Compilation done", codeResultData)
 
-        if (codeResultData?.status === CompileStatus.WON) {
+        if (response?.status === CompileStatus.WON) {
             removeGameSession()
             redirect(`${GAME_SESSION_APP_PATHS.LEADERBOARD}/${roomPinOfSession}`)
-        }
 
-        if (codeResultData !== undefined) setCodeExecutionResponse(codeResultData)
+        }
         setLoading(false)
     }
 

@@ -57,6 +57,19 @@ public class NotificationWsService {
         return jsonPlayers.toString();
     }
 
+
+    public List<String> getAllClientIds(Player player) {
+        List<String> clientIds = new ArrayList<>();
+        var players = sessionManagementRepository.findAllByEscaperoomSession(player.getEscaperoomSession());
+        if (players.isPresent()) {
+            clientIds = players.get().stream()
+                    .filter(player1 -> Objects.equals(player1.getEscaperoomSession(), player.getEscaperoomSession()))
+                    .map(Player::getHttpSessionID)
+                    .toList();
+        }
+        return clientIds;
+    }
+
     //Bei einwählen in eine Lobby
     public void establishLobbyEmitters(String httpId) {
         System.out.println("Establish Lobby emitters for " + httpId );
@@ -102,8 +115,8 @@ public class NotificationWsService {
         var jsonPlayers = new JSONObject();
         if (playing) {
             String START_PLAYING_EVENT = "started";
-
-            webSocketStartedHandler.broadcast(String.valueOf(new JSONObject()));
+            List<String> allIds = getAllClientIds(player);
+            webSocketStartedHandler.broadcast(String.valueOf(new JSONObject()), allIds);
 
             //notifyClients(player.getEscaperoomSession(), START_PLAYING_EVENT, new JSONObject());
         } else {
